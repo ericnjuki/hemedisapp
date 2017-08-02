@@ -1,0 +1,16 @@
+<table class="ui celled table">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Username</th>
+      <th>Gender</th>
+    </tr>
+  </thead>
+  <tr *ngFor="let u of gridData.data">
+    <td>{{ u.id }}</td>
+    <td>{{ u.username}}</td>
+    <td>{{ u.gender}}</td>
+  </tr>
+</table>
+
+{{gridData.sortColumn}}
