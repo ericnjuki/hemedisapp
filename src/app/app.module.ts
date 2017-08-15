@@ -4,27 +4,22 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
-import { SidenavComponent } from './sidenav.component';
-import { UserListComponent } from './user-list/user-list.component';
-import { SlotMachineListComponent } from './slot-machine-list/slot-machine-list.component';
-import { routing } from "app/app.routing";
-import { UserService } from "app/users.service";
+import { SidenavComponent } from './side-nav/sidenav.component';
+import { AppRouterModule } from 'app/app.routing';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     SidenavComponent,
-    UserListComponent,
-    SlotMachineListComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpModule,
-    routing
+    AppRouterModule
   ],
-  providers: [UserService],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
