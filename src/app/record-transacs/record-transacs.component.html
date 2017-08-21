@@ -1,0 +1,54 @@
+<ul class="nav nav-tabs app-tabs app-header">
+  <li class="active"><a data-toggle="tab" href="#sale">Sale</a></li>
+  <li><a data-toggle="tab" href="#purchase">Purchase</a></li>
+</ul>
+
+<div class="tab-content">
+  <div id="sale" class="tab-pane fade in active">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-9 col-md-push-1 app-sale-record-tab">
+          <div class="app-record-header">
+            <input id="app-date" type="date">
+            <div class="pull-right">
+              <small>Date:</small>
+              <label for="app-date">12/12/12</label>
+            </div>
+          </div>
+          <table class="table table-hover" name="record-sales">
+            <thead>
+              <tr>
+                <th class="col-md-7">Item</th>
+                <th class="col-md-4">Amount</th>
+                <th class="col-md-1"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let saleItem of saleItems let i=index">
+                <td contenteditable="true">{{saleItem.item}}</td>
+                <td contenteditable="true">
+                  {{saleItem.amount}}
+                </td>
+                <td>
+                  <a 
+                    class="pull-right"
+                    (click)="addRemoveSaleItem(i)">
+                    <i class="icon ion-android-add-circle"></i>
+                  </a>
+                </td>
+              </tr>
+              <tr>
+                <th>TOTAL</th>
+                <th>{{getTotalSaleAmount()}}</th>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="purchase" class="tab-pane fade">
+    <h3>Menu 1</h3>
+    <p>Some content in menu 1.</p>
+  </div>
+</div>

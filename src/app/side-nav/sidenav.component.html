@@ -5,15 +5,15 @@
                     <!-- open nav ul -->
                     <ul>
                         <li class="side-nav-item active">
-                            <a href="custom-blank.html">
+                            <a routerLink="/transactions">
                                 <i class="nav-item-icon icon ion-social-rss-outline"></i>
-                                Blank
+                                Recent Transactions
                             </a>
                         </li><!-- /.side-nav-item -->
                         <li class="side-nav-item">
-                            <a href="custom-form-elements.html">
-                                <i class="nav-item-icon icon ion-social-rss-outline"></i>
-                                Form Elements
+                            <a routerLink="/record">
+                                <i class="nav-item-icon icon ion-social-rss"></i>
+                                Record Transactions
                             </a>
                         </li><!-- /.side-nav-item -->
                         <li class="side-nav-item">
@@ -21,21 +21,36 @@
                                 <span class="badge">4</span>
                                 <i class="nav-item-caret"></i>
                                 <i class="nav-item-icon icon ion-navicon"></i>
-                                Maintanance
+                                First level
                             </a>
                             <!-- /level menu child -->
                             <ul id="level1" class="side-nav-child">
                                 <li class="side-nav-item-heading">
                                     <a href="#" class="side-nav-back">
                                         <i class="nav-item-caret"></i>
-                                       Maintanance
+                                       Back to First level
                                     </a>
                                 </li><!-- /header level menu child -->
-                                                     <li class="side-nav-item">
-                                    <a href="form_elements.html">
+                                <li class="side-nav-item">
+                                    <a href="#level2">
+                                        <i class="nav-item-caret"></i>
                                         <i class="nav-item-icon icon ion-ios-help-outline"></i>
-                                        Slot Types
+                                        Second level
                                     </a>
+                                    <ul id="level2" class="side-nav-child">
+                                        <li class="side-nav-item-heading">
+                                            <a href="#" class="side-nav-back">
+                                                <i class="nav-item-caret"></i>
+                                                Back to Second level
+                                            </a>
+                                        </li><!-- /header level menu child -->
+                                        <li class="side-nav-item">
+                                            <a href="form_elements.html">
+                                                <i class="nav-item-icon icon ion-ios-help-outline"></i>
+                                                Third level
+                                            </a>
+                                        </li>
+                                    </ul>
                                 </li><!-- /form-element -->
                                 <li class="side-nav-item">
                                     <a href="form_wizard.html">
@@ -43,26 +58,6 @@
                                         Slot Manufacturers
                                     </a>
                                 </li><!-- /manufacturers -->
-                                <li class="side-nav-item">
-                                    <a href="form_wysiwyg.html">
-                                        <i class="nav-item-icon icon ion-ios-help-outline"></i>
-                                        Slot Groups
-                                    </a>
-                                </li><!-- /groups -->
-
-                                <li class="side-nav-item">
-                                  <a [routerLink]= "['/slots']">
-                                        <i class="nav-item-icon icon ion-ios-help-outline"></i>
-                                        Slots
-                                    </a>
-                                </li><!-- /Slots -->
-                                <li class="side-nav-item">
-                                    <a href="form_wysiwyg.html">
-                                        <i class="nav-item-icon icon ion-ios-help-outline"></i>
-                                        User Roles
-                                    </a>
-                                </li><!-- /roles -->
-
                                 <li class="side-nav-item">
                                     <a [routerLink]= "['/users']">
                                         <i class="nav-item-icon icon ion-ios-help-outline"></i>

@@ -6,12 +6,18 @@ import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 import { SidenavComponent } from './side-nav/sidenav.component';
 import { AppRouterModule } from 'app/app.routing';
+import { RecentTransacsComponent } from './recent-transacs/recent-transacs.component';
+import { TransactionPillComponent } from './recent-transacs/transaction-pill/transaction-pill.component';
+import { RecordTransacsComponent } from './record-transacs/record-transacs.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     SidenavComponent,
+    RecentTransacsComponent,
+    TransactionPillComponent,
+    RecordTransacsComponent,
   ],
   imports: [
     BrowserModule,

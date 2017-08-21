@@ -1,0 +1,26 @@
+.app-header{
+    padding: 0;
+    position: fixed;
+    /* margin-top: -56px; */
+}
+.transacs{
+    margin-top: 56px;
+}
+div.row{
+    display: flex;
+     align-items: center; 
+    margin: 0;
+     line-height: 56px; 
+}
+.pull-right{
+     display: flex; 
+     align-items: center;
+     left: 30%;
+    /* height: 56px; */
+    /* padding-top: 26px; */
+
+}
+input{
+    line-height: auto;
+    height: 30px;
+}
