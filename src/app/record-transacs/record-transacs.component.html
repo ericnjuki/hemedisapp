@@ -25,14 +25,25 @@
             </thead>
             <tbody>
               <tr *ngFor="let saleItem of saleItems let i=index">
-                <td contenteditable="true">{{saleItem.item}}</td>
-                <td contenteditable="true">
-                  {{saleItem.amount}}
-                </td>
+                <td>{{saleItem.item}}</td>
+                <td>{{saleItem.amount}}</td>
                 <td>
                   <a 
                     class="pull-right"
-                    (click)="addRemoveSaleItem(i)">
+                    (click)="removeSaleItem(i)">
+                    <i class="icon ion-android-remove-circle"></i>
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td contenteditable="true" data-text="Item" (input)="checkItem(item)" #item></td>
+                <td contenteditable="true" data-text="Price" #price></td>
+                <td id = "addButton">
+                  <a
+                    class="pull-right"
+                    (click)="addSaleItem(i, item, price)">
                     <i class="icon ion-android-add-circle"></i>
                   </a>
                 </td>
@@ -41,14 +52,72 @@
                 <th>TOTAL</th>
                 <th>{{getTotalSaleAmount()}}</th>
               </tr>
-            </tbody>
+              <tr>
+                <td colspan="3"><button class="btn btn-success pull-right post"
+                  (click)="postSale()">Post</button></td>
+              </tr>
+            </tfoot>
           </table>
         </div>
       </div>
     </div>
   </div>
   <div id="purchase" class="tab-pane fade">
-    <h3>Menu 1</h3>
-    <p>Some content in menu 1.</p>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-9 col-md-push-1 app-sale-record-tab">
+          <div class="app-record-header">
+            <input id="app-date" type="date">
+            <div class="pull-right">
+              <small>Date:</small>
+              <label for="app-date">12/12/12</label>
+            </div>
+          </div>
+          <table class="table table-hover" name="record-purchases">
+            <thead>
+              <tr>
+                <th class="col-md-7">Item</th>
+                <th class="col-md-4">Amount</th>
+                <th class="col-md-1"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let purchaseItem of purchaseItems let i=index">
+                <td>{{purchaseItem.item}}</td>
+                <td>{{purchaseItem.amount}}</td>
+                <td>
+                  <a 
+                    class="pull-right"
+                    (click)="removePurchaseItem(i)">
+                    <i class="icon ion-android-remove-circle"></i>
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td contenteditable="true" data-text="Item" (input)="checkItem(item)" #pitem></td>
+                <td contenteditable="true" data-text="Price" #pprice></td>
+                <td id = "addButton">
+                  <a
+                    class="pull-right"
+                    (click)="addPurchaseItem(i, pitem, pprice)">
+                    <i class="icon ion-android-add-circle"></i>
+                  </a>
+                </td>
+              </tr>
+              <tr>
+                <th>TOTAL</th>
+                <th>{{getTotalPurchaseAmount()}}</th>
+              </tr>
+              <tr>
+                <td colspan="3"><button class="btn btn-success pull-right post"
+                  (click)="postPurchase()">Post</button></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

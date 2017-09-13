@@ -9,6 +9,7 @@ import { AppRouterModule } from 'app/app.routing';
 import { RecentTransacsComponent } from './recent-transacs/recent-transacs.component';
 import { TransactionPillComponent } from './recent-transacs/transaction-pill/transaction-pill.component';
 import { RecordTransacsComponent } from './record-transacs/record-transacs.component';
+import { StatisticsComponent } from './statistics/statistics.component';
 
 
 @NgModule({
@@ -18,6 +19,7 @@ import { RecordTransacsComponent } from './record-transacs/record-transacs.compo
     RecentTransacsComponent,
     TransactionPillComponent,
     RecordTransacsComponent,
+    StatisticsComponent,
   ],
   imports: [
     BrowserModule,

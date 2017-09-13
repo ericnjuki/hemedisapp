@@ -1,0 +1,3 @@
+.side-nav-item a, .side-nav-item.active a, .side-nav-item.active a:hover, .side-nav-item.active a:focus {
+    color: black;
+}

@@ -1,3 +1,6 @@
+.red{
+    background: red;
+}
 .app-tabs{
     padding: 0;
 }
@@ -25,14 +28,30 @@
 .pull-right i{
     font-size: 20px;
 }
-
-td input{
-    width: 80%;
-    height: 100%;
-}
 a .ion-android-remove-circle{
     color: #b73333;
 }
     a .ion-android-remove-circle:hover{
         color: #7c2323;
     }
+.bx-shadow{
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);    
+}
+tfoot td~td{
+    border-left: 1px solid #e5e5e5;
+}
+tfoot td:focus{
+    border-bottom: 2px solid blue;
+}
+
+[contentEditable=true]:empty:not(:focus):before{
+    content:attr(data-text)
+
+}
+[contentEditable=true]::before{
+    color: gray;
+}
+
+#addButton i{
+    cursor: pointer;
+}

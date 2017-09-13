@@ -1,0 +1,13 @@
+.content-header, .side-header{
+    border-bottom: 1px solid black;
+}
+.content-header, .side-left, .side-header {
+    background-color: white;
+    color: black;
+}
+#brand a {
+    color: black;
+}
+aside {
+    border-right: 1px solid black;
+}

@@ -3,9 +3,6 @@
     position: fixed;
     /* margin-top: -56px; */
 }
-.transacs{
-    margin-top: 56px;
-}
 div.row{
     display: flex;
      align-items: center; 
@@ -18,7 +15,6 @@ div.row{
      left: 30%;
     /* height: 56px; */
     /* padding-top: 26px; */
-
 }
 input{
     line-height: auto;
