@@ -13,29 +13,13 @@
           <th>Cusotmer</th>
         </tr>
       </thead> -->
-      <tr>
-        <td>jigsaw</td>
-        <td>1234</td>
-      </tr>
-      <tr>
-        <td>jigsaw</td>
-        <td>1234</td>
-      </tr>
-      <tr>
-        <td>jigsaw</td>
-        <td>1234</td>
-      </tr>
-      <tr>
-        <td>jigsaw</td>
-        <td>1234</td>
-      </tr>
-      <tr>
-        <td>jigsaw</td>
-        <td>1234</td>
+      <tr *ngFor="let item of pillData.items">
+        <td>{{ item.itemName }}</td>
+        <td>{{ item.sellingPrice }}</td>
       </tr>
       <tr>
         <th>TOTAL</th>
-        <th>0000</th>
+        <th>{{ total }}</th>
       </tr>
     </table>
   </section>

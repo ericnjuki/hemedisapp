@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { TransactionService } from "app/services/transacs.service";
+import { TransactionData } from "app/shared/transacs.model";
+import { ITransactionData } from "app/interfaces/transacs.interface";
 
 @Component({
   selector: 'app-recent-transacs',
@@ -6,14 +9,18 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./recent-transacs.component.css']
 })
 export class RecentTransacsComponent implements OnInit {
-  transactions: any[] = [''];
-  constructor() { }
+  transactions: Array<ITransactionData>;
+  constructor(private transacService: TransactionService) { }
 
   ngOnInit() {
+    this.transacService.getTransacs()
+      .subscribe(allTransactions => {
+        this.transactions = allTransactions;
+      });
   }
 
   addTransac() {
-    this.transactions.push(23);
+
   }
   extendPill(i: number) {
     $('.pill').eq(i).children('.app-panel-body').toggleClass('panel-clicked app-panel-body-lg');

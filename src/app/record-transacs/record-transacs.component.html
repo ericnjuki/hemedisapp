@@ -18,14 +18,17 @@
           <table class="table table-hover" name="record-sales">
             <thead>
               <tr>
-                <th class="col-md-7">Item</th>
-                <th class="col-md-4">Amount</th>
-                <th class="col-md-1"></th>
+                <th class="col-md-4">Item</th>
+                <th class="col-md-2">Qty</th>
+                <th class="col-md-3">Price</th>
+                <th class="col-md-3">Amount</th>
               </tr>
             </thead>
             <tbody>
               <tr *ngFor="let saleItem of saleItems let i=index">
                 <td>{{saleItem.item}}</td>
+                <td>{{saleItem.quantity}}</td>
+                <td>{{saleItem.price}}</td>
                 <td>{{saleItem.amount}}</td>
                 <td>
                   <a 
@@ -39,7 +42,9 @@
             <tfoot>
               <tr>
                 <td contenteditable="true" data-text="Item" (input)="checkItem(item)" #item></td>
-                <td contenteditable="true" data-text="Price" #price></td>
+                <td contenteditable="true" data-text="Qty"></td>
+                <td contenteditable="true" data-text="Price" #pprice></td>
+                <td></td>
                 <td id = "addButton">
                   <a
                     class="pull-right"
@@ -53,7 +58,7 @@
                 <th>{{getTotalSaleAmount()}}</th>
               </tr>
               <tr>
-                <td colspan="3"><button class="btn btn-success pull-right post"
+                <td colspan="5"><button class="btn btn-success pull-right post"
                   (click)="postSale()">Post</button></td>
               </tr>
             </tfoot>
@@ -84,6 +89,8 @@
             <tbody>
               <tr *ngFor="let purchaseItem of purchaseItems let i=index">
                 <td>{{purchaseItem.item}}</td>
+                <td>{{purchaseItem.quantity}}</td>
+                <td>{{purchaseItem.price}}</td>
                 <td>{{purchaseItem.amount}}</td>
                 <td>
                   <a 
@@ -97,7 +104,9 @@
             <tfoot>
               <tr>
                 <td contenteditable="true" data-text="Item" (input)="checkItem(item)" #pitem></td>
+                <td contenteditable="true" data-text="Qty"></td>
                 <td contenteditable="true" data-text="Price" #pprice></td>
+                <td>000</td>
                 <td id = "addButton">
                   <a
                     class="pull-right"

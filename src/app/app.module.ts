@@ -10,6 +10,7 @@ import { RecentTransacsComponent } from './recent-transacs/recent-transacs.compo
 import { TransactionPillComponent } from './recent-transacs/transaction-pill/transaction-pill.component';
 import { RecordTransacsComponent } from './record-transacs/record-transacs.component';
 import { StatisticsComponent } from './statistics/statistics.component';
+import { TransactionService } from 'app/services/transacs.service';
 
 
 @NgModule({
@@ -27,7 +28,7 @@ import { StatisticsComponent } from './statistics/statistics.component';
     HttpModule,
     AppRouterModule
   ],
-  providers: [],
+  providers: [TransactionService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

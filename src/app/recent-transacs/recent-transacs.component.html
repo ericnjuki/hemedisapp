@@ -25,6 +25,7 @@
     <div class="col-md-8 col-md-offset-2">
       <app-transaction-pill 
         *ngFor="let pill of transactions let i = index" 
+        [pillData] = transactions[i]
         (click)="extendPill(i)"></app-transaction-pill>
     </div>
   </div>
