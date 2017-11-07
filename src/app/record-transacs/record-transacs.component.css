@@ -50,8 +50,15 @@ tfoot td:focus{
 }
 [contentEditable=true]::before{
     color: gray;
-}
 
+}
 #addButton i{
     cursor: pointer;
+
+}
+.awesomplete{
+    display: block;
+}
+.ui-autocomplete {
+    /* z-index: 1100; */
 }

@@ -22,6 +22,7 @@
                 <th class="col-md-2">Qty</th>
                 <th class="col-md-3">Price</th>
                 <th class="col-md-3">Amount</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -41,7 +42,11 @@
             </tbody>
             <tfoot>
               <tr>
-                <td contenteditable="true" data-text="Item" (input)="checkItem(item)" #item></td>
+                <td contenteditable="true" data-text="Item" #item appAutoComplete>
+                </td>
+                <!-- <datalist id="stockItems">
+                  <option *ngFor="let item of stockItemsFromDb let o=index">{{ item }}</option>
+                </datalist> -->
                 <td contenteditable="true" data-text="Qty"></td>
                 <td contenteditable="true" data-text="Price" #pprice></td>
                 <td></td>
@@ -81,9 +86,11 @@
           <table class="table table-hover" name="record-purchases">
             <thead>
               <tr>
-                <th class="col-md-7">Item</th>
-                <th class="col-md-4">Amount</th>
-                <th class="col-md-1"></th>
+                <th class="col-md-4">Item</th>
+                <th class="col-md-2">Quantity</th>
+                <th class="col-md-3">Price</th>
+                <th class="col-md-3">Amount</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -103,7 +110,7 @@
             </tbody>
             <tfoot>
               <tr>
-                <td contenteditable="true" data-text="Item" (input)="checkItem(item)" #pitem></td>
+                <td contenteditable="true" data-text="Item" #pitem appAutoComplete></td>
                 <td contenteditable="true" data-text="Qty"></td>
                 <td contenteditable="true" data-text="Price" #pprice></td>
                 <td>000</td>
@@ -120,7 +127,7 @@
                 <th>{{getTotalPurchaseAmount()}}</th>
               </tr>
               <tr>
-                <td colspan="3"><button class="btn btn-success pull-right post"
+                <td colspan="5"><button class="btn btn-success pull-right post"
                   (click)="postPurchase()">Post</button></td>
               </tr>
             </tfoot>

@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { ITransactionData } from "app/interfaces/transacs.interface";
-import { TransactionData } from "app/shared/transacs.model";
-import { Item } from "app/shared/item.model";
-import { TransactionService } from "app/services/transacs.service";
+import { ITransactionData } from 'app/interfaces/transacs.interface';
+import { TransactionData } from 'app/shared/transacs.model';
+import { Item } from 'app/shared/item.model';
+import { TransactionService } from 'app/services/transacs.service';
 
 @Component({
   selector: 'app-record-transacs',
@@ -14,15 +14,20 @@ export class RecordTransacsComponent implements OnInit {
   // local variables
   purchaseItems = [];
   saleItems = [];
+  stockItemsFromDb = ['ade', 'allan', 'aeon'];
   // transactionObject
   transaction: ITransactionData;
   itemsArray: Array<Item> = [];
 
-  constructor(private transacService: TransactionService) { }
+  constructor(private transacService: TransactionService) {
+   }
 
   ngOnInit() {
 
     $(function () {
+
+      // var availableTags: Array<string> = this.getItems();
+      var availableTags = ['eric', 'erric', 'rickest'];
       setTimeout(() => {
         $('[name=record-sales] tfoot tr').children('td').eq(0).focus();
       }, 0);
@@ -37,18 +42,26 @@ export class RecordTransacsComponent implements OnInit {
           $('[name=record-purchases] tfoot tr').children('td').eq(0).focus();
         }, 0);
       });
+      // (<any>$('[contenteditable=true]')).autocomplete({
+      //   source: availableTags,
+      //   minLength: 2
+      // });
     });
+  }
+  getItems() {
+    return ['ade', 'allan', 'aeon'];
   }
 
   ///
   ///SALES
   ///
   addSaleItem(x, item: HTMLInputElement, price: HTMLInputElement) {
+    console.log();
     // item.parentElement.parentElement.parentElement
     const itemData = $('[name=record-sales] tfoot tr').eq(0).children('td');
-    const saleItemName = itemData.html().replace(/\s+/g, '');
-    const itemSellingPrice = +itemData.eq(1).html().replace(/\s+/g, '');
-    const itemQuantity = +itemData.eq(2).html().replace(/\s+/g, '');
+    const saleItemName = itemData.eq(0).html().replace(/\s+/g, '');
+    const itemQuantity = +itemData.eq(1).html().replace(/\s+/g, '');
+    const itemSellingPrice = +itemData.eq(2).html().replace(/\s+/g, '');
 
     this.saleItems.push({
       item: saleItemName,
@@ -65,14 +78,18 @@ export class RecordTransacsComponent implements OnInit {
     });
 
     this.transaction = {
-        date: '2019-04-23 18:25:43.000',
-        items: this.itemsArray,
-        transactionType: 1
-      };
+      date: new Date().toString(),
+      items: this.itemsArray,
+      transactionType: 1
+    };
     itemData.not($('[name=record-sales] tfoot tr td#addButton')).html('');
+    console.log(this.saleItems);
+
   }
+
   removeSaleItem(x) {
     this.saleItems.splice(x, 1);
+    console.log(this.saleItems);
   }
 
   getTotalSaleAmount() {
@@ -83,11 +100,12 @@ export class RecordTransacsComponent implements OnInit {
     }
     return total;
   }
+
   postSale() {
     console.log('sale posted');
-    this.transacService.postTransacs(this.transaction).subscribe(response => {
-      console.log(response);
-    });
+    // this.transacService.postTransacs(this.transaction).subscribe(response => {
+    //   console.log(response);
+    // });
 
   }
 
@@ -96,10 +114,8 @@ export class RecordTransacsComponent implements OnInit {
   /// PURCHASES
   ///
   addPurchaseItem(x, item: HTMLInputElement, price: HTMLInputElement) {
-    // item.parentElement.parentElement.parentElement
-    console.log(item.parentElement.parentElement.parentElement);
     const itemData = $('[name=record-purchases] tfoot tr').eq(0).children('td');
-    const purcahseItemName = itemData.html().replace(/\s+/g, '');
+    const purcahseItemName = itemData.eq(0).html().replace(/\s+/g, '');
     const itemPurchaseCost = +itemData.eq(1).html().replace(/\s+/g, '');
     const itemQuantity = +itemData.eq(2).html().replace(/\s+/g, '');
 
@@ -118,14 +134,17 @@ export class RecordTransacsComponent implements OnInit {
     });
 
     this.transaction = {
-        date: '2008-04-23 18:25:43.000',
-        items: this.itemsArray,
-        transactionType: 0
-      };
+      date: new Date().toISOString(),
+      items: this.itemsArray,
+      transactionType: 0
+    };
     itemData.not($('[name=record-purchases] tfoot tr td#addButton')).html('');
+    console.log(this.purchaseItems);
   }
   removePurchaseItem(x) {
     this.purchaseItems.splice(x, 1);
+    console.log(this.purchaseItems);
+
   }
   getTotalPurchaseAmount() {
     let total = 0;
@@ -133,11 +152,12 @@ export class RecordTransacsComponent implements OnInit {
       total += this.purchaseItems[i].amount;
     }
     return total;
+
   }
   postPurchase() {
-    this.transacService.postTransacs(this.transaction).subscribe(response => {
-      console.log(response);
-    });
+    // this.transacService.postTransacs(this.transaction).subscribe(response => {
+    //   console.log(response);
+    // });
     console.log('purchase posted');
   }
 
@@ -146,7 +166,11 @@ export class RecordTransacsComponent implements OnInit {
   ///
   ///OTHER
   ///
-  checkItem(saleItem: HTMLInputElement) {
-    // check input value against server and display results in popup
+
+  setDate() {
+    return new Date().toDateString();
+  }
+  changeDate() {
+
   }
 }

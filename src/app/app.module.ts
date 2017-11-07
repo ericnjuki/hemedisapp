@@ -11,6 +11,8 @@ import { TransactionPillComponent } from './recent-transacs/transaction-pill/tra
 import { RecordTransacsComponent } from './record-transacs/record-transacs.component';
 import { StatisticsComponent } from './statistics/statistics.component';
 import { TransactionService } from 'app/services/transacs.service';
+import { AutoCompleteDirective } from "app/directives/autocomplete.directive";
+import { ItemService } from "app/services/items.service";
 
 
 @NgModule({
@@ -21,14 +23,16 @@ import { TransactionService } from 'app/services/transacs.service';
     TransactionPillComponent,
     RecordTransacsComponent,
     StatisticsComponent,
-  ],
+    AutoCompleteDirective
+    ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpModule,
     AppRouterModule
   ],
-  providers: [TransactionService],
+  providers: [TransactionService, ItemService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+
