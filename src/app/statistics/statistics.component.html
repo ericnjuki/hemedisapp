@@ -1,12 +1,55 @@
 <div class="app-header">
+  <h3 class="app-title pull-left hidden-xs">
+    <small class="text-muted">Showing records for:</small>
+    11th Nov 2017
+  </h3>
+  <!-- <button class="btn pull-right">
+    <i class="icon ion-ios-calendar-outline"></i>
+    Nov 11, 2017 - Nov 11, 2017
+    <b class="caret"></b>
+  </button> -->
+</div>
+<div class="container-fluid">
   <div class="row">
-    <div class="col-md-2"><small class="text-muted">Showing records for:</small></div>
-    <div class="col-md-1"><b>2017</b></div>
-    <!-- TO DO: add mor columns to incorporate date-time picker  -->
-    <div class="col-md-1">Feb</div>
-    <div class="col-md-2 pull-right col-md-push-6">
-      <input id="addRecord" type="button" (click)="addTransac()">
-      <input type="date">
+    <div class="col-md-10 col-md-push-1">
+      <div class="app-stats-header clearfix">
+        <button class="btn pull-left col-md-2" (click)="previousYear()">
+            <span class="ion-arrow-left-a"></span>
+        </button>
+        <h3 class="col-md-8" [innerHTML]="statsDate.year"></h3>
+        <button class="btn pull-right col-md-2" (click)="nextYear()">
+            <span class="ion-arrow-right-a"></span>
+        </button>
+      </div>
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th class="col-md-3">Month</th>
+            <th class="col-md-3">Sales</th>
+            <th class="col-md-3">Purchases</th>
+            <th class="col-md-3">Profit/Loss</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let rowData of monthlyStats">
+            <td>
+              <b>{{ rowData.month }}</b>
+            </td>
+            <td>{{ rowData.sales }}</td>
+            <td>{{ rowData.purchases }}</td>
+            <td>{{ rowData.profitLoss }}</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <th>TOTAL</th>
+            <th></th>
+            <th></th>
+            <th></th>
+          </tr>
+        </tfoot>
+      </table>
     </div>
   </div>
 </div>

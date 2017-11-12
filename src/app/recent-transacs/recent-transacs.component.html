@@ -8,12 +8,15 @@
 </div>  -->
 <div class="app-header">
   <div class="row">
-    <div class="col-md-2"><small class="text-muted">Showing records for:</small></div>
-    <div class="col-md-1"><b>2017</b></div>
+    <div class="col-md-2">
+      <small class="text-muted">Showing records for:</small>
+    </div>
+    <div class="col-md-1">
+      <b>2017</b>
+    </div>
     <!-- TO DO: add mor columns to incorporate date-time picker  -->
     <div class="col-md-1">Feb</div>
     <div class="col-md-2 pull-right col-md-push-6">
-      <input id="addRecord" type="button" (click)="addTransac()">
       <input type="date">
     </div>
   </div>
@@ -23,10 +26,7 @@
   </div>
   <div class="row">
     <div class="col-md-8 col-md-offset-2">
-      <app-transaction-pill 
-        *ngFor="let pill of transactions let i = index" 
-        [pillData] = transactions[i]
-        (click)="extendPill(i)"></app-transaction-pill>
+      <app-transaction-pill *ngFor="let pill of transactions let i = index" [transactionData]="transactions[i]" (click)="extendPill(i)"></app-transaction-pill>
     </div>
   </div>
 </div>

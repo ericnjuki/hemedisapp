@@ -18,6 +18,9 @@
     margin: 5px 0;
     transition: 0.1s ease-in;
 }
+    .panel.sa-purchase{
+        background: tan;
+    }
     .panel:hover{
         background: #e3e3e3;
     }

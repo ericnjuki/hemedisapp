@@ -9,10 +9,10 @@
       <div class="row">
         <div class="col-md-9 col-md-push-1 app-sale-record-tab">
           <div class="app-record-header">
-            <input id="app-date" type="date">
+            <input id="app-date" type="date" [value]="setDate()" (change)="updateDate(saleDate)" #saleDate>
             <div class="pull-right">
               <small>Date:</small>
-              <label for="app-date">12/12/12</label>
+              <label for="app-date" [innerHTML]="setDate()"></label>
             </div>
           </div>
           <table class="table table-hover" name="record-sales">
@@ -22,7 +22,6 @@
                 <th class="col-md-2">Qty</th>
                 <th class="col-md-3">Price</th>
                 <th class="col-md-3">Amount</th>
-                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -42,8 +41,7 @@
             </tbody>
             <tfoot>
               <tr>
-                <td contenteditable="true" data-text="Item" #item appAutoComplete>
-                </td>
+                <td contenteditable="true" data-text="Item" #item appAutoComplete></td>
                 <!-- <datalist id="stockItems">
                   <option *ngFor="let item of stockItemsFromDb let o=index">{{ item }}</option>
                 </datalist> -->
@@ -61,9 +59,11 @@
               <tr>
                 <th>TOTAL</th>
                 <th>{{getTotalSaleAmount()}}</th>
+                <th></th>
+                <th></th>
               </tr>
               <tr>
-                <td colspan="5"><button class="btn btn-success pull-right post"
+                <td colspan="4"><button class="btn btn-success pull-right post"
                   (click)="postSale()">Post</button></td>
               </tr>
             </tfoot>
@@ -77,7 +77,7 @@
       <div class="row">
         <div class="col-md-9 col-md-push-1 app-sale-record-tab">
           <div class="app-record-header">
-            <input id="app-date" type="date">
+            <input id="app-date" type="date" [value]="setDate()" (change)="updateDate(purchaseDate)" #purchaseDate>
             <div class="pull-right">
               <small>Date:</small>
               <label for="app-date">12/12/12</label>

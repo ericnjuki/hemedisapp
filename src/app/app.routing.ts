@@ -4,7 +4,7 @@ import { RecordTransacsComponent } from 'app/record-transacs/record-transacs.com
 import { StatisticsComponent } from 'app/statistics/statistics.component';
 
 const APP_ROUTES: Routes = [
-    { path: '', redirectTo: '/transactions', pathMatch: 'full' },
+    // { path: '', redirectTo: '/transactions', pathMatch: 'full' },
     { path: 'transactions', component: RecentTransacsComponent },
     { path: 'record', component: RecordTransacsComponent },
     { path: 'stats', component: StatisticsComponent }

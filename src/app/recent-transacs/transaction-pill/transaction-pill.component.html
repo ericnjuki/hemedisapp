@@ -1,5 +1,5 @@
 <!-- ngFor this  -->
-<div class="panel pill">
+<div class="panel pill" [ngClass]="{'sa-purchase':isPurchase}">
   <div class="row pill-head">
     <div class="col-md-4">aldfjas</div>
     <div class="col-md-4">aldfjas</div>
@@ -13,7 +13,7 @@
           <th>Cusotmer</th>
         </tr>
       </thead> -->
-      <tr *ngFor="let item of pillData.items">
+      <tr *ngFor="let item of transactionData.items">
         <td>{{ item.itemName }}</td>
         <td>{{ item.sellingPrice }}</td>
       </tr>

@@ -9,12 +9,14 @@ import { ITransactionData } from "app/interfaces/transacs.interface";
   styleUrls: ['./recent-transacs.component.css']
 })
 export class RecentTransacsComponent implements OnInit {
-  transactions: Array<ITransactionData>;
+  transactions: Array<ITransactionData> = [];
+  includeItems = true;
   constructor(private transacService: TransactionService) { }
 
   ngOnInit() {
-    this.transacService.getTransacs()
+    this.transacService.getTransacs(this.includeItems)
       .subscribe(allTransactions => {
+        console.log(allTransactions);
         this.transactions = allTransactions;
       });
   }

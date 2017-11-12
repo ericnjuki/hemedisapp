@@ -11,9 +11,7 @@ export class ItemService {
 
     constructor(private http: Http) { }
     searchItems() {
-        return this.http.get(this._url + 'g')
+        return this.http.get(this._url + 'g/names')
         .map((response: Response) => response.json());
-        // return this.http.get(this._url + 'g');
-        // return ['eric', 'erric'];
     }
 }

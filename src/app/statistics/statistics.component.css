@@ -1,25 +1,24 @@
-.app-header{
-    padding: 0;
-    position: fixed;
-    /* margin-top: -56px; */
-}
-div.row{
-    display: flex;
-     align-items: center; 
-    margin: 0;
-     line-height: 56px; 
-}
-.pull-right{
-     display: flex; 
-     align-items: center;
-     left: 30%;
-    /* height: 56px; */
-    /* padding-top: 26px; */
-}
-input{
-    line-height: auto;
-    height: 30px;
-}
 .bx-shadow{
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);    
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);  
+
 }
+.app-stats-header{
+    margin-top: 2em;
+    margin-bottom: 1em;
+    padding-bottom: 2px;
+    border: 1px solid red;
+
+}
+    .app-stats-header h3{
+        margin: auto;
+        position: relative;
+        left: 25%;
+        line-height: 1.42857143;
+    }
+table{
+    text-align: center;
+
+}
+    th{
+        text-align: center;
+    }

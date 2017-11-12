@@ -1,12 +1,15 @@
 .red{
     background: red;
+
 }
 .app-tabs{
     padding: 0;
+
 }
     .app-tabs li{
         width: 50%;
         height: 100%;
+
     }
     .nav-tabs a{
         padding: 0;
@@ -24,24 +27,35 @@
     margin-bottom: 2em;
     padding-bottom: 2px;
     border-bottom: 1px solid black;
+
 }
 .pull-right i{
     font-size: 20px;
+
 }
 a .ion-android-remove-circle{
     color: #b73333;
+
 }
     a .ion-android-remove-circle:hover{
         color: #7c2323;
+
     }
 .bx-shadow{
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);    
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);  
+
+}
+.table>tfoot>tr>td{
+    border-top: none;
+    
 }
 tfoot td~td{
     border-left: 1px solid #e5e5e5;
+
 }
 tfoot td:focus{
     border-bottom: 2px solid blue;
+
 }
 
 [contentEditable=true]:empty:not(:focus):before{
@@ -58,7 +72,8 @@ tfoot td:focus{
 }
 .awesomplete{
     display: block;
+
 }
-.ui-autocomplete {
-    /* z-index: 1100; */
-}
+/* .ui-autocomplete {
+    /* z-index: 1100;
+} */

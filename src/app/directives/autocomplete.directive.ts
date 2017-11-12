@@ -11,17 +11,17 @@ export class AutoCompleteDirective {
         const $contentEditableElement = $(el.nativeElement);
 
         $(function () {
-            let arrayOfItems: Array<string> = [];
+            let arrayOfNames: Array<string> = [];
             itemService.searchItems()
-                .subscribe(jsonObject => {
-                    for (const name of jsonObject) {
-                        arrayOfItems.push(name);
+                .subscribe(jsonItems => {
+                    for (const name of jsonItems) {
+                        arrayOfNames.push(name);
                     }
                 });
 
             (<any>$($contentEditableElement)).autocomplete({
-                // source: ['eric', 'erric', 'eerrrric'],
-                source: arrayOfItems,
+                source: arrayOfNames,
+                // why this doesn't work:
                 // source: 'localhost:51191/api/v1.0/items/g',
                 minLength: 2
             });

@@ -1,3 +1,4 @@
+import { ItemService } from './../services/items.service';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ITransactionData } from 'app/interfaces/transacs.interface';
 import { TransactionData } from 'app/shared/transacs.model';
@@ -11,23 +12,22 @@ import { TransactionService } from 'app/services/transacs.service';
   encapsulation: ViewEncapsulation.None
 })
 export class RecordTransacsComponent implements OnInit {
-  // local variables
+  // displayed on ui after an item is added
   purchaseItems = [];
   saleItems = [];
-  stockItemsFromDb = ['ade', 'allan', 'aeon'];
-  // transactionObject
-  transaction: ITransactionData;
+
+  // sent to the api
+  transaction: ITransactionData = new TransactionData();
+  // added to transaction which is sent
   itemsArray: Array<Item> = [];
 
-  constructor(private transacService: TransactionService) {
-   }
+  constructor(private transacService: TransactionService, private itemService: ItemService) { }
 
   ngOnInit() {
 
     $(function () {
 
-      // var availableTags: Array<string> = this.getItems();
-      var availableTags = ['eric', 'erric', 'rickest'];
+      // setting focus on contenteditable <td>s on loading a tab, for visibility
       setTimeout(() => {
         $('[name=record-sales] tfoot tr').children('td').eq(0).focus();
       }, 0);
@@ -42,14 +42,7 @@ export class RecordTransacsComponent implements OnInit {
           $('[name=record-purchases] tfoot tr').children('td').eq(0).focus();
         }, 0);
       });
-      // (<any>$('[contenteditable=true]')).autocomplete({
-      //   source: availableTags,
-      //   minLength: 2
-      // });
     });
-  }
-  getItems() {
-    return ['ade', 'allan', 'aeon'];
   }
 
   ///
@@ -78,12 +71,11 @@ export class RecordTransacsComponent implements OnInit {
     });
 
     this.transaction = {
-      date: new Date().toString(),
+      date: this.setDate(),
       items: this.itemsArray,
       transactionType: 1
     };
     itemData.not($('[name=record-sales] tfoot tr td#addButton')).html('');
-    console.log(this.saleItems);
 
   }
 
@@ -102,11 +94,16 @@ export class RecordTransacsComponent implements OnInit {
   }
 
   postSale() {
-    console.log('sale posted');
-    // this.transacService.postTransacs(this.transaction).subscribe(response => {
-    //   console.log(response);
-    // });
+    console.log(this.transaction);
+    this.transacService.postTransacs(this.transaction)
+      .subscribe(response => {
+        console.log(response);
+      });
 
+    // clear all posted sales from display
+    this.saleItems = [];
+    // clear items in temp array
+    this.itemsArray = [];
   }
 
 
@@ -115,31 +112,31 @@ export class RecordTransacsComponent implements OnInit {
   ///
   addPurchaseItem(x, item: HTMLInputElement, price: HTMLInputElement) {
     const itemData = $('[name=record-purchases] tfoot tr').eq(0).children('td');
-    const purcahseItemName = itemData.eq(0).html().replace(/\s+/g, '');
-    const itemPurchaseCost = +itemData.eq(1).html().replace(/\s+/g, '');
-    const itemQuantity = +itemData.eq(2).html().replace(/\s+/g, '');
+    const purchaseItemName = itemData.eq(0).html().replace(/\s+/g, '');
+    const itemQuantity = +itemData.eq(1).html().replace(/\s+/g, '');
+    const itemPurchaseCost = +itemData.eq(2).html().replace(/\s+/g, '');
 
     this.purchaseItems.push({
-      item: purcahseItemName,
+      item: purchaseItemName,
       quantity: itemQuantity,
       price: itemPurchaseCost,
       amount: itemQuantity * itemPurchaseCost
     });
 
     this.itemsArray.push({
-      itemName: purcahseItemName,
+      itemName: purchaseItemName,
       quantity: itemQuantity,
       purchaseCost: itemPurchaseCost,
       sellingPrice: 0
     });
 
     this.transaction = {
-      date: new Date().toISOString(),
+      date: this.setDate(),
       items: this.itemsArray,
-      transactionType: 0
+      transactionType: 2
     };
     itemData.not($('[name=record-purchases] tfoot tr td#addButton')).html('');
-    console.log(this.purchaseItems);
+
   }
   removePurchaseItem(x) {
     this.purchaseItems.splice(x, 1);
@@ -155,10 +152,17 @@ export class RecordTransacsComponent implements OnInit {
 
   }
   postPurchase() {
-    // this.transacService.postTransacs(this.transaction).subscribe(response => {
-    //   console.log(response);
-    // });
-    console.log('purchase posted');
+    console.log(this.transaction);
+
+    this.transacService.postTransacs(this.transaction)
+      .subscribe(response => {
+        console.log(response);
+      });
+
+    // clear all posted purchases from display
+    this.purchaseItems = [];
+    // clear items in temp array
+    this.itemsArray = [];
   }
 
 
@@ -168,9 +172,11 @@ export class RecordTransacsComponent implements OnInit {
   ///
 
   setDate() {
-    return new Date().toDateString();
+    const currentDate = new Date().toISOString().substr(0, 10);
+    return currentDate;
   }
-  changeDate() {
 
+  updateDate(newDate: HTMLInputElement) {
+    this.transaction.date = newDate.value;
   }
 }
