@@ -13,6 +13,7 @@ import { StatisticsComponent } from './statistics/statistics.component';
 import { TransactionService } from 'app/services/transacs.service';
 import { AutoCompleteDirective } from "app/directives/autocomplete.directive";
 import { ItemService } from "app/services/items.service";
+import { ItemsComponent } from './items/items.component';
 
 
 @NgModule({
@@ -23,7 +24,8 @@ import { ItemService } from "app/services/items.service";
     TransactionPillComponent,
     RecordTransacsComponent,
     StatisticsComponent,
-    AutoCompleteDirective
+    AutoCompleteDirective,
+    ItemsComponent
     ],
   imports: [
     BrowserModule,

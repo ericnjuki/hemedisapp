@@ -6,16 +6,15 @@ import { ITransactionData } from 'app/interfaces/transacs.interface';
 @Injectable()
 export class TransactionService {
     private _url = 'http://localhost:51191/api/v1.0/transacs/';
+    // private _url = 'http://shopassisst2.azurewebsites.net/api/v1.0/transacs/';
     private _headers = new Headers({
         'Content-Type': 'application/json'
     });
-    private options: RequestOptionsArgs = {
-        search: new URLSearchParams('includeItems=true'),
-    };
+    private options: RequestOptionsArgs = {};
 
     constructor(private _http: Http) { }
     getTransacs(includeItems: boolean) {
-        console.log(includeItems);
+        this.options.search = new URLSearchParams('includeItems=true');
         if (includeItems) {
             return this._http.get(this._url + 'g', this.options)
                 .map((response: Response) => response.json());
@@ -23,13 +22,13 @@ export class TransactionService {
         return this._http.get(this._url + 'g')
             .map((response: Response) => response.json());
     }
-    getStatsData() {
-        return this._http.get(this._url + 'g/stats')
+    getStatsData(year: number) {
+        this.options.search = new URLSearchParams('forYear=' + year.toString());
+        return this._http.get(this._url + 'g/stats', this.options)
             .map((response: Response) => response.json());
 
     }
     postTransacs(transactionObject: ITransactionData) {
-        console.log(transactionObject);
         return this._http.post(this._url + 'p', transactionObject, this._headers);
 
     }

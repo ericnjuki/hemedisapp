@@ -51,13 +51,15 @@ export class RecordTransacsComponent implements OnInit {
   addSaleItem(x, item: HTMLInputElement, price: HTMLInputElement) {
     console.log();
     // item.parentElement.parentElement.parentElement
-    const itemData = $('[name=record-sales] tfoot tr').eq(0).children('td');
-    const saleItemName = itemData.eq(0).html().replace(/\s+/g, '');
-    const itemQuantity = +itemData.eq(1).html().replace(/\s+/g, '');
-    const itemSellingPrice = +itemData.eq(2).html().replace(/\s+/g, '');
+    const $itemData = $('[name=record-sales] tfoot tr').eq(0).children('td');
+    const saleItemName = $itemData.eq(0).html();
+    const itemUnit = 'wookie';
+    const itemQuantity = +$itemData.eq(1).html().replace(/\s+/g, '');
+    const itemSellingPrice = +$itemData.eq(2).html().replace(/\s+/g, '');
 
     this.saleItems.push({
       item: saleItemName,
+      unit: itemUnit,
       quantity: itemQuantity,
       price: itemSellingPrice,
       amount: itemQuantity * itemSellingPrice
@@ -65,6 +67,7 @@ export class RecordTransacsComponent implements OnInit {
 
     this.itemsArray.push({
       itemName: saleItemName,
+      unit: itemUnit,
       quantity: itemQuantity,
       purchaseCost: 0,
       sellingPrice: itemSellingPrice
@@ -75,13 +78,12 @@ export class RecordTransacsComponent implements OnInit {
       items: this.itemsArray,
       transactionType: 1
     };
-    itemData.not($('[name=record-sales] tfoot tr td#addButton')).html('');
+    $itemData.not($('[name=record-sales] tfoot tr td#addButton')).html('');
 
   }
 
   removeSaleItem(x) {
     this.saleItems.splice(x, 1);
-    console.log(this.saleItems);
   }
 
   getTotalSaleAmount() {
@@ -94,7 +96,6 @@ export class RecordTransacsComponent implements OnInit {
   }
 
   postSale() {
-    console.log(this.transaction);
     this.transacService.postTransacs(this.transaction)
       .subscribe(response => {
         console.log(response);
@@ -110,14 +111,16 @@ export class RecordTransacsComponent implements OnInit {
   ///
   /// PURCHASES
   ///
-  addPurchaseItem(x, item: HTMLInputElement, price: HTMLInputElement) {
-    const itemData = $('[name=record-purchases] tfoot tr').eq(0).children('td');
-    const purchaseItemName = itemData.eq(0).html().replace(/\s+/g, '');
-    const itemQuantity = +itemData.eq(1).html().replace(/\s+/g, '');
-    const itemPurchaseCost = +itemData.eq(2).html().replace(/\s+/g, '');
+  addPurchaseItem(item: HTMLInputElement, price: HTMLInputElement) {
+    const $itemData = $('[name=record-purchases] tfoot tr').eq(0).children('td');
+    const purchaseItemName = $itemData.eq(0).html();
+    const itemUnit = 'banana';
+    const itemQuantity = +$itemData.eq(1).html().replace(/\s+/g, '');
+    const itemPurchaseCost = +$itemData.eq(2).html().replace(/\s+/g, '');
 
     this.purchaseItems.push({
       item: purchaseItemName,
+      unit: itemUnit,
       quantity: itemQuantity,
       price: itemPurchaseCost,
       amount: itemQuantity * itemPurchaseCost
@@ -125,6 +128,7 @@ export class RecordTransacsComponent implements OnInit {
 
     this.itemsArray.push({
       itemName: purchaseItemName,
+      unit: itemUnit,
       quantity: itemQuantity,
       purchaseCost: itemPurchaseCost,
       sellingPrice: 0
@@ -135,25 +139,22 @@ export class RecordTransacsComponent implements OnInit {
       items: this.itemsArray,
       transactionType: 2
     };
-    itemData.not($('[name=record-purchases] tfoot tr td#addButton')).html('');
-
+    $itemData.not($('[name=record-purchases] tfoot tr td#addButton')).html('');
   }
+
   removePurchaseItem(x) {
     this.purchaseItems.splice(x, 1);
-    console.log(this.purchaseItems);
-
   }
+
   getTotalPurchaseAmount() {
     let total = 0;
     for (let i = 0; i < this.purchaseItems.length; i++) {
       total += this.purchaseItems[i].amount;
     }
     return total;
-
   }
-  postPurchase() {
-    console.log(this.transaction);
 
+  postPurchase() {
     this.transacService.postTransacs(this.transaction)
       .subscribe(response => {
         console.log(response);

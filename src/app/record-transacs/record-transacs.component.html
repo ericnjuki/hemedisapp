@@ -1,6 +1,10 @@
 <ul class="nav nav-tabs app-tabs app-header">
-  <li class="active"><a data-toggle="tab" href="#sale">Sale</a></li>
-  <li><a data-toggle="tab" href="#purchase">Purchase</a></li>
+  <li class="active">
+    <a data-toggle="tab" href="#sale">Sale</a>
+  </li>
+  <li>
+    <a data-toggle="tab" href="#purchase">Purchase</a>
+  </li>
 </ul>
 
 <div class="tab-content">
@@ -31,9 +35,7 @@
                 <td>{{saleItem.price}}</td>
                 <td>{{saleItem.amount}}</td>
                 <td>
-                  <a 
-                    class="pull-right"
-                    (click)="removeSaleItem(i)">
+                  <a class="pull-right" (click)="removeSaleItem(i)">
                     <i class="icon ion-android-remove-circle"></i>
                   </a>
                 </td>
@@ -48,10 +50,8 @@
                 <td contenteditable="true" data-text="Qty"></td>
                 <td contenteditable="true" data-text="Price" #pprice></td>
                 <td></td>
-                <td id = "addButton">
-                  <a
-                    class="pull-right"
-                    (click)="addSaleItem(i, item, price)">
+                <td id="addButton">
+                  <a class="pull-right" (click)="addSaleItem(i, item, price)">
                     <i class="icon ion-android-add-circle"></i>
                   </a>
                 </td>
@@ -63,8 +63,9 @@
                 <th></th>
               </tr>
               <tr>
-                <td colspan="4"><button class="btn btn-success pull-right post"
-                  (click)="postSale()">Post</button></td>
+                <td colspan="4">
+                  <button class="btn btn-success pull-right post" (click)="postSale()">Post</button>
+                </td>
               </tr>
             </tfoot>
           </table>
@@ -100,9 +101,7 @@
                 <td>{{purchaseItem.price}}</td>
                 <td>{{purchaseItem.amount}}</td>
                 <td>
-                  <a 
-                    class="pull-right"
-                    (click)="removePurchaseItem(i)">
+                  <a class="pull-right" (click)="removePurchaseItem(i)">
                     <i class="icon ion-android-remove-circle"></i>
                   </a>
                 </td>
@@ -114,10 +113,8 @@
                 <td contenteditable="true" data-text="Qty"></td>
                 <td contenteditable="true" data-text="Price" #pprice></td>
                 <td>000</td>
-                <td id = "addButton">
-                  <a
-                    class="pull-right"
-                    (click)="addPurchaseItem(i, pitem, pprice)">
+                <td id="addButton">
+                  <a class="pull-right" (click)="addPurchaseItem(i, pitem, pprice)">
                     <i class="icon ion-android-add-circle"></i>
                   </a>
                 </td>
@@ -127,8 +124,11 @@
                 <th>{{getTotalPurchaseAmount()}}</th>
               </tr>
               <tr>
-                <td colspan="5"><button class="btn btn-success pull-right post"
-                  (click)="postPurchase()">Post</button></td>
+                <td colspan="5">
+                  <button class="btn btn-success pull-right" (click)="postPurchase()">
+                    Post
+                  </button>
+                </td>
               </tr>
             </tfoot>
           </table>

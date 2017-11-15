@@ -1,0 +1,70 @@
+<!-- <div class="col-md-6 col-md-push-3">
+  <form class="form-group">
+    <label for="itemName">itemName</label>
+    <input type="text" id="itemName" class="form-control" #itemName>
+    <label for="itemName">unit</label>
+    <input type="text" id="unit" class="form-control" #unit>
+    <label for="quantity">quantity</label>
+    <input type="text" id="quantity" class="form-control" #quantity>
+    <label for="sellingPrice">sellingPrice</label>
+    <input type="text" id="sellingPrice" class="form-control" #sellingPrice>
+    <label for="purchaseCost">purchaseCost</label>
+    <input type="text" id="purchaseCost" class="form-control" #purchaseCost>
+    <br>
+    <input type="button" class="btn btn-success pull-right" value="post"
+      (click)="addItem(itemName.value, quantity.value, sellingPrice.value, purchaseCost.value)">
+  </form>
+</div> -->
+<div class="col-md-9 col-md-push-1">
+  <table class="table table-hover" name="record-items">
+    <thead>
+      <tr>
+        <th class="col-md-4">Name</th>
+        <th class="col-md-2">Unit</th>
+        <th class="col-md-1">Qty</th>
+        <th class="col-md-2">Purchase At</th>
+        <th class="col-md-2">Sell At</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of items let i=index">
+        <td>{{ item.itemName }}</td>
+        <td>{{ item.unit }}</td>
+        <td>{{ item.quantity }}</td>
+        <td>{{ item.purchaseCost }}</td>
+        <td>{{ item.sellingPrice }}</td>
+        <td>
+          <a class="pull-right" (click)="removeItem(i)">
+            <i class="icon ion-android-remove-circle"></i>
+          </a>
+        </td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td contenteditable="true" data-text="Item" #item appAutoComplete></td>
+        <td contenteditable="true" data-text="Unit" #unit></td>
+        <td contenteditable="true" data-text="Qty" #qty></td>
+        <td contenteditable="true" data-text="Purchase Cost" #pcost></td>
+        <td contenteditable="true" data-text="Selling Price" #sprice (keydown.enter)="clickAddButton()"></td>
+        <td id="addButton">
+          <a id="addisiaButton" class="pull-right" (click)="addItem(item, unit, qty, pcost, sprice)">
+            <i class="icon ion-android-add-circle"></i>
+          </a>
+        </td>
+      </tr>
+      <tr>
+        <!-- <td></td>
+        <td></td>
+        <td></td>
+        <td></td> -->
+        <td colspan="5">
+          <button class="btn btn-success pull-right" (click)="postItems()">
+            Add
+            <span>{{ getNumberOfItems() }} items</span>
+          </button>
+        </td>
+      </tr>
+    </tfoot>
+  </table>
+</div>

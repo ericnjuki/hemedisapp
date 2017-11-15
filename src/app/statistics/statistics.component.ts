@@ -12,7 +12,7 @@ export class StatisticsComponent implements OnInit {
 
   today = new Date();
   statsDate = {
-    year: this.today.getUTCFullYear().toString(),
+    year: this.today.getUTCFullYear(),
     month: this.today.getUTCMonth(),
     day: this.today.getUTCDay()
 
@@ -22,24 +22,28 @@ export class StatisticsComponent implements OnInit {
   constructor(private transacService: TransactionService) { }
 
   ngOnInit() {
-    this.transacService.getStatsData()
-      .subscribe(theData => {
-        // converting int months (i.e. 0, 1, 2...) into my enum strings (JAN, FEB...)
-        for(let data of theData){
-          data.month = AppMonths[data.month];
-        }
-        this.monthlyStats = theData;
-      });
+    this.getStatsForYear(this.statsDate.year);
+  }
 
+  getStatsForYear(year: number) {
+    this.transacService.getStatsData(year)
+    .subscribe(theData => {
+      // converting int months (i.e. 0, 1, 2...) into my enum strings (JAN, FEB...)
+      for(const data of theData){
+        data.month = AppMonths[data.month];
+      }
+      this.monthlyStats = theData;
+    });
   }
   previousYear() {
-    const x = +(this.statsDate.year) - 1;
-    this.statsDate.year = x.toString();
-
+    const newYear = (+(this.statsDate.year) - 1);
+    this.getStatsForYear(newYear);
+    this.statsDate.year = newYear;
   }
-  nextYear() {
-    const x = +(this.statsDate.year) + 1;
-    this.statsDate.year = x.toString();
 
+  nextYear() {
+    const newYear = (+(this.statsDate.year) + 1);
+    this.getStatsForYear(newYear);
+    this.statsDate.year = newYear;
   }
 }
