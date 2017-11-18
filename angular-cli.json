@@ -23,7 +23,8 @@
       ],
       "scripts": [
         "assets/jquery/jquery.min.js",
-        "assets/jquery-ui/jquery-ui.min.js"
+        "assets/jquery-ui/jquery-ui.min.js",
+        "../node_modules/fuse.js/dist/fuse.min.js"
       ],
       "environmentSource": "environments/environment.ts",
       "environments": {

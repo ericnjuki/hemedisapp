@@ -1,3 +1,18 @@
 .side-nav-item a, .side-nav-item.active a, .side-nav-item.active a:hover, .side-nav-item.active a:focus {
     color: black;
 }
+a{
+    background: white;
+}
+
+.side-nav .side-nav-item-heading > a {
+    color: black;
+    background-color: white;
+    border-color: black;
+}
+.side-nav-child {
+    background-color: white;
+}
+.nav-item-caret {
+    font-weight: bold;
+}

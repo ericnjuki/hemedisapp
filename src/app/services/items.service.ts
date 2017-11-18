@@ -15,12 +15,16 @@ export class ItemService {
     });
 
     constructor(private http: Http) { }
+    getAllItems() {
+        return this.http.get(this._url + 'g')
+            .map(response => response.json());
+    }
     searchItems() {
         return this.http.get(this._url + 'g/names')
             .map((response: Response) => response.json());
     }
 
     addItems(item: Item[]) {
-        return this.http.post(this._url + 'p', item, this._headers);
+        return this.http.post(this._url + 'p', item);
     }
 }

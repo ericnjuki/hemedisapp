@@ -7,6 +7,8 @@
 }
 #brand a {
     color: black;
+    text-transform: lowercase;
+    font-family: serif;
 }
 aside {
     border-right: 1px solid black;
