@@ -1,3 +1,4 @@
+<npAutoComplete (itemData)="handleItemData($event)"></npAutoComplete>
 <ul class="nav nav-tabs app-tabs app-header">
   <li class="active">
     <a data-toggle="tab" href="#sale">Sale</a>
@@ -43,7 +44,7 @@
             </tbody>
             <tfoot>
               <tr>
-                <td contenteditable="true" data-text="Item" #item appAutoComplete></td>
+                <td contenteditable="true" data-text="Item" #item></td>
                 <!-- <datalist id="stockItems">
                   <option *ngFor="let item of stockItemsFromDb let o=index">{{ item }}</option>
                 </datalist> -->

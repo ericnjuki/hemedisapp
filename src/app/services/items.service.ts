@@ -1,5 +1,5 @@
 import { Item } from './../shared/item.model';
-import { Injectable } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 import { Http, Response, Headers } from '@angular/http';
 import 'rxjs/add/operator/map';
 
@@ -14,6 +14,8 @@ export class ItemService {
         'Content-Type': 'application/json'
     });
 
+    public event: EventEmitter<any>;
+
     constructor(private http: Http) { }
     getAllItems() {
         return this.http.get(this._url + 'g')
@@ -27,4 +29,5 @@ export class ItemService {
     addItems(item: Item[]) {
         return this.http.post(this._url + 'p', item);
     }
+
 }

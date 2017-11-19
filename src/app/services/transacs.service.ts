@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http, Response, Headers, RequestOptions, RequestOptionsArgs, URLSearchParams } from '@angular/http';
+import { Http, Response, RequestOptions, RequestOptionsArgs, URLSearchParams } from '@angular/http';
 import 'rxjs/add/operator/map';
 import { ITransactionData } from 'app/interfaces/transacs.interface';
 
@@ -7,9 +7,7 @@ import { ITransactionData } from 'app/interfaces/transacs.interface';
 export class TransactionService {
     private _url = 'http://localhost:51191/api/v1.0/transacs/';
     // private _url = 'http://shopassisst2.azurewebsites.net/api/v1.0/transacs/';
-    private _headers = new Headers({
-        'Content-Type': 'application/json'
-    });
+
     private options: RequestOptionsArgs = {};
 
     constructor(private _http: Http) { }
@@ -29,7 +27,7 @@ export class TransactionService {
 
     }
     postTransacs(transactionObject: ITransactionData) {
-        return this._http.post(this._url + 'p', transactionObject, this._headers);
+        return this._http.post(this._url + 'p', transactionObject);
 
     }
 }

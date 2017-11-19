@@ -1,31 +1,42 @@
-import { Directive, ElementRef } from '@angular/core';
+import { Directive, ElementRef, Output, EventEmitter } from '@angular/core';
 import { ItemService } from 'app/services/items.service';
 import * as fuzzy from 'fuzzy';
 
-@Directive({ selector: '[appAutoComplete]' })
+@Directive({
+    selector: 'npAutoComplete'
+})
 export class AutoCompleteDirective {
     /**
      *
      */
+    @Output() itemData: EventEmitter<any> = new EventEmitter();
+    private someData;
     constructor(el: ElementRef, private itemService: ItemService) {
         // because .autocomplete is an extenstion of a jQuery object
-        const $contentEditableElement = $(el.nativeElement);
+        const $contentEditableElement = $('[data-text=Item]');
+        // TO-DO: fix this, get this event HERE!!
+        itemService.event = this.itemData;
 
         $(function () {
-            let arrayOfNames: Array<string> = [];
-            itemService.searchItems()
-                .subscribe(jsonItemNames => {
-                    (<any>$($contentEditableElement)).autocomplete({ // jQuery docs
+            const itemNames: Array<string> = [];
+            itemService.getAllItems()
+                .subscribe(jsonItems => {
+                    for (const item of jsonItems) {
+                        itemNames.push(item.itemName);
+                    }
+                    // console.log(itemNames);
+                    // (<any>$($contentEditableElement)).autocomplete({ // jQuery docs
+                    (<any>$('[data-text=Item]')).autocomplete({ // jQuery docs
                         source: function (request, response) {
-                            const result = fuzzy.filter(request.term, jsonItemNames);
+                            const result = fuzzy.filter(request.term, itemNames);
                             const matches = result.map(item => { return item.string; });
                             console.log(matches);
                             response(matches);
                             // clear the items on the list on every callback !important
-                            arrayOfNames = [];
+                            // itemNames = [];
                         },
                         select: function () {
-
+                            itemService.event.emit(jsonItems);
                         },
                         minLength: 1
                     });

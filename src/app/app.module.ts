@@ -14,6 +14,8 @@ import { TransactionService } from 'app/services/transacs.service';
 import { AutoCompleteDirective } from "app/directives/autocomplete.directive";
 import { ItemService } from "app/services/items.service";
 import { ItemsComponent } from './items/items.component';
+import { TestDirectiveDirective } from './directives/test-directive.directive';
+import { TestComponentComponent } from './test-component/test-component.component';
 
 
 @NgModule({
@@ -25,7 +27,9 @@ import { ItemsComponent } from './items/items.component';
     RecordTransacsComponent,
     StatisticsComponent,
     AutoCompleteDirective,
-    ItemsComponent
+    ItemsComponent,
+    TestDirectiveDirective,
+    TestComponentComponent
     ],
   imports: [
     BrowserModule,

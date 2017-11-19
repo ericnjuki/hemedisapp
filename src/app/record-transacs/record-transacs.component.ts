@@ -46,7 +46,7 @@ export class RecordTransacsComponent implements OnInit {
   }
 
   ///
-  ///SALES
+  /// SALES
   ///
   addSaleItem(x, item: HTMLInputElement, price: HTMLInputElement) {
     console.log();
@@ -169,7 +169,7 @@ export class RecordTransacsComponent implements OnInit {
 
 
   ///
-  ///OTHER
+  /// OTHER
   ///
 
   setDate() {
@@ -179,5 +179,9 @@ export class RecordTransacsComponent implements OnInit {
 
   updateDate(newDate: HTMLInputElement) {
     this.transaction.date = newDate.value;
+  }
+
+  handleItemData(summat) {
+    console.log(summat);
   }
 }
