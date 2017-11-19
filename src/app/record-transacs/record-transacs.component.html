@@ -30,13 +30,13 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let saleItem of saleItems let i=index">
-                <td>{{saleItem.item}}</td>
-                <td>{{saleItem.quantity}}</td>
-                <td>{{saleItem.price}}</td>
-                <td>{{saleItem.amount}}</td>
+              <tr *ngFor="let saleItem of saleItems let saleItemIndex=index">
+                <td>{{ saleItem.item }}</td>
+                <td>{{ saleItem.quantity }}</td>
+                <td>{{ saleItem.price }}</td>
+                <td>{{ saleItem.amount }}</td>
                 <td>
-                  <a class="pull-right" (click)="removeSaleItem(i)">
+                  <a class="pull-right" (click)="removeSaleItem(saleItemIndex)">
                     <i class="icon ion-android-remove-circle"></i>
                   </a>
                 </td>
@@ -48,18 +48,18 @@
                 <!-- <datalist id="stockItems">
                   <option *ngFor="let item of stockItemsFromDb let o=index">{{ item }}</option>
                 </datalist> -->
-                <td contenteditable="true" data-text="Qty"></td>
-                <td contenteditable="true" data-text="Price" #pprice></td>
-                <td></td>
+                <td contenteditable="true" data-text="Qty" (input)="getTotalSaleAmountOnItem()"></td>
+                <td contenteditable="true" data-text="Price" #sprice></td>
+                <td ></td>
                 <td id="addButton">
-                  <a class="pull-right" (click)="addSaleItem(i, item, price)">
+                  <a class="pull-right" (click)="addSaleItem(saleItemIndex, item, sprice)">
                     <i class="icon ion-android-add-circle"></i>
                   </a>
                 </td>
               </tr>
               <tr>
                 <th>TOTAL</th>
-                <th>{{getTotalSaleAmount()}}</th>
+                <th>{{ getTotalSaleAmount() }}</th>
                 <th></th>
                 <th></th>
               </tr>
@@ -96,13 +96,13 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let purchaseItem of purchaseItems let i=index">
+              <tr *ngFor="let purchaseItem of purchaseItems let purchaseItemIndex=index">
                 <td>{{purchaseItem.item}}</td>
                 <td>{{purchaseItem.quantity}}</td>
                 <td>{{purchaseItem.price}}</td>
                 <td>{{purchaseItem.amount}}</td>
                 <td>
-                  <a class="pull-right" (click)="removePurchaseItem(i)">
+                  <a class="pull-right" (click)="removePurchaseItem(purchaseItemIndex)">
                     <i class="icon ion-android-remove-circle"></i>
                   </a>
                 </td>
@@ -111,11 +111,11 @@
             <tfoot>
               <tr>
                 <td contenteditable="true" data-text="Item" #pitem appAutoComplete></td>
-                <td contenteditable="true" data-text="Qty"></td>
+                <td contenteditable="true" data-text="Qty" (input)="getTotalPurchaseAmountOnItem()"></td>
                 <td contenteditable="true" data-text="Price" #pprice></td>
-                <td>000</td>
+                <td></td>
                 <td id="addButton">
-                  <a class="pull-right" (click)="addPurchaseItem(i, pitem, pprice)">
+                  <a class="pull-right" (click)="addPurchaseItem(purchaseItemIndex, pitem, pprice)">
                     <i class="icon ion-android-add-circle"></i>
                   </a>
                 </td>

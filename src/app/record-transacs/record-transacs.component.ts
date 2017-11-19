@@ -12,6 +12,11 @@ import { TransactionService } from 'app/services/transacs.service';
   encapsulation: ViewEncapsulation.None
 })
 export class RecordTransacsComponent implements OnInit {
+  // displayed on ui after a suggested item is clicked
+  suggestedItem = {
+    sellingPrice: ''
+  };
+
   // displayed on ui after an item is added
   purchaseItems = [];
   saleItems = [];
@@ -49,7 +54,6 @@ export class RecordTransacsComponent implements OnInit {
   /// SALES
   ///
   addSaleItem(x, item: HTMLInputElement, price: HTMLInputElement) {
-    console.log();
     // item.parentElement.parentElement.parentElement
     const $itemData = $('[name=record-sales] tfoot tr').eq(0).children('td');
     const saleItemName = $itemData.eq(0).html();
@@ -181,7 +185,21 @@ export class RecordTransacsComponent implements OnInit {
     this.transaction.date = newDate.value;
   }
 
-  handleItemData(summat) {
-    console.log(summat);
+  getTotalSaleAmountOnItem() {
+    $('[name=record-sales] tfoot tr td ').eq(3)
+      .html(
+        (+$('[name=record-sales] [data-text=Qty]').html() * +$('[name=record-sales] [data-text=Price]').html()).toString()
+      );
+  }
+
+  getTotalPurchaseAmountOnItem() {
+    $('[name=record-purchases] tfoot tr td ').eq(3)
+      .html(
+        (+$('[name=record-purchases] [data-text=Qty]').html() * +$('[name=record-purchases] [data-text=Price]').html()).toString()
+      );
+  }
+
+  handleItemData(itemObject) {
+    $('[data-text=Price]').html(itemObject.sellingPrice);
   }
 }

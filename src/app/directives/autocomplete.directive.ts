@@ -19,6 +19,7 @@ export class AutoCompleteDirective {
 
         $(function () {
             const itemNames: Array<string> = [];
+            let matches = [];
             itemService.getAllItems()
                 .subscribe(jsonItems => {
                     for (const item of jsonItems) {
@@ -29,14 +30,19 @@ export class AutoCompleteDirective {
                     (<any>$('[data-text=Item]')).autocomplete({ // jQuery docs
                         source: function (request, response) {
                             const result = fuzzy.filter(request.term, itemNames);
-                            const matches = result.map(item => { return item.string; });
-                            console.log(matches);
+                            matches = result.map(item => { return item.string; });
                             response(matches);
+
                             // clear the items on the list on every callback !important
                             // itemNames = [];
                         },
-                        select: function () {
-                            itemService.event.emit(jsonItems);
+                        select: function (event, ui) {
+                            jsonItems.forEach(function (item) {
+                                if (item.itemName === ui.item.value) {
+                                    console.log(item);
+                                    itemService.event.emit(item);
+                                }
+                            })
                         },
                         minLength: 1
                     });
