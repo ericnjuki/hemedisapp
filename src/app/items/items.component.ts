@@ -15,7 +15,7 @@ export class ItemsComponent implements OnInit {
   constructor(private itemService: ItemService) { }
 
   ngOnInit() {
-    $(function(){
+    $(function() {
       // focus on the first contenteditable field when this component is created
       setTimeout(() => {
         $('table tfoot tr td').eq(0).focus();

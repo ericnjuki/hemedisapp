@@ -8,7 +8,8 @@ export class ItemService {
     /**
      *
      */
-    private _url = 'http://localhost:51191/api/v1.0/items/';
+    // private _url = 'http://localhost:51191/api/v1.0/items/';
+    private _url = 'http://localhost:1111/api/v1.0/items/';
     // private _url = 'http://shopassisst2.azurewebsites.net/api/v1.0/items/';
     private _headers = new Headers({
         'Content-Type': 'application/json'
@@ -28,6 +29,10 @@ export class ItemService {
 
     addItems(item: Item[]) {
         return this.http.post(this._url + 'p', item);
+    }
+
+    getTestItems() {
+        return ['peanut butter', 'jelly']
     }
 
 }

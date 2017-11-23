@@ -1,0 +1,48 @@
+<div class="example-container mat-elevation-z8">
+  <mat-table #table [dataSource]="dataSource" matSort>
+    <!--- Note that these columns can be defined in any order.
+          The actual rendered columns are set as a property on the row definition" -->
+
+    <!-- ID Column -->
+    <ng-container cdkColumnDef="itemName">
+      <mat-header-cell *cdkHeaderCellDef mat-sort-header> Name </mat-header-cell>
+      <mat-cell *cdkCellDef="let row"> {{row.itemName}} </mat-cell>
+    </ng-container>
+
+    <!-- Progress Column -->
+    <ng-container cdkColumnDef="unit">
+      <mat-header-cell *cdkHeaderCellDef mat-sort-header> Unit </mat-header-cell>
+      <mat-cell *cdkCellDef="let row"> {{row.unit}} </mat-cell>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container cdkColumnDef="quantity">
+      <mat-header-cell *cdkHeaderCellDef> Quantity </mat-header-cell>
+      <mat-cell *cdkCellDef="let row"> {{row.quantity}} </mat-cell>
+    </ng-container>
+
+    <!-- Color Column -->
+    <ng-container cdkColumnDef="purchaseCost">
+      <mat-header-cell *cdkHeaderCellDef>Buying at</mat-header-cell>
+      <mat-cell *cdkCellDef="let row"> {{row.purchaseCost}} </mat-cell>
+    </ng-container>
+
+
+    <!-- Color Column -->
+    <ng-container cdkColumnDef="sellingPrice">
+      <mat-header-cell *cdkHeaderCellDef>Selling at</mat-header-cell>
+      <mat-cell *cdkCellDef="let row"> {{row.sellingPrice}} </mat-cell>
+    </ng-container>
+
+    <mat-header-row *cdkHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *cdkRowDef="let row; columns: displayedColumns;"></mat-row>
+  </mat-table>
+
+    <mat-paginator #paginator
+                [length]="exampleDatabase.data.length"
+                [pageIndex]="0"
+                [pageSize]="25"
+                [pageSizeOptions]="[5, 10, 25, 100]">
+  </mat-paginator>
+
+</div>
