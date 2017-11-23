@@ -18,10 +18,11 @@ export class StockComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor() { }
+  constructor(private _itemService: ItemService) { }
 
   ngOnInit() {
-    this.dataSource = new ExampleDataSource(this.exampleDatabase, this.paginator, this.sort);
+    this.dataSource = new ExampleDataSource(this.exampleDatabase, this.paginator, this.sort, this._itemService, );
+
   }
 
 }

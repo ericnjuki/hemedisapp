@@ -17,7 +17,7 @@ export class ExampleDatabase {
                 'purchaseCost': 120,
                 'sellingPrice': 150
 
-            },
+            }
         ];
 
         return data;

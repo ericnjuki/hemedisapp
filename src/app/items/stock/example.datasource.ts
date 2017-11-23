@@ -12,25 +12,31 @@ export class ExampleDataSource extends DataSource<any> {
     get filter(): string { return this._filterChange.value; }
     set filter(filter: string) { this._filterChange.next(filter); }
 
-    constructor(private _exampleDatabase: ExampleDatabase, private _paginator: MatPaginator, private _sort: MatSort) {
+    constructor(
+        private _exampleDatabase: ExampleDatabase,
+        private _paginator: MatPaginator,
+        private _sort: MatSort,
+        private _itemService?: ItemService) {
         super();
     }
 
     /** Connect function called by the table to retrieve one stream containing the data to render. */
-    connect(): Observable<IItem[]> {
-        const displayDataChanges = [
-            this._exampleDatabase.dataChange,
-            this._paginator.page,
-            this._sort.sortChange
-        ];
+    // connect(): Observable<IItem[]> {
+    //     const displayDataChanges = [
+    //         this._exampleDatabase.dataChange,
+    //         this._paginator.page,
+    //         this._sort.sortChange
+    //     ];
 
-        return Observable.merge(...displayDataChanges).map(() => {
-            // const data = this._exampleDatabase.data.slice();
-            const data = this.getSortedData();
-            // Grab the page's slice of data.
-            const startIndex = this._paginator.pageIndex * this._paginator.pageSize;
-            return data.splice(startIndex, this._paginator.pageSize);
-        });
+    //     return Observable.merge(...displayDataChanges).map(() => {
+    //         const data = this.getSortedData();
+    //         // Grab the page's slice of data.
+    //         const startIndex = this._paginator.pageIndex * this._paginator.pageSize;
+    //         return data.splice(startIndex, this._paginator.pageSize);
+    //     });
+    // }
+    connect(): Observable<IItem[]> {
+        return this._itemService.getAllItems();
     }
 
     disconnect() { }
