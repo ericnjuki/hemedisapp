@@ -16,7 +16,7 @@ export class ExampleDataSource extends DataSource<any> {
         private _exampleDatabase: ExampleDatabase,
         private _paginator: MatPaginator,
         private _sort: MatSort,
-        private _itemService?: ItemService) {
+        private _itemService: ItemService) {
         super();
     }
 
@@ -27,7 +27,9 @@ export class ExampleDataSource extends DataSource<any> {
     //         this._paginator.page,
     //         this._sort.sortChange
     //     ];
-
+    //     this._itemService.getAllItems().subscribe(res => {
+    //         console.log(res);
+    //     });
     //     return Observable.merge(...displayDataChanges).map(() => {
     //         const data = this.getSortedData();
     //         // Grab the page's slice of data.
@@ -45,14 +47,21 @@ export class ExampleDataSource extends DataSource<any> {
         const data = this._exampleDatabase.data.slice();
         if (!this._sort.active || this._sort.direction === '') { return data; }
 
+        // insert our service here, and run this on subscription
         return data.sort((a, b) => {
             let propertyA: number | string = '';
             let propertyB: number | string = '';
 
             switch (this._sort.active) {
-                case 'shiftDate': [propertyA, propertyB] = [a.itemName, b.itemName]; break;
-                case 'swipeIn': [propertyA, propertyB] = [a.purchaseCost, b.purchaseCost]; break;
-                case 'swipeOut': [propertyA, propertyB] = [a.sellingPrice, b.sellingPrice]; break;
+                case 'itemName':
+                    [propertyA, propertyB] = [a.itemName, b.itemName];
+                    break;
+                case 'purchaseCost':
+                    [propertyA, propertyB] = [a.purchaseCost, b.purchaseCost];
+                    break;
+                case 'sellingPrice':
+                    [propertyA, propertyB] = [a.sellingPrice, b.sellingPrice];
+                    break;
             }
 
             const valueA = isNaN(+propertyA) ? propertyA : +propertyA;

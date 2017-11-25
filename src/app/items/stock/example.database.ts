@@ -17,6 +17,14 @@ export class ExampleDatabase {
                 'purchaseCost': 120,
                 'sellingPrice': 150
 
+            },
+            {
+                'itemName': 'dagger',
+                'quantity': 98,
+                'unit': 'hadi',
+                'purchaseCost': 2,
+                'sellingPrice': 15
+
             }
         ];
 
