@@ -32,9 +32,7 @@ export class StockComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     // this.dataSource = new ExampleDataSource(this.exampleDatabase, this.paginator, this.sort, this._itemService, );
     this.dataSource = new StockDataSource(this._itemService);
-    // this.dataSource = new MatTableDataSource(['erico']);
     $(function () {
-      // $('mat-cell').attr('contenteditable', 'true');
       $('[contenteditable=true]').focus(function () {
         const val = this.innerHTML;
         const $this = $(this);
@@ -52,13 +50,9 @@ export class StockComponent implements OnInit, AfterViewInit {
   }
 
   toggleTableEditing(row) {
-    // console.log(row);
-    // this.isContenteditable = this.isContenteditable ? false : true;
-    // console.log(x);
-    // this.dataSource._renderChangesSubscription.add(() => {
-    // });
-    // this.dataSource._renderChangesSubscription.unsubscribe();
-    // /*this works:*/ this.dataSource.dataChange.next(this.dataSource.customData);
+    this.isContenteditable = this.isContenteditable ? false : true;
+    // use this to view items to update?
+    // /*this works:*/ this.dataSource.dataChange.next(this.updatedItems);
   }
   onItemInput(row: IItem, matCell: HTMLInputElement) {
     this.itemToUpdate = {
@@ -77,9 +71,6 @@ export class StockComponent implements OnInit, AfterViewInit {
       console.log('First updated item!');
     } else {
       for (let i = 0; i < this.updatedItems.length; i++) {
-        // for (const items of this.updatedItems) {
-        // console.log('item: '); console.log(items);
-        // console.log('itemToUpdate: '); console.log(this.itemToUpdate)
         if (this.updatedItems[i].itemId === this.itemToUpdate.itemId) {
           // This item has been updated before, replace it with a new update
           this.updatedItems.push(this.addUpdatedItems(this.updatedItems[i], matCell));
@@ -93,21 +84,6 @@ export class StockComponent implements OnInit, AfterViewInit {
       this.updatedItems.push(this.addUpdatedItems(this.itemToUpdate, matCell));
       console.log('New updated item!');
     }
-
-    // if (this.updatedItems.length === 0) {
-    //   // First item from my table to be updated
-    //   this.updatedItems.push(this.addUpdatedItems(itemToUpdate, matCell));
-    //   console.log('First updated item!');
-    // } else if (this.updatedItems.indexOf(itemToUpdate) !== -1) {
-    //   // This item has been updated before, replace it with a new update
-    //   this.updatedItems.splice(this.updatedItems.indexOf(itemToUpdate), 1);
-    //   this.updatedItems.push(this.addUpdatedItems(itemToUpdate, matCell));
-    //   console.log('Item updated!');
-    // } else {
-    //   // This item hasn't been updated before, simply add it to my updated items
-    //   this.updatedItems.push(this.addUpdatedItems(itemToUpdate, matCell));
-    //   console.log('New updated item!');
-    // }
     console.log(this.updatedItems);
   }
   addUpdatedItems(rowData, cellData): IItem {

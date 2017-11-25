@@ -15,7 +15,7 @@ export class ItemsComponent implements OnInit {
   constructor(private itemService: ItemService) { }
 
   ngOnInit() {
-    $(function() {
+    $(function () {
       // focus on the first contenteditable field when this component is created
       setTimeout(() => {
         $('table tfoot tr td').eq(0).focus();
@@ -23,7 +23,7 @@ export class ItemsComponent implements OnInit {
       // disables enter_key's action of adding a line-break in a contenteditable
       // as i've subscribed to the enter onclick event, setting it's action to
       // add a new row in the ADD ITEMS table
-      $('[contentEditable=true]').keypress(function(e){ return e.which != 13; });
+      $('[contentEditable=true]').keypress(function (e) { return e.which != 13; });
     });
   }
 
@@ -57,17 +57,17 @@ export class ItemsComponent implements OnInit {
   }
 
   postItems() {
-    // clear all items from display; shows the user that items have been posted.
-    // this is optimistic
-    this.items = [];
-    const $itemData = $('[name=record-items] tfoot tr').eq(0).children('td');
     this.itemService.addItems(this.items)
       .subscribe(response => {
         console.log(response);
       });
+    // clear all items from display; shows the user that items have been posted.
+    this.items = [];
+    const $itemData = $('[name=record-items] tfoot tr').eq(0).children('td');
+    $itemData.eq(0).focus();
   }
 
-  clickAddButton(){
+  clickAddButton() {
     // $('#addButton a').trigger('click');
     // $('#addButton a').eq(0).click();
 
