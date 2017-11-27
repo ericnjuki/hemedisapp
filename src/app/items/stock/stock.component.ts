@@ -68,23 +68,18 @@ export class StockComponent implements OnInit, AfterViewInit {
     if (this.updatedItems.length === 0) {
       // First item from my table to be updated
       this.updatedItems.push(this.addUpdatedItems(this.itemToUpdate, matCell));
-      console.log('First updated item!');
     } else {
       for (let i = 0; i < this.updatedItems.length; i++) {
         if (this.updatedItems[i].itemId === this.itemToUpdate.itemId) {
           // This item has been updated before, replace it with a new update
           this.updatedItems.push(this.addUpdatedItems(this.updatedItems[i], matCell));
           this.updatedItems.splice(i, 1);
-          console.log('Item updated!');
-          console.log(this.updatedItems);
           return;
         }
       }
       // This item hasn't been updated before, simply add it to my updated items
       this.updatedItems.push(this.addUpdatedItems(this.itemToUpdate, matCell));
-      console.log('New updated item!');
     }
-    console.log(this.updatedItems);
   }
   addUpdatedItems(rowData, cellData): IItem {
     // loop through displayed columns
@@ -110,20 +105,16 @@ export class StockComponent implements OnInit, AfterViewInit {
             return rowData;
         }
       } else {
-        console.log('this is an impossible error for now, you\'re forked!')
+        console.log('this is an impossible error for now, you\'re forked!');
       }
     }
     return rowData;
-    // for (const col of this.displayedColumns) {
-    //   // when you get a match, update the appropriate property
-    //   // ~bitwise inverse, inverts the -1 returned by indexOf when a match is false
-    //   if (col.indexOf(cellData.getAttribute('class')) !== -1) {
-    //     rowData[col] = cellData.innerHTML;
-    //   }
-    // }
   }
   postUpdate() {
-    // console.log(this.updatedItems);
+    this._itemService.updateItems(this.updatedItems)
+      .subscribe(response => {
+        console.log(response);
+      });
 
   }
 }

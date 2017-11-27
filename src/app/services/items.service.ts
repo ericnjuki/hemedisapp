@@ -29,4 +29,9 @@ export class ItemService {
     addItems(items: Item[]) {
         return this.http.post(this._url + 'p', items);
     }
+
+    updateItems(items) {
+        console.log(items);
+        return this.http.put(this._url + 'u', items);
+    }
 }

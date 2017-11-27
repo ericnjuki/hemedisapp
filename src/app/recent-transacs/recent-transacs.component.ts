@@ -16,7 +16,6 @@ export class RecentTransacsComponent implements OnInit {
   ngOnInit() {
     this.transacService.getTransacs(this.includeItems)
       .subscribe(allTransactions => {
-        console.log(allTransactions);
         this.transactions = allTransactions;
       });
   }

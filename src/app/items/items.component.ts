@@ -1,6 +1,8 @@
 import { Item } from 'app/shared/item.model';
 import { ItemService } from './../services/items.service';
 import { Component, OnInit } from '@angular/core';
+import { TransactionService } from 'app/services/transacs.service';
+import { ITransactionData } from 'app/interfaces/transacs.interface';
 
 @Component({
   selector: 'app-items',
@@ -12,7 +14,7 @@ export class ItemsComponent implements OnInit {
   // what items they're going to post
   items = [];
 
-  constructor(private itemService: ItemService) { }
+  constructor(private itemService: ItemService, private transacService: TransactionService) { }
 
   ngOnInit() {
     $(function () {
@@ -23,7 +25,7 @@ export class ItemsComponent implements OnInit {
       // disables enter_key's action of adding a line-break in a contenteditable
       // as i've subscribed to the enter onclick event, setting it's action to
       // add a new row in the ADD ITEMS table
-      $('[contentEditable=true]').keypress(function (e) { return e.which != 13; });
+      $('[contentEditable=true]').keypress(function (e) { return e.which !== 13; });
     });
   }
 
@@ -60,9 +62,21 @@ export class ItemsComponent implements OnInit {
     this.itemService.addItems(this.items)
       .subscribe(response => {
         console.log(response);
+        // if adding new items was successful, add
+        // new record of them as purchases
+        let purchaseTransaction: ITransactionData;
+        purchaseTransaction = {
+          date: new Date().toISOString().substr(0, 10),
+          items: this.items,
+          transactionType: 2
+        }
+        this.transacService.postTransacs(purchaseTransaction)
+          .subscribe(res => {
+            console.log(res);
+            // clear all items from display; shows the user that items have been posted.
+            this.items = [];
+          });
       });
-    // clear all items from display; shows the user that items have been posted.
-    this.items = [];
     const $itemData = $('[name=record-items] tfoot tr').eq(0).children('td');
     $itemData.eq(0).focus();
   }
