@@ -1,6 +1,4 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
-import { ExampleDataSource } from 'app/items/stock/example.datasource';
-import { ExampleDatabase } from 'app/items/stock/example.database';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { ItemService } from 'app/services/items.service';
@@ -17,8 +15,6 @@ import { IItem } from 'app/interfaces/item.interface';
 })
 export class StockComponent implements OnInit, AfterViewInit {
   displayedColumns = ['itemName', 'quantity', 'unit', 'purchaseCost', 'sellingPrice'];
-  exampleDatabase = new ExampleDatabase();
-  // dataSource: ExampleDataSource | null;
   dataSource: StockDataSource | null | any;
   isContenteditable = true;
   updatedItems = [];
@@ -30,7 +26,6 @@ export class StockComponent implements OnInit, AfterViewInit {
   constructor(private _itemService: ItemService) { }
 
   ngOnInit() {
-    // this.dataSource = new ExampleDataSource(this.exampleDatabase, this.paginator, this.sort, this._itemService, );
     this.dataSource = new StockDataSource(this._itemService);
     $(function () {
       $('[contenteditable=true]').focus(function () {
@@ -49,11 +44,6 @@ export class StockComponent implements OnInit, AfterViewInit {
 
   }
 
-  toggleTableEditing(row) {
-    this.isContenteditable = this.isContenteditable ? false : true;
-    // use this to view items to update?
-    // /*this works:*/ this.dataSource.dataChange.next(this.updatedItems);
-  }
   onItemInput(row: IItem, matCell: HTMLInputElement) {
     this.itemToUpdate = {
       'itemId': row.itemId,
@@ -115,6 +105,5 @@ export class StockComponent implements OnInit, AfterViewInit {
       .subscribe(response => {
         console.log(response);
       });
-
   }
 }

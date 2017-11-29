@@ -14,13 +14,9 @@ import { TransactionService } from 'app/services/transacs.service';
 import { AutoCompleteDirective } from 'app/directives/autocomplete.directive';
 import { ItemService } from 'app/services/items.service';
 import { ItemsComponent } from './items/items.component';
-import { TestDirectiveDirective } from './directives/test-directive.directive';
-import { TestComponentComponent } from './test-component/test-component.component';
 import { StockComponent } from './items/stock/stock.component';
-import { SuppliersComponent } from './suppliers/suppliers.component';
 
 // angular material components
-import { MatButtonModule, MatCheckboxModule } from '@angular/material';
 import { MatTableModule } from '@angular/material/table';
 import { CdkTableModule } from '@angular/cdk/table';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -37,18 +33,13 @@ import { MatPaginatorModule, MatSortModule } from '@angular/material';
     StatisticsComponent,
     AutoCompleteDirective,
     ItemsComponent,
-    TestDirectiveDirective,
-    TestComponentComponent,
-    StockComponent,
-    SuppliersComponent
+    StockComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpModule,
     AppRouterModule,
-    MatButtonModule,
-    MatCheckboxModule,
     MatTableModule,
     CdkTableModule,
     BrowserAnimationsModule,

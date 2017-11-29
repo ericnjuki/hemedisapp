@@ -19,7 +19,7 @@
     transition: 0.1s ease-in;
 }
     .panel.sa-purchase{
-        background: tan;
+        /* background: grey; */
     }
     .panel:hover{
         background: #e3e3e3;
@@ -27,18 +27,11 @@
     .panel:hover .col-md-4~.col-md-4{
         border-left: 1px solid white;
     }   
-    /* .panel:hover .pill-footer{
-        border-top: 1px solid white;    
-    } */
 
 .pill{
     border: 0;
 }
-/* .pill-footer{
-    height: 0.5em;
-    border-top: 1px solid #e3e3e3;    
-    transition: 0.3s ease-in-out;
-} */
+
 .app-panel-body{
     height: 0;  
     overflow: hidden;

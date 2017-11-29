@@ -1,11 +1,9 @@
 <div class="example-container mat-elevation-z8">
+  <button class="btn btn-primary" [disabled]="!updatedItems.length" (click)="postUpdate()">Update!</button>
   <mat-table #table [dataSource]="dataSource" matSort>
-    <!--- Note that these columns can be defined in any order.
-          The actual rendered columns are set as a property on the row definition" -->
-
     <!-- ID Column -->
     <ng-container matColumnDef="itemName">
-      <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
+      <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
       <mat-cell *matCellDef="let row" [attr.contenteditable]="isContenteditable" (input)="onItemInput(row, item)" #item> {{row.itemName}} </mat-cell>
     </ng-container>
 
@@ -23,28 +21,18 @@
 
     <!-- Color Column -->
     <ng-container matColumnDef="purchaseCost">
-      <mat-header-cell *matHeaderCellDef mat-sort-header>Buying at</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef>Buying at</mat-header-cell>
       <mat-cell *matCellDef="let row" [attr.contenteditable]="isContenteditable" (input)="onItemInput(row, bp)" #bp> {{row.purchaseCost}} </mat-cell>
     </ng-container>
 
 
     <!-- Color Column -->
     <ng-container matColumnDef="sellingPrice">
-      <mat-header-cell *matHeaderCellDef mat-sort-header>Selling at</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef>Selling at</mat-header-cell>
       <mat-cell *matCellDef="let row" [attr.contenteditable]="isContenteditable" (input)="onItemInput(row, sp)" #sp> {{row.sellingPrice}} </mat-cell>
     </ng-container>
 
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
     <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
   </mat-table>
-
-    <mat-paginator #paginator
-                [length]="exampleDatabase.data.length"
-                [pageIndex]="0"
-                [pageSize]="25"
-                [pageSizeOptions]="[5, 10, 25, 100]">
-  </mat-paginator>
-  
 </div>
-<button class="btn btn-success" (click)="toggleTableEditing()">Updatable!</button>
-<button class="btn btn-primary" (click)="postUpdate()">Post!</button>

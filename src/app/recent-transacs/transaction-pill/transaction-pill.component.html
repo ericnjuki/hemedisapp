@@ -1,18 +1,11 @@
-<!-- ngFor this  -->
 <div class="panel pill" [ngClass]="{'sa-purchase':isPurchase}">
   <div class="row pill-head">
-    <div class="col-md-4">{{ transactionData.date }}</div>
-    <div class="col-md-4"></div>
+    <div class="col-md-4">{{ transacDate }}</div>
+    <div class="col-md-4">{{ typeInWords }}</div>
     <div class="col-md-4"></div>
   </div>
   <section class="app-panel-body">
     <table class="table celled ">
-      <!-- <thead class="thead">
-        <tr>
-          <th>Time</th>
-          <th>Cusotmer</th>
-        </tr>
-      </thead> -->
       <tr *ngFor="let item of transactionData.items">
         <td>{{ item.itemName }}</td>
         <td>{{ item.sellingPrice }}</td>
@@ -23,5 +16,4 @@
       </tr>
     </table>
   </section>
-  <!-- <div class="pill-footer"></div> -->
 </div>

@@ -1,29 +1,31 @@
 .app-header{
     padding: 0;
     position: fixed;
-    /* margin-top: -56px; */
+
 }
 .transacs{
     margin-top: 56px;
+
 }
 div.row{
     display: flex;
-     align-items: center; 
+    align-items: center; 
     margin: 0;
-     line-height: 56px; 
+    line-height: 56px; 
+
 }
 .pull-right{
      display: flex; 
      align-items: center;
      left: 30%;
-    /* height: 56px; */
-    /* padding-top: 26px; */
 
 }
 input{
     line-height: auto;
     height: 30px;
+
 }
 .bx-shadow{
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);    
+    
 }

@@ -4,7 +4,11 @@ import { ITransactionData } from 'app/interfaces/transacs.interface';
 import { TransactionData } from 'app/shared/transacs.model';
 import { Item } from 'app/shared/item.model';
 import { TransactionService } from 'app/services/transacs.service';
-
+/**
+ * Where transactions (both sale and purchase) are recorded from
+ * Has autocomplete, shall not allow recording transaction of
+ * an item that doesn't exist!
+ */
 @Component({
   selector: 'app-record-transacs',
   templateUrl: './record-transacs.component.html',
@@ -50,14 +54,11 @@ export class RecordTransacsComponent implements OnInit {
     });
   }
 
-  ///
-  /// SALES
-  ///
-  addSaleItem(x, item: HTMLInputElement, price: HTMLInputElement) {
-    // item.parentElement.parentElement.parentElement
+  addSaleItem(item: HTMLInputElement, price: HTMLInputElement) {
+    // bad: jquery
     const $itemData = $('[name=record-sales] tfoot tr').eq(0).children('td');
     const saleItemName = $itemData.eq(0).html();
-    const itemUnit = 'wookie';
+    const itemUnit = 'pc';
     const itemQuantity = +$itemData.eq(1).html().replace(/\s+/g, '');
     const itemSellingPrice = +$itemData.eq(2).html().replace(/\s+/g, '');
 
@@ -92,7 +93,6 @@ export class RecordTransacsComponent implements OnInit {
 
   getTotalSaleAmount() {
     let total = 0;
-    // TO DO: efficientify this psst: use for..in
     for (let i = 0; i < this.saleItems.length; i++) {
       total += this.saleItems[i].amount;
     }
@@ -111,14 +111,15 @@ export class RecordTransacsComponent implements OnInit {
     this.itemsArray = [];
   }
 
-
-  ///
-  /// PURCHASES
-  ///
+/**
+ * Adds purchase item to non-editable table to be reviewed before posting
+ * @param item HtmlInputElement of <tr> containing item data (itemName, price etc) [Deprecated]
+ * @param price [Deprecated]
+ */
   addPurchaseItem(item: HTMLInputElement, price: HTMLInputElement) {
     const $itemData = $('[name=record-purchases] tfoot tr').eq(0).children('td');
     const purchaseItemName = $itemData.eq(0).html();
-    const itemUnit = 'banana';
+    const itemUnit = 'pc';
     const itemQuantity = +$itemData.eq(1).html().replace(/\s+/g, '');
     const itemPurchaseCost = +$itemData.eq(2).html().replace(/\s+/g, '');
 
@@ -188,14 +189,14 @@ export class RecordTransacsComponent implements OnInit {
   getTotalSaleAmountOnItem() {
     $('[name=record-sales] tfoot tr td ').eq(3)
       .html(
-        (+$('[name=record-sales] [data-text=Qty]').html() * +$('[name=record-sales] [data-text=Price]').html()).toString()
+      (+$('[name=record-sales] [data-text=Qty]').html() * +$('[name=record-sales] [data-text=Price]').html()).toString()
       );
   }
 
   getTotalPurchaseAmountOnItem() {
     $('[name=record-purchases] tfoot tr td ').eq(3)
       .html(
-        (+$('[name=record-purchases] [data-text=Qty]').html() * +$('[name=record-purchases] [data-text=Price]').html()).toString()
+      (+$('[name=record-purchases] [data-text=Qty]').html() * +$('[name=record-purchases] [data-text=Price]').html()).toString()
       );
   }
 

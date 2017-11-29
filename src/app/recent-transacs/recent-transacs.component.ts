@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { TransactionService } from "app/services/transacs.service";
-import { TransactionData } from "app/shared/transacs.model";
-import { ITransactionData } from "app/interfaces/transacs.interface";
-
+import { TransactionService } from 'app/services/transacs.service';
+import { TransactionData } from 'app/shared/transacs.model';
+import { ITransactionData } from 'app/interfaces/transacs.interface';
+/**
+ * Gets recent transactions from a service and displays them
+ * using child component "TransactionPillComponent"
+ */
 @Component({
   selector: 'app-recent-transacs',
   templateUrl: './recent-transacs.component.html',
@@ -11,6 +14,7 @@ import { ITransactionData } from "app/interfaces/transacs.interface";
 export class RecentTransacsComponent implements OnInit {
   transactions: Array<ITransactionData> = [];
   includeItems = true;
+
   constructor(private transacService: TransactionService) { }
 
   ngOnInit() {
@@ -20,11 +24,7 @@ export class RecentTransacsComponent implements OnInit {
       });
   }
 
-  addTransac() {
-
-  }
   extendPill(i: number) {
     $('.pill').eq(i).children('.app-panel-body').toggleClass('panel-clicked app-panel-body-lg');
-
   }
 }
