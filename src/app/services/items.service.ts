@@ -1,19 +1,14 @@
 import { Item } from './../shared/item.model';
 import { Injectable, EventEmitter } from '@angular/core';
-import { Http, Response, Headers } from '@angular/http';
+import { Http, Response } from '@angular/http';
 import 'rxjs/add/operator/map';
 
+/**
+ * Interacts with remote api to retrieve various item data
+ */
 @Injectable()
 export class ItemService {
-    /**
-     *
-     */
-    private _url = 'http://localhost:51191/api/v1.0/items/';
-    // private _url = 'http://localhost:1111/api/v1.0/items/';
-    private _headers = new Headers({
-        'Content-Type': 'application/json'
-    });
-
+    private _url = 'http://shopassisst2.azurewebsites.net/api/v1.0/items/';
     public event: EventEmitter<any>;
 
     constructor(private http: Http) { }
@@ -31,7 +26,6 @@ export class ItemService {
     }
 
     updateItems(items) {
-        console.log(items);
         return this.http.put(this._url + 'u', items);
     }
 }

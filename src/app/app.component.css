@@ -1,15 +1,32 @@
 .content-header, .side-header{
     border-bottom: 1px solid black;
+
 }
 .content-header, .side-left, .side-header {
     background-color: white;
     color: black;
+
+}
+#brand {
+    text-align: center;
 }
 #brand a {
     color: black;
     text-transform: lowercase;
-    font-family: serif;
+    padding-right: 1.7em;
+
 }
 aside {
     border-right: 1px solid black;
+
+}
+#ng{
+    font-weight: bold;
+    font-family: Courier New, Courier, monospace;
+    text-transform: uppercase;
+
+}
+#pos{
+    font-family: cursive;
+
 }

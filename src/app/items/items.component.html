@@ -31,16 +31,16 @@
         <td contenteditable="true" data-text="Purchase Cost" #pcost></td>
         <td contenteditable="true" data-text="Selling Price" #sprice (keydown.enter)="clickAddButton()"></td>
         <td id="addButton">
-          <a id="addisiaButton" class="pull-right" (click)="addItem(item, unit, qty, pcost, sprice)">
+          <a id="addisiaButton" class="pull-right" (click)="addItem()">
             <i class="icon ion-android-add-circle"></i>
           </a>
         </td>
       </tr>
       <tr>
-        <!-- <td></td>
         <td></td>
         <td></td>
-        <td></td> -->
+        <td></td>
+        <td></td>
         <td colspan="5">
           <button class="btn btn-success pull-right" (click)="postItems()">
             Add

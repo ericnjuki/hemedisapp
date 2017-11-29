@@ -4,37 +4,19 @@
     <nav class="side-nav">
         <!-- open nav ul -->
         <ul>
-            <!-- add class active dynamically-->
+            <!-- add class active dynamically-->            
             <li class="side-nav-item">
-                <a href="#np-stock-children">
-                    <!-- <span class="badge">4</span> -->
-                    <i class="nav-item-caret"></i>
+                <a routerLink="/stock">
                     <i class="nav-item-icon icon ion-ios-pricetags"></i>
-                    Stock
+                    Current Stock
                 </a>
-                <!-- Stock children -->
-                <ul id="np-stock-children" class="side-nav-child">
-                    <li class="side-nav-item-heading">
-                        <a href="#" class="side-nav-back">
-                            <i class="nav-item-caret"></i>
-                            Back to Menu
-                        </a>
-                    </li><!-- 2nd level menu header -->
-                    <li class="side-nav-item">
-                        <a href="/stock">
-                            <i class="nav-item-icon icon ion-ios-pricetag-outline"></i>
-                            Current Stock
-                        </a>
-                    </li><!-- current Stock -->
-                    <li class="side-nav-item">
-                        <a routerLink="/items">
-                            <i class="nav-item-icon icon ion-ios-plus-outline"></i>
-                            Add New Items
-                        </a>
-                    </li><!-- new items -->
-                </ul><!-- Stock children - 2nd level menu -->
-            </li><!-- Stock - 1st level menu item -->
-
+            </li><!-- current Stock -->
+            <li class="side-nav-item">
+                <a routerLink="/items">
+                    <i class="nav-item-icon icon ion-ios-pricetag-outline"></i>
+                    Add New Items
+                </a>
+            </li><!-- new items -->
             <li class="side-nav-item">
                 <a routerLink="/stats">
                     <i class="nav-item-icon icon ion-arrow-graph-up-right"></i>
@@ -42,40 +24,19 @@
                 </a>
             </li><!-- Statistics - 1st level menu item -->
 
-            <li class="side-nav-item">
-                <a href="#np-transacs-children">
-                    <i class="nav-item-caret"></i>
+            
+            <li class="side-nav-item"> <!-- add class active dynamically-->
+                <a routerLink="/transactions">
                     <i class="nav-item-icon icon ion-ios-paper"></i>
-                    Transactions
+                    Recent Transactions
                 </a>
-                <ul id="np-transacs-children" class="side-nav-child">
-                    <li class="side-nav-item-heading">
-                        <a href="#" class="side-nav-back">
-                            <i class="nav-item-caret"></i>
-                            Back to Menu
-                        </a>
-                    </li><!-- 2nd level menu header -->
-                    <li class="side-nav-item"> <!-- add class active dynamically-->
-                        <a routerLink="/transactions">
-                            <i class="nav-item-icon icon ion-ios-paper"></i>
-                            Recent Transactions
-                        </a>
-                    </li><!-- /.side-nav-item -->
-                    <li class="side-nav-item">
-                        <a routerLink="/record">
-                            <i class="nav-item-icon icon ion-android-add"></i>
-                            Record Transactions
-                        </a>
-                    </li><!-- record transactions -->
-                </ul><!-- Transactions children - 2nd level menu -->
-            </li><!-- Transactions - 1st level menu item -->
-
+            </li><!-- /.side-nav-item -->
             <li class="side-nav-item">
-                <a routerLink="/suppliers" id="np-suppliers">
-                    <i class="nav-item-icon icon ion-ios-person"></i>
-                    Suppliers
+                <a routerLink="/record">
+                    <i class="nav-item-icon icon ion-android-add"></i>
+                    Record Transactions
                 </a>
-            </li><!-- Suppliers - 1st level menu item -->
+            </li><!-- record transactions -->
         </ul><!-- /nav ul-->
     </nav><!-- /nav-->
 

@@ -4,6 +4,9 @@ import { Component, OnInit } from '@angular/core';
 import { TransactionService } from 'app/services/transacs.service';
 import { ITransactionData } from 'app/interfaces/transacs.interface';
 
+/**
+ * Where all new/unique items are added from, has no autocomplete
+ */
 @Component({
   selector: 'app-items',
   templateUrl: './items.component.html',
@@ -82,9 +85,6 @@ export class ItemsComponent implements OnInit {
   }
 
   clickAddButton() {
-    // $('#addButton a').trigger('click');
-    // $('#addButton a').eq(0).click();
-
     // simulates a click.
     // i'm using this to add a new row to array of 'items to be added'
     // when the enter_key is clicked from anywhere within the row that's

@@ -1,6 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { TransactionData } from "app/shared/transacs.model";
-
+import { TransactionData } from 'app/shared/transacs.model';
+/**
+ * Expandable 'pills' for displaying recent transactions
+ */
 @Component({
   selector: 'app-transaction-pill',
   templateUrl: './transaction-pill.component.html',
@@ -10,6 +12,8 @@ export class TransactionPillComponent implements OnInit {
   @Input() transactionData: TransactionData;
   total = 0;
   isPurchase = false;
+  typeInWords = 'sale';
+  transacDate;
   constructor() { }
 
   ngOnInit() {
@@ -19,8 +23,10 @@ export class TransactionPillComponent implements OnInit {
     }
     if (this.transactionData.transactionType === 1) {
       this.isPurchase = true;
+      this.typeInWords = 'purchase'
 
     }
+    this.transacDate = this.transactionData.date.substr(0, 10);
   }
 
 }

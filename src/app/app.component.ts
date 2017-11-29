@@ -9,8 +9,8 @@ declare var $: any;
 export class AppComponent implements OnInit {
   title = 'app works!';
 
-  ngOnInit(){
-    $(function(){
+  ngOnInit() {
+    $(function () {
       $('.app-header').addClass('bx-shadow');
 
     });
