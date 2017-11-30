@@ -2,10 +2,11 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
+import { AppRouterModule } from 'app/app.routing';
 
+// ng-pos components
 import { AppComponent } from './app.component';
 import { SidenavComponent } from './side-nav/sidenav.component';
-import { AppRouterModule } from 'app/app.routing';
 import { RecentTransacsComponent } from './recent-transacs/recent-transacs.component';
 import { TransactionPillComponent } from './recent-transacs/transaction-pill/transaction-pill.component';
 import { RecordTransacsComponent } from './record-transacs/record-transacs.component';
@@ -22,6 +23,8 @@ import { CdkTableModule } from '@angular/cdk/table';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatPaginatorModule, MatSortModule } from '@angular/material';
 
+// other components
+import { ToastyModule } from 'ng2-toasty';
 
 @NgModule({
   declarations: [
@@ -44,7 +47,8 @@ import { MatPaginatorModule, MatSortModule } from '@angular/material';
     CdkTableModule,
     BrowserAnimationsModule,
     MatPaginatorModule,
-    MatSortModule
+    MatSortModule,
+    ToastyModule.forRoot(),
   ],
   providers: [TransactionService, ItemService],
   bootstrap: [AppComponent]

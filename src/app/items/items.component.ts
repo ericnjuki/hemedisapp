@@ -3,6 +3,7 @@ import { ItemService } from './../services/items.service';
 import { Component, OnInit } from '@angular/core';
 import { TransactionService } from 'app/services/transacs.service';
 import { ITransactionData } from 'app/interfaces/transacs.interface';
+import { ToastyService, ToastyConfig, ToastOptions, ToastData } from 'ng2-toasty';
 
 /**
  * Where all new/unique items are added from, has no autocomplete
@@ -17,7 +18,10 @@ export class ItemsComponent implements OnInit {
   // what items they're going to post
   items = [];
 
-  constructor(private itemService: ItemService, private transacService: TransactionService) { }
+  constructor(private itemService: ItemService,
+    private toastyService: ToastyService,
+    private toastyConfig: ToastyConfig,
+    private transacService: TransactionService) { }
 
   ngOnInit() {
     $(function () {
@@ -62,8 +66,11 @@ export class ItemsComponent implements OnInit {
   }
 
   postItems() {
+    const firstToast = this.addToast('wait');
     this.itemService.addItems(this.items)
       .subscribe(response => {
+        this.toastyService.clear(firstToast);
+        this.addToast();
         console.log(response);
         // if adding new items was successful, add
         // new record of them as purchases
@@ -82,6 +89,26 @@ export class ItemsComponent implements OnInit {
       });
     const $itemData = $('[name=record-items] tfoot tr').eq(0).children('td');
     $itemData.eq(0).focus();
+  }
+
+  addToast(toastType?) {
+    let toastId;
+    const toastOptions: ToastOptions = {
+      title: 'Update Status',
+      timeout: 5000,
+      theme: 'bootstrap',
+      onAdd: (toast: ToastData) => {
+        toastId = toast.id
+      }
+    };
+    if (toastType === 'wait') {
+      toastOptions.msg = 'updating...';
+      this.toastyService.wait(toastOptions);
+    } else {
+      toastOptions.msg = 'Update successful!';
+      this.toastyService.success(toastOptions);
+    }
+    return toastId;
   }
 
   clickAddButton() {

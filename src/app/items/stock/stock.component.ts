@@ -6,6 +6,7 @@ import { StockDataSource } from 'app/items/stock/stock.datasource';
 import { Observable } from 'rxjs/Observable';
 import { MatTableDataSource } from '@angular/material/table';
 import { IItem } from 'app/interfaces/item.interface';
+import { ToastyService, ToastyConfig, ToastOptions, ToastData } from 'ng2-toasty';
 
 
 @Component({
@@ -23,10 +24,14 @@ export class StockComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private _itemService: ItemService) { }
+  constructor(
+    private itemService: ItemService,
+    private toastyService: ToastyService,
+    private toastyConfig: ToastyConfig) {
+  }
 
   ngOnInit() {
-    this.dataSource = new StockDataSource(this._itemService);
+    this.dataSource = new StockDataSource(this.itemService);
     $(function () {
       $('[contenteditable=true]').focus(function () {
         const val = this.innerHTML;
@@ -101,9 +106,33 @@ export class StockComponent implements OnInit, AfterViewInit {
     return rowData;
   }
   postUpdate() {
-    this._itemService.updateItems(this.updatedItems)
+    const firstToast = this.addToast('wait');
+    this.itemService.updateItems(this.updatedItems)
       .subscribe(response => {
+        this.toastyService.clear(firstToast);
+        this.addToast();
         console.log(response);
+        this.updatedItems = [];
       });
+  }
+
+  addToast(toastType?) {
+    let toastId;
+    const toastOptions: ToastOptions = {
+      title: 'Update Status',
+      timeout: 5000,
+      theme: 'bootstrap',
+      onAdd: (toast: ToastData) => {
+        toastId = toast.id
+      }
+    };
+    if (toastType === 'wait') {
+      toastOptions.msg = 'updating...';
+      this.toastyService.wait(toastOptions);
+    } else {
+      toastOptions.msg = 'Update successful!';
+      this.toastyService.success(toastOptions);
+    }
+    return toastId;
   }
 }

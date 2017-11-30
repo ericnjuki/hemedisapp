@@ -4,6 +4,8 @@ import { ITransactionData } from 'app/interfaces/transacs.interface';
 import { TransactionData } from 'app/shared/transacs.model';
 import { Item } from 'app/shared/item.model';
 import { TransactionService } from 'app/services/transacs.service';
+import { ToastyService, ToastyConfig, ToastOptions, ToastData } from 'ng2-toasty';
+
 /**
  * Where transactions (both sale and purchase) are recorded from
  * Has autocomplete, shall not allow recording transaction of
@@ -30,7 +32,10 @@ export class RecordTransacsComponent implements OnInit {
   // added to transaction which is sent
   itemsArray: Array<Item> = [];
 
-  constructor(private transacService: TransactionService, private itemService: ItemService) { }
+  constructor(private transacService: TransactionService,
+    private toastyService: ToastyService,
+    private toastyConfig: ToastyConfig,
+    private itemService: ItemService) { }
 
   ngOnInit() {
 
@@ -100,8 +105,11 @@ export class RecordTransacsComponent implements OnInit {
   }
 
   postSale() {
+    const firstToast = this.addToast('wait');
     this.transacService.postTransacs(this.transaction)
       .subscribe(response => {
+        this.toastyService.clear(firstToast);
+        this.addToast();
         console.log(response);
       });
 
@@ -111,11 +119,11 @@ export class RecordTransacsComponent implements OnInit {
     this.itemsArray = [];
   }
 
-/**
- * Adds purchase item to non-editable table to be reviewed before posting
- * @param item HtmlInputElement of <tr> containing item data (itemName, price etc) [Deprecated]
- * @param price [Deprecated]
- */
+  /**
+   * Adds purchase item to non-editable table to be reviewed before posting
+   * @param item HtmlInputElement of <tr> containing item data (itemName, price etc) [Deprecated]
+   * @param price [Deprecated]
+   */
   addPurchaseItem(item: HTMLInputElement, price: HTMLInputElement) {
     const $itemData = $('[name=record-purchases] tfoot tr').eq(0).children('td');
     const purchaseItemName = $itemData.eq(0).html();
@@ -160,8 +168,11 @@ export class RecordTransacsComponent implements OnInit {
   }
 
   postPurchase() {
+    const firstToast = this.addToast('wait');
     this.transacService.postTransacs(this.transaction)
       .subscribe(response => {
+        this.toastyService.clear(firstToast);
+        this.addToast();
         console.log(response);
       });
 
@@ -176,6 +187,25 @@ export class RecordTransacsComponent implements OnInit {
   ///
   /// OTHER
   ///
+  addToast(toastType?) {
+    let toastId;
+    const toastOptions: ToastOptions = {
+      title: 'Update Status',
+      timeout: 5000,
+      theme: 'bootstrap',
+      onAdd: (toast: ToastData) => {
+        toastId = toast.id
+      }
+    };
+    if (toastType === 'wait') {
+      toastOptions.msg = 'updating...';
+      this.toastyService.wait(toastOptions);
+    } else {
+      toastOptions.msg = 'Update successful!';
+      this.toastyService.success(toastOptions);
+    }
+    return toastId;
+  }
 
   setDate() {
     const currentDate = new Date().toISOString().substr(0, 10);

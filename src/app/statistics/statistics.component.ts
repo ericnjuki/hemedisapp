@@ -2,6 +2,8 @@ import { TransactionService } from 'app/services/transacs.service';
 import { AppMonths } from './../shared/enums/months.enum';
 import { Http } from '@angular/http';
 import { Component, OnInit, Input } from '@angular/core';
+import { ToastyService, ToastyConfig, ToastOptions, ToastData } from 'ng2-toasty';
+
 /**
  * Where monthly statistics are displayed in a table
  */
@@ -20,13 +22,17 @@ export class StatisticsComponent implements OnInit {
 
   };
   monthlyStats = [];
-  constructor(private transacService: TransactionService) { }
+  constructor(
+    private transacService: TransactionService,
+    private toastyService: ToastyService,
+    private toastyConfig: ToastyConfig) { }
 
   ngOnInit() {
     this.getStatsForYear(this.statsDate.year);
   }
 
   getStatsForYear(year: number) {
+    const firstToast = this.addToast();
     this.transacService.getStatsData(year)
       .subscribe(theData => {
         // converting int months (i.e. 0, 1, 2...) into my enum strings (JAN, FEB...)
@@ -34,6 +40,7 @@ export class StatisticsComponent implements OnInit {
           data.month = AppMonths[data.month];
         }
         this.monthlyStats = theData;
+        this.toastyService.clear(firstToast);
       });
   }
   previousYear() {
@@ -46,5 +53,20 @@ export class StatisticsComponent implements OnInit {
     const newYear = (+(this.statsDate.year) + 1);
     this.getStatsForYear(newYear);
     this.statsDate.year = newYear;
+  }
+
+  addToast() {
+    let toastId;
+    const toastOptions: ToastOptions = {
+      title: '',
+      msg: 'fetching data...',
+      timeout: 5000,
+      theme: 'bootstrap',
+      onAdd: (toast: ToastData) => {
+        toastId = toast.id
+      }
+    };
+    this.toastyService.wait(toastOptions);
+    return toastId;
   }
 }
