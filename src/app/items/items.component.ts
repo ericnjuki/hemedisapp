@@ -25,6 +25,7 @@ export class ItemsComponent implements OnInit {
 
   ngOnInit() {
     $(function () {
+      const $contentEditables = $('[contentEditable=true]');
       // focus on the first contenteditable field when this component is created
       setTimeout(() => {
         $('table tfoot tr td').eq(0).focus();
@@ -32,11 +33,20 @@ export class ItemsComponent implements OnInit {
       // disables enter_key's action of adding a line-break in a contenteditable
       // as i've subscribed to the enter onclick event, setting it's action to
       // add a new row in the ADD ITEMS table
-      $('[contentEditable=true]').keypress(function (e) { return e.which !== 13; });
+      $contentEditables.keypress(function (e) { return e.which !== 13; });
     });
   }
 
   addItem() {
+    if (this.checkIfEmpty) {
+      const toastOptions: ToastOptions = {
+        title: '',
+        msg: 'Item not added',
+        timeout: 5000,
+      };
+      this.toastyService.error(toastOptions);
+      return;
+    }
     const $itemData = $('[name=record-items] tfoot tr').eq(0).children('td');
     const itemName = $itemData.eq(0).html();
     const unit = $itemData.eq(1).html();
@@ -123,5 +133,45 @@ export class ItemsComponent implements OnInit {
     // using this to show the number of items that are going to be
     // posted in the add button
     return this.items.length;
+  }
+
+  validationError(msg: string, type?: string) {
+    console.log(type + ': ' + msg);
+  }
+
+  checkIfEmpty(element: HTMLInputElement) {
+    if (
+      +element.innerHTML === NaN ||
+      element.innerHTML === null ||
+      +element.innerHTML === 0 ||
+      element.innerHTML === ''
+    ) {
+      $(element).addClass('error-field');
+      this.validationError('Required field!');
+      return true;
+    }
+    return false
+  }
+
+  checkIfNumber(element: HTMLInputElement) {
+    if (!this.isNumber(element.innerHTML)) {
+      this.validationError('Field must be a number!');
+      return;
+    }
+    console.log('is good');
+  }
+
+  checkIfHasNumber(element: HTMLInputElement) {
+    if (this.hasNUmber(element.innerHTML)) {
+      this.validationError('This is a unit, are you sure you want numbers in it?', 'warning');
+    }
+  }
+
+  isNumber(value): boolean {
+    return !isNaN(parseFloat(value)) && isFinite(value);
+  }
+
+  hasNUmber(value): boolean {
+    return /\d/.test(value);
   }
 }

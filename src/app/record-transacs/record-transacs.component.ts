@@ -59,38 +59,103 @@ export class RecordTransacsComponent implements OnInit {
     });
   }
 
-  addSaleItem(item: HTMLInputElement, price: HTMLInputElement) {
-    // bad: jquery
-    const $itemData = $('[name=record-sales] tfoot tr').eq(0).children('td');
-    const saleItemName = $itemData.eq(0).html();
+  validateItem(transacType) {
+    console.log(transacType);
+    let $itemData;
+    switch (transacType) {
+      case 'sale':
+        $itemData = $('[name=record-sales] tfoot tr').eq(0).children('td');
+        break;
+      case 'purchase':
+        $itemData = $('[name=record-purchases] tfoot tr').eq(0).children('td');
+        break;
+      default:
+        console.log('invalid transactionType');
+        return;
+    }
+
+    const itemName = $itemData.eq(0).html();
     const itemUnit = 'pc';
     const itemQuantity = +$itemData.eq(1).html().replace(/\s+/g, '');
-    const itemSellingPrice = +$itemData.eq(2).html().replace(/\s+/g, '');
+    const itemPrice = +$itemData.eq(2).html().replace(/\s+/g, '');
 
-    this.saleItems.push({
-      item: saleItemName,
-      unit: itemUnit,
-      quantity: itemQuantity,
-      price: itemSellingPrice,
-      amount: itemQuantity * itemSellingPrice
-    });
+    if (
+      itemName === '' || itemName === null ||
+      +itemQuantity === NaN ||
+      +itemPrice === NaN || +itemPrice === 0
+    ) {
+      this.validationFailed('All fields must be filled!');
+      return;
+    }
+
+    this.transaction.date = this.setDate()
+
+    if (transacType === 'sale') {
+      this.saleItems.push({
+        item: itemName,
+        unit: itemUnit,
+        quantity: itemQuantity,
+        price: itemPrice,
+        amount: itemQuantity * itemPrice
+      });
+      this.transaction.transactionType = 1;
+      $itemData.not($('[name=record-sales] tfoot tr td#addButton')).html('');
+    }
+    if (transacType === 'purchase') {
+      this.purchaseItems.push({
+        item: itemName,
+        unit: itemUnit,
+        quantity: itemQuantity,
+        price: itemPrice,
+        amount: itemQuantity * itemPrice
+      });
+      this.transaction.transactionType = 2;
+      $itemData.not($('[name=record-purchases] tfoot tr td#addButton')).html('');
+    }
 
     this.itemsArray.push({
-      itemName: saleItemName,
+      itemName: itemName,
       unit: itemUnit,
       quantity: itemQuantity,
       purchaseCost: 0,
-      sellingPrice: itemSellingPrice
+      sellingPrice: itemPrice
     });
 
-    this.transaction = {
-      date: this.setDate(),
-      items: this.itemsArray,
-      transactionType: 1
-    };
-    $itemData.not($('[name=record-sales] tfoot tr td#addButton')).html('');
-
+    this.transaction.items = this.itemsArray;
   }
+
+  // addSaleItem() {
+  //   // bad: jquery
+  //   const $itemData = $('[name=record-sales] tfoot tr').eq(0).children('td');
+  //   const saleItemName = $itemData.eq(0).html();
+  //   const itemUnit = 'pc';
+  //   const itemQuantity = +$itemData.eq(1).html().replace(/\s+/g, '');
+  //   const itemSellingPrice = +$itemData.eq(2).html().replace(/\s+/g, '');
+
+  //   this.saleItems.push({
+  //     item: saleItemName,
+  //     unit: itemUnit,
+  //     quantity: itemQuantity,
+  //     price: itemSellingPrice,
+  //     amount: itemQuantity * itemSellingPrice
+  //   });
+
+  //   this.itemsArray.push({
+  //     itemName: saleItemName,
+  //     unit: itemUnit,
+  //     quantity: itemQuantity,
+  //     purchaseCost: 0,
+  //     sellingPrice: itemSellingPrice
+  //   });
+
+  //   this.transaction = {
+  //     date: this.setDate(),
+  //     items: this.itemsArray,
+  //     transactionType: 1
+  //   };
+  //   $itemData.not($('[name=record-sales] tfoot tr td#addButton')).html('');
+
+  // }
 
   removeSaleItem(x) {
     this.saleItems.splice(x, 1);
@@ -119,41 +184,36 @@ export class RecordTransacsComponent implements OnInit {
     this.itemsArray = [];
   }
 
-  /**
-   * Adds purchase item to non-editable table to be reviewed before posting
-   * @param item HtmlInputElement of <tr> containing item data (itemName, price etc) [Deprecated]
-   * @param price [Deprecated]
-   */
-  addPurchaseItem(item: HTMLInputElement, price: HTMLInputElement) {
-    const $itemData = $('[name=record-purchases] tfoot tr').eq(0).children('td');
-    const purchaseItemName = $itemData.eq(0).html();
-    const itemUnit = 'pc';
-    const itemQuantity = +$itemData.eq(1).html().replace(/\s+/g, '');
-    const itemPurchaseCost = +$itemData.eq(2).html().replace(/\s+/g, '');
+  // addPurchaseItem() {
+  //   const $itemData = $('[name=record-purchases] tfoot tr').eq(0).children('td');
+  //   const purchaseItemName = $itemData.eq(0).html();
+  //   const itemUnit = 'pc';
+  //   const itemQuantity = +$itemData.eq(1).html().replace(/\s+/g, '');
+  //   const itemPurchaseCost = +$itemData.eq(2).html().replace(/\s+/g, '');
 
-    this.purchaseItems.push({
-      item: purchaseItemName,
-      unit: itemUnit,
-      quantity: itemQuantity,
-      price: itemPurchaseCost,
-      amount: itemQuantity * itemPurchaseCost
-    });
+  //   this.purchaseItems.push({
+  //     item: purchaseItemName,
+  //     unit: itemUnit,
+  //     quantity: itemQuantity,
+  //     price: itemPurchaseCost,
+  //     amount: itemQuantity * itemPurchaseCost
+  //   });
 
-    this.itemsArray.push({
-      itemName: purchaseItemName,
-      unit: itemUnit,
-      quantity: itemQuantity,
-      purchaseCost: itemPurchaseCost,
-      sellingPrice: 0
-    });
+  //   this.itemsArray.push({
+  //     itemName: purchaseItemName,
+  //     unit: itemUnit,
+  //     quantity: itemQuantity,
+  //     purchaseCost: itemPurchaseCost,
+  //     sellingPrice: 0
+  //   });
 
-    this.transaction = {
-      date: this.setDate(),
-      items: this.itemsArray,
-      transactionType: 2
-    };
-    $itemData.not($('[name=record-purchases] tfoot tr td#addButton')).html('');
-  }
+  //   this.transaction = {
+  //     date: this.setDate(),
+  //     items: this.itemsArray,
+  //     transactionType: 2
+  //   };
+  //   $itemData.not($('[name=record-purchases] tfoot tr td#addButton')).html('');
+  // }
 
   removePurchaseItem(x) {
     this.purchaseItems.splice(x, 1);
@@ -232,5 +292,29 @@ export class RecordTransacsComponent implements OnInit {
 
   handleItemData(itemObject) {
     $('[data-text=Price]').html(itemObject.sellingPrice);
+  }
+
+  validationFailed(msg: string) {
+    console.log(msg);
+  }
+
+  checkIfNumber(qtyElement: HTMLInputElement, field?) {
+    if (!this.isNumber(qtyElement.innerHTML)) {
+      this.validationFailed('Field must be a number!');
+      return;
+    }
+    console.log('is good');
+
+    if (field === 'sqty') {
+      this.getTotalSaleAmountOnItem();
+    }
+
+    if (field === 'pqty') {
+      this.getTotalPurchaseAmountOnItem();
+    }
+  }
+
+  isNumber(value): boolean {
+    return !isNaN(parseFloat(value)) && isFinite(value);
   }
 }
