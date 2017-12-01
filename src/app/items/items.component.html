@@ -25,11 +25,11 @@
     </tbody>
     <tfoot>
       <tr>
-        <td contenteditable="true" data-text="Item" (blur)="checkIfEmpty(item)" #item appAutoComplete></td>
-        <td contenteditable="true" data-text="Unit" (blur)="checkIfEmpty(unit)" (input)="checkIfHasNumber(unit)" #unit></td>
-        <td contenteditable="true" data-text="Qty" (blur)="checkIfEmpty(qty)" (input)="checkIfNumber(qty)" #qty></td>
-        <td contenteditable="true" data-text="Purchase Cost" (blur)="checkIfEmpty(pcost)" (input)="checkIfNumber(pcost)" #pcost></td>
-        <td contenteditable="true" data-text="Selling Price" (blur)="checkIfEmpty(sprice)" (input)="checkIfNumber(sprice)" #sprice (keydown.enter)="clickAddButton()"></td>
+        <td contenteditable="true" data-text="Item" (blur)="checkIfEmpty(item, 'string')" #item appAutoComplete></td>
+        <td contenteditable="true" data-text="Unit" (blur)="checkIfEmpty(unit, 'string')" (input)="checkIfHasNumber(unit)" #unit></td>
+        <td contenteditable="true" data-text="Qty" (blur)="checkIfEmpty(qty, 'number')" (input)="checkIfNumber(qty)" #qty></td>
+        <td contenteditable="true" data-text="Purchase Cost" (blur)="checkIfEmpty(pcost, 'number')" (input)="checkIfNumber(pcost)" #pcost></td>
+        <td contenteditable="true" data-text="Selling Price" (blur)="checkIfEmpty(sprice, 'number')" (input)="checkIfNumber(sprice)" #sprice (keydown.enter)="clickAddButton()"></td>
         <td id="addButton">
           <a id="addisiaButton" class="pull-right" (click)="addItem()">
             <i class="icon ion-android-add-circle"></i>

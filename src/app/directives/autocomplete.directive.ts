@@ -32,7 +32,6 @@ export class AutoCompleteDirective {
                         select: function (event, ui) {
                             jsonItems.forEach(function (item) {
                                 if (item.itemName === ui.item.value) {
-                                    console.log(item);
                                     itemService.event.emit(item);
                                 }
                             })

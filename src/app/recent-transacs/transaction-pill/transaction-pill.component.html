@@ -8,10 +8,12 @@
     <table class="table celled ">
       <tr *ngFor="let item of transactionData.items">
         <td>{{ item.itemName }}</td>
+        <td>{{ item.purchaseCost }}</td>
         <td>{{ item.sellingPrice }}</td>
       </tr>
       <tr>
         <th>TOTAL</th>
+        <th></th>
         <th>{{ total }}</th>
       </tr>
     </table>

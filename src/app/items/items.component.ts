@@ -17,6 +17,7 @@ export class ItemsComponent implements OnInit {
   // array of items that are displayed so the user can see
   // what items they're going to post
   items = [];
+  somethingIsEmpty = true;
 
   constructor(private itemService: ItemService,
     private toastyService: ToastyService,
@@ -38,12 +39,14 @@ export class ItemsComponent implements OnInit {
   }
 
   addItem() {
-    if (this.checkIfEmpty) {
-      const toastOptions: ToastOptions = {
-        title: '',
-        msg: 'Item not added',
-        timeout: 5000,
-      };
+    const toastOptions: ToastOptions = {
+      title: '',
+      msg: 'Fill in the fields please',
+      timeout: 5000,
+    };
+    console.log(this.somethingIsEmpty);
+    if (this.somethingIsEmpty) {
+      toastOptions.msg = 'Something is empty';
       this.toastyService.error(toastOptions);
       return;
     }
@@ -139,26 +142,36 @@ export class ItemsComponent implements OnInit {
     console.log(type + ': ' + msg);
   }
 
-  checkIfEmpty(element: HTMLInputElement) {
-    if (
-      +element.innerHTML === NaN ||
-      element.innerHTML === null ||
-      +element.innerHTML === 0 ||
-      element.innerHTML === ''
+  checkIfEmpty(element: HTMLInputElement, type) {
+    const $element = $(element);
+    if (type === 'number' &&
+      +$element.html().replace(/\s+/g, '') === NaN ||
+      +$element.html().replace(/\s+/g, '') === 0
     ) {
       $(element).addClass('error-field');
       this.validationError('Required field!');
-      return true;
+      this.somethingIsEmpty = true;
+      return;
     }
-    return false
+    if (type === 'string' &&
+      $element.html().replace(/\s+/g, '') === null ||
+      $element.html().replace(/\s+/g, '') === ''
+    ) {
+      $(element).addClass('error-field');
+      this.validationError('Required field!');
+      this.somethingIsEmpty = true;
+      return;
+    }
+    this.somethingIsEmpty = false;
   }
 
   checkIfNumber(element: HTMLInputElement) {
     if (!this.isNumber(element.innerHTML)) {
       this.validationError('Field must be a number!');
-      return;
+      return false;
     }
     console.log('is good');
+    return true;
   }
 
   checkIfHasNumber(element: HTMLInputElement) {

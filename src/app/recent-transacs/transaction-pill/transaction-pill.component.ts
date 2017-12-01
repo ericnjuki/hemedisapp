@@ -21,7 +21,7 @@ export class TransactionPillComponent implements OnInit {
       this.total += item.sellingPrice;
 
     }
-    if (this.transactionData.transactionType === 1) {
+    if (this.transactionData.transactionType === 2) {
       this.isPurchase = true;
       this.typeInWords = 'purchase'
 
