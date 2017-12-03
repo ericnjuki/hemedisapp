@@ -7,7 +7,7 @@ import { ITransactionData } from 'app/interfaces/transacs.interface';
  */
 @Injectable()
 export class TransactionService {
-    private _url = 'http://shopassisst2.azurewebsites.net/api/v1.0/transacs/';
+    private _url = 'http://localhost:1111/api/v1.0/transacs/';
 
     private options: RequestOptionsArgs = {};
 

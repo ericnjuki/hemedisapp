@@ -45,6 +45,9 @@ a .ion-android-remove-circle{
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);  
 
 }
+#np-form-status{
+    border: 1px solid red;
+}
 .table>tfoot>tr>td{
     border-top: none;
     

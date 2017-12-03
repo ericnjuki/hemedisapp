@@ -18,10 +18,8 @@ import { ToastyService, ToastyConfig, ToastOptions, ToastData } from 'ng2-toasty
   encapsulation: ViewEncapsulation.None
 })
 export class RecordTransacsComponent implements OnInit {
-  // displayed on ui after a suggested item is clicked
-  suggestedItem = {
-    sellingPrice: ''
-  };
+  // to display errors during user input
+  formStatus = 'All Good';
 
   // displayed on ui after an item is added
   purchaseItems = [];
@@ -48,27 +46,26 @@ export class RecordTransacsComponent implements OnInit {
 
       // setting focus on contenteditable <td>s on loading a tab, for visibility
       setTimeout(() => {
-        $('[name=record-sales] tfoot tr').children('td').eq(0).focus();
+        $('[name=record-sales] tfoot tr').eq(1).children('td').eq(0).focus();
       }, 0);
 
       $('[href="#sale"]').on('click', () => {
         setTimeout(() => {
-          $('[name=record-sales] tfoot tr').children('td').eq(0).focus();
+          $('[name=record-sales] tfoot tr').eq(1).children('td').eq(0).focus();
         }, 0);
       });
       $('[href="#purchase"]').on('click', () => {
         setTimeout(() => {
-          $('[name=record-purchases] tfoot tr').children('td').eq(0).focus();
+          $('[name=record-purchases] tfoot tr').eq(1).children('td').eq(0).focus();
         }, 0);
       });
-      // highlights all text on 'Item' fields on focus
-      $('[data-text=Item]').on('focus', () => {
-        document.execCommand('selectAll', false, null);
-      });
+      const $contentEditables = $('[contentEditable=true]');
+      $contentEditables.keypress(function (e) { return e.which !== 13; });
     });
   }
 
   validateItem(transacType) {
+    this.allItemsExist = false;
     const toastOptions: ToastOptions = {
       title: '',
       msg: 'Item not added',
@@ -77,13 +74,13 @@ export class RecordTransacsComponent implements OnInit {
     let $itemData;
     switch (transacType) {
       case 'sale':
-        $itemData = $('[name=record-sales] tfoot tr').eq(0).children('td');
+        $itemData = $('[name=record-sales] tfoot tr').eq(1).children('td');
         break;
       case 'purchase':
-        $itemData = $('[name=record-purchases] tfoot tr').eq(0).children('td');
+        $itemData = $('[name=record-purchases] tfoot tr').eq(1).children('td');
         break;
       default:
-        this.validationFailed('Invalid transactionType!');
+        this.validationFailed('error', 'Invalid transactionType!');
         return;
     }
 
@@ -97,108 +94,82 @@ export class RecordTransacsComponent implements OnInit {
       +itemQuantity === NaN ||
       +itemPrice === NaN || +itemPrice === 0
     ) {
-      this.validationFailed('All fields must be filled!', 'error');
+      this.validationFailed('error', 'All fields must be filled!');
       return;
     }
 
     if (!this.checkIfNumber($itemData.eq(1))) {
       $itemData.eq(1).addClass('error-field');
-      this.validationFailed('Quantity must be a number!', 'error');
+      this.validationFailed('error', 'Quantity must be a number!');
       return;
     }
 
     if (!this.checkIfNumber($itemData.eq(2))) {
       $itemData.eq(2).addClass('error-field');
-      this.validationFailed('Price must be a number!', 'error');
+      this.validationFailed('error', 'Price must be a number!');
       return;
     }
 
     this.transaction.date = this.setDate();
 
-    const checkNamesToast = this.addToast('wait', 'Validating...');
     this.itemService.searchItems().subscribe(jsonNames => {
       this.arrJsonNames = jsonNames;
-      for (let i = 0; i < this.arrJsonNames.length; i++) {
-        if (this.arrJsonNames[i].toUpperCase() === itemName.toUpperCase()) {
-          this.allItemsExist = true;
-        }
-      }
-      if (!this.allItemsExist) {
-        this.toastyService.clear(checkNamesToast);
-        this.validationFailed('Item doesn\'t exist in your records!', 'error');
+      if (this.arrJsonNames.length === 0) {
+        this.validationFailed('error', 'Inventory has no records (temp error)');
         $itemData.eq(0).focus();
         return;
-      } else {
-        this.itemsArray.push({
-          itemName: itemName,
+      }
+      let i = 0;
+      while (!this.allItemsExist) {
+        if (this.arrJsonNames[i].toUpperCase() === itemName.toUpperCase()) {
+          this.allItemsExist = true;
+        } else if (i === this.arrJsonNames.length - 1) {
+          this.validationFailed('error', 'Item doesn\'t exist in your records!');
+          $itemData.eq(0).focus();
+          // highlights all text on 'Item' fields on focus
+          document.execCommand('selectAll', false, null);
+          return;
+        }
+        i++;
+      }
+      // input item exists in records
+
+      this.itemsArray.push({
+        itemName: itemName,
+        unit: itemUnit,
+        quantity: itemQuantity,
+        purchaseCost: 0,
+        sellingPrice: itemPrice
+      });
+      this.transaction.items = this.itemsArray;
+
+      if (transacType === 'sale') {
+        this.saleItems.push({
+          item: itemName,
           unit: itemUnit,
           quantity: itemQuantity,
-          purchaseCost: 0,
-          sellingPrice: itemPrice
+          price: itemPrice,
+          amount: itemQuantity * itemPrice
         });
-        this.toastyService.clear(checkNamesToast);
-        this.transaction.items = this.itemsArray;
-
-        if (transacType === 'sale') {
-          this.saleItems.push({
-            item: itemName,
-            unit: itemUnit,
-            quantity: itemQuantity,
-            price: itemPrice,
-            amount: itemQuantity * itemPrice
-          });
-          this.transaction.transactionType = 1;
-          $itemData.not($('[name=record-sales] tfoot tr td#addButton')).html('');
-        }
-        if (transacType === 'purchase') {
-          this.purchaseItems.push({
-            item: itemName,
-            unit: itemUnit,
-            quantity: itemQuantity,
-            price: itemPrice,
-            amount: itemQuantity * itemPrice
-          });
-          this.transaction.transactionType = 2;
-          $itemData.not($('[name=record-purchases] tfoot tr td#addButton')).html('');
-        }
+        this.transaction.transactionType = 1;
+        // $itemData.not($('[name=record-sales] tfoot tr td#addButton')).html('');
+      }
+      if (transacType === 'purchase') {
+        this.purchaseItems.push({
+          item: itemName,
+          unit: itemUnit,
+          quantity: itemQuantity,
+          price: itemPrice,
+          amount: itemQuantity * itemPrice
+        });
+        this.transaction.transactionType = 2;
+        // $itemData.not($('[name=record-purchases] tfoot tr td#addButton')).html('');
       }
     });
+    $itemData.not($('td#addButton')).html('');
     $itemData.eq(1).removeClass('error-field');
     $itemData.eq(2).removeClass('error-field');
   }
-
-  // addSaleItem() {
-  //   // bad: jquery
-  //   const $itemData = $('[name=record-sales] tfoot tr').eq(0).children('td');
-  //   const saleItemName = $itemData.eq(0).html();
-  //   const itemUnit = 'pc';
-  //   const itemQuantity = +$itemData.eq(1).html().replace(/\s+/g, '');
-  //   const itemSellingPrice = +$itemData.eq(2).html().replace(/\s+/g, '');
-
-  //   this.saleItems.push({
-  //     item: saleItemName,
-  //     unit: itemUnit,
-  //     quantity: itemQuantity,
-  //     price: itemSellingPrice,
-  //     amount: itemQuantity * itemSellingPrice
-  //   });
-
-  //   this.itemsArray.push({
-  //     itemName: saleItemName,
-  //     unit: itemUnit,
-  //     quantity: itemQuantity,
-  //     purchaseCost: 0,
-  //     sellingPrice: itemSellingPrice
-  //   });
-
-  //   this.transaction = {
-  //     date: this.setDate(),
-  //     items: this.itemsArray,
-  //     transactionType: 1
-  //   };
-  //   $itemData.not($('[name=record-sales] tfoot tr td#addButton')).html('');
-
-  // }
 
   removeSaleItem(x) {
     this.saleItems.splice(x, 1);
@@ -213,11 +184,12 @@ export class RecordTransacsComponent implements OnInit {
   }
 
   postSale() {
-    const firstToast = this.addToast('wait');
+    console.log('y;eaaj');
+    const firstToast = this.addToast('wait', 'posting');
     this.transacService.postTransacs(this.transaction)
       .subscribe(response => {
         this.toastyService.clear(firstToast);
-        this.addToast();
+        this.addToast('success', 'Posted!');
         console.log(response);
       });
 
@@ -226,37 +198,6 @@ export class RecordTransacsComponent implements OnInit {
     // clear items in temp array
     this.itemsArray = [];
   }
-
-  // addPurchaseItem() {
-  //   const $itemData = $('[name=record-purchases] tfoot tr').eq(0).children('td');
-  //   const purchaseItemName = $itemData.eq(0).html();
-  //   const itemUnit = 'pc';
-  //   const itemQuantity = +$itemData.eq(1).html().replace(/\s+/g, '');
-  //   const itemPurchaseCost = +$itemData.eq(2).html().replace(/\s+/g, '');
-
-  //   this.purchaseItems.push({
-  //     item: purchaseItemName,
-  //     unit: itemUnit,
-  //     quantity: itemQuantity,
-  //     price: itemPurchaseCost,
-  //     amount: itemQuantity * itemPurchaseCost
-  //   });
-
-  //   this.itemsArray.push({
-  //     itemName: purchaseItemName,
-  //     unit: itemUnit,
-  //     quantity: itemQuantity,
-  //     purchaseCost: itemPurchaseCost,
-  //     sellingPrice: 0
-  //   });
-
-  //   this.transaction = {
-  //     date: this.setDate(),
-  //     items: this.itemsArray,
-  //     transactionType: 2
-  //   };
-  //   $itemData.not($('[name=record-purchases] tfoot tr td#addButton')).html('');
-  // }
 
   removePurchaseItem(x) {
     this.purchaseItems.splice(x, 1);
@@ -271,11 +212,11 @@ export class RecordTransacsComponent implements OnInit {
   }
 
   postPurchase() {
-    const firstToast = this.addToast('wait');
+    const firstToast = this.addToast('wait', 'posting..');
     this.transacService.postTransacs(this.transaction)
       .subscribe(response => {
         this.toastyService.clear(firstToast);
-        this.addToast();
+        this.addToast('success', 'Posted!');
         console.log(response);
       });
 
@@ -290,23 +231,37 @@ export class RecordTransacsComponent implements OnInit {
   ///
   /// OTHER
   ///
-  addToast(toastType?, message?) {
+  addToast(toastType: string, message: string) {
     let toastId;
     const toastOptions: ToastOptions = {
       title: '',
-      msg: 'posting...',
-      theme: 'bootstrap',
       onAdd: (toast: ToastData) => {
         toastId = toast.id
       }
     };
-    if (toastType === 'wait') {
-      toastOptions.msg = message;
-      this.toastyService.wait(toastOptions);
-    } else {
-      toastOptions.msg = 'Posted!';
-      toastOptions.timeout = 3000;
-      this.toastyService.success(toastOptions);
+    toastOptions.title = '';
+    toastOptions.msg = message;
+    toastOptions.theme = 'bootstrap';
+    toastOptions.timeout = 3000;
+
+    switch (toastType) {
+      case 'wait':
+        this.toastyService.wait(toastOptions);
+        break;
+      case 'info':
+        this.toastyService.info(toastOptions);
+        break;
+      case 'success':
+        this.toastyService.success(toastOptions);
+        break;
+      case 'warning':
+        this.toastyService.warning(toastOptions);
+        break;
+      case 'error':
+        this.toastyService.error(toastOptions);
+        break;
+      default:
+        this.toastyService.default(toastOptions);
     }
     return toastId;
   }
@@ -321,14 +276,14 @@ export class RecordTransacsComponent implements OnInit {
   }
 
   getTotalSaleAmountOnItem() {
-    $('[name=record-sales] tfoot tr td ').eq(3)
+    $('[name=record-sales] tfoot tr ').eq(1).children().eq(3)
       .html(
       (+$('[name=record-sales] [data-text=Qty]').html() * +$('[name=record-sales] [data-text=Price]').html()).toString()
       );
   }
 
   getTotalPurchaseAmountOnItem() {
-    $('[name=record-purchases] tfoot tr td ').eq(3)
+    $('[name=record-purchases] tfoot tr ').eq(1).children().eq(3)
       .html(
       (+$('[name=record-purchases] [data-text=Qty]').html() * +$('[name=record-purchases] [data-text=Price]').html()).toString()
       );
@@ -338,15 +293,21 @@ export class RecordTransacsComponent implements OnInit {
     $('[data-text=Price]').html(itemObject.sellingPrice);
   }
 
-  validationFailed(message: string, popupType?) {
+  validationFailed(popupType, message: string) {
     const toastOptions: ToastOptions = {
       title: '',
       msg: message,
       timeout: 3000,
     };
-    if (popupType === 'error') {
-      this.toastyService.error(toastOptions);
-      return;
+
+    switch (popupType) {
+      case 'error':
+        this.toastyService.error(toastOptions);
+        return;
+      case 'warning':
+        this.formStatus = message;
+        // this.toastyService.warning(toastOptions);
+        break;
     }
     console.log(message);
     return;
@@ -355,10 +316,10 @@ export class RecordTransacsComponent implements OnInit {
   checkIfNumber(qtyElement: HTMLInputElement, field?) {
     const $qtyElement = $(qtyElement);
     if (!this.isNumber($qtyElement.html().replace(/\s+/g, ''))) {
-      this.validationFailed('Field must be a number!');
+      this.validationFailed('warning', 'Field must be a number!');
       return false;
     }
-
+    this.formStatus = 'All Good';
     if (field === 'sqty') {
       this.getTotalSaleAmountOnItem();
     }

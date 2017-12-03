@@ -43,11 +43,12 @@
               </tr>
             </tbody>
             <tfoot>
+              <tr id="np-form-status">{{ formStatus }}</tr>
               <tr>
                 <td contenteditable="true" data-text="Item"></td>
                 <td contenteditable="true" data-text="Qty" (input)="checkIfNumber(sqty, 'sqty')" #sqty></td>
                 <td contenteditable="true" data-text="Price" (input)="checkIfNumber(sprice)" #sprice></td>
-                <td ></td>
+                <td></td>
                 <td id="addButton">
                   <a class="pull-right" (click)="validateItem('sale')">
                     <i class="icon ion-android-add-circle"></i>
@@ -94,10 +95,10 @@
             </thead>
             <tbody>
               <tr *ngFor="let purchaseItem of purchaseItems; let purchaseItemIndex=index">
-                <td>{{purchaseItem.item}}</td>
-                <td>{{purchaseItem.quantity}}</td>
-                <td>{{purchaseItem.price}}</td>
-                <td>{{purchaseItem.amount}}</td>
+                <td>{{ purchaseItem.item }}</td>
+                <td>{{ purchaseItem.quantity }}</td>
+                <td>{{ purchaseItem.price }}</td>
+                <td>{{ purchaseItem.amount }}</td>
                 <td>
                   <a class="pull-right" (click)="removePurchaseItem(purchaseItemIndex)">
                     <i class="icon ion-android-remove-circle"></i>
@@ -106,6 +107,7 @@
               </tr>
             </tbody>
             <tfoot>
+              <tr id="np-form-status">{{ formStatus }}</tr>
               <tr>
                 <td contenteditable="true" data-text="Item"></td>
                 <td contenteditable="true" data-text="Qty" (input)="checkIfNumber(pqty, 'pqty')" #pqty></td>
