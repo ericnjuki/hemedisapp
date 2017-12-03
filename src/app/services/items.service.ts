@@ -16,7 +16,7 @@ export class ItemService {
         return this.http.get(this._url + 'g')
             .map(response => response.json());
     }
-    searchItems() {
+    getItemNames() {
         return this.http.get(this._url + 'g/names')
             .map((response: Response) => response.json());
     }

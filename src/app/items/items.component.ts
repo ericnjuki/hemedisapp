@@ -19,7 +19,9 @@ export class ItemsComponent implements OnInit {
   items = [];
   somethingIsEmpty = true;
 
-  constructor(private itemService: ItemService,
+  // to display errors during user input
+  formStatus = { OK: true, text: 'All Good' }; constructor(private itemService: ItemService,
+
     private toastyService: ToastyService,
     private toastyConfig: ToastyConfig,
     private transacService: TransactionService) { }
@@ -44,13 +46,12 @@ export class ItemsComponent implements OnInit {
       msg: 'Fill in the fields please',
       timeout: 5000,
     };
-    console.log(this.somethingIsEmpty);
     if (this.somethingIsEmpty) {
       toastOptions.msg = 'Something is empty';
       this.toastyService.error(toastOptions);
       return;
     }
-    const $itemData = $('[name=record-items] tfoot tr').eq(0).children('td');
+    const $itemData = $('[name=record-items] tfoot tr').eq(1).children('td');
     const itemName = $itemData.eq(0).html();
     const unit = $itemData.eq(1).html();
     // .replace(regex) to remove all spaces from the value of the td;
@@ -69,7 +70,7 @@ export class ItemsComponent implements OnInit {
     this.items.push(item);
     // clears row of contenteditable tds after its values are added to the
     // array of items above
-    $itemData.not($('[name=record-items] tfoot tr td#addButton')).html('');
+    $itemData.not($('td#addButton')).html('');
     // and focus on the first contenteditable again
     $itemData.eq(0).focus();
   }
@@ -95,12 +96,11 @@ export class ItemsComponent implements OnInit {
         }
         this.transacService.postTransacs(purchaseTransaction)
           .subscribe(res => {
-            console.log(res);
             // clear all items from display; shows the user that items have been posted.
             this.items = [];
           });
       });
-    const $itemData = $('[name=record-items] tfoot tr').eq(0).children('td');
+    const $itemData = $('[name=record-items] tfoot tr').eq(1).children('td');
     $itemData.eq(0).focus();
   }
 
@@ -139,7 +139,8 @@ export class ItemsComponent implements OnInit {
   }
 
   validationError(msg: string, type?: string) {
-    console.log(type + ': ' + msg);
+    this.formStatus.OK = false;
+    this.formStatus.text = msg;
   }
 
   checkIfEmpty(element: HTMLInputElement, type) {
@@ -162,15 +163,20 @@ export class ItemsComponent implements OnInit {
       this.somethingIsEmpty = true;
       return;
     }
+    this.clearRequiredError(element);
     this.somethingIsEmpty = false;
   }
 
+  clearRequiredError(element: HTMLInputElement) {
+    $(element).removeClass('error-field');
+    this.formStatus.OK = true;
+    this.formStatus.text = 'All Good';
+  }
   checkIfNumber(element: HTMLInputElement) {
     if (!this.isNumber(element.innerHTML)) {
       this.validationError('Field must be a number!');
       return false;
     }
-    console.log('is good');
     return true;
   }
 

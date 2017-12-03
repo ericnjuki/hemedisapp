@@ -20,6 +20,12 @@ a .ion-android-remove-circle{
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);  
 
 }
+.np-form-status-notok{
+    color: red;
+}
+.np-form-status-ok{
+    color: green;
+}
 .table>tfoot>tr>td~td{
     border-left: none;
     

@@ -19,7 +19,7 @@ import { ToastyService, ToastyConfig, ToastOptions, ToastData } from 'ng2-toasty
 })
 export class RecordTransacsComponent implements OnInit {
   // to display errors during user input
-  formStatus = 'All Good';
+  formStatus = { OK: true, text: 'All Good' };
 
   // displayed on ui after an item is added
   purchaseItems = [];
@@ -34,6 +34,7 @@ export class RecordTransacsComponent implements OnInit {
   // other
   allItemsExist: boolean;
   arrJsonNames: Array<string> = [];
+  salePurchaseFlag = 0;
 
   constructor(private transacService: TransactionService,
     private toastyService: ToastyService,
@@ -59,25 +60,40 @@ export class RecordTransacsComponent implements OnInit {
           $('[name=record-purchases] tfoot tr').eq(1).children('td').eq(0).focus();
         }, 0);
       });
+      // disabling newline on enter in contenteditable
       const $contentEditables = $('[contentEditable=true]');
       $contentEditables.keypress(function (e) { return e.which !== 13; });
+
     });
   }
 
+  // called from template, when add item button is clicked
   validateItem(transacType) {
+    // this flag verifies that all items input exist in remote
     this.allItemsExist = false;
     const toastOptions: ToastOptions = {
       title: '',
       msg: 'Item not added',
       timeout: 5000,
     };
+    // getting input from template
     let $itemData;
     switch (transacType) {
       case 'sale':
+        if (this.salePurchaseFlag === 1 && this.purchaseItems.length > 0) {
+          this.validationFailed('error', 'Post purchases first!')
+          return;
+        }
         $itemData = $('[name=record-sales] tfoot tr').eq(1).children('td');
+        this.salePurchaseFlag = 0;
         break;
       case 'purchase':
+        if (this.salePurchaseFlag === 0 && this.saleItems.length > 0) {
+          this.validationFailed('error', 'Post sales first!')
+          return;
+        }
         $itemData = $('[name=record-purchases] tfoot tr').eq(1).children('td');
+        this.salePurchaseFlag = 1;
         break;
       default:
         this.validationFailed('error', 'Invalid transactionType!');
@@ -89,6 +105,7 @@ export class RecordTransacsComponent implements OnInit {
     const itemQuantity = +$itemData.eq(1).html().replace(/\s+/g, '');
     const itemPrice = +$itemData.eq(2).html().replace(/\s+/g, '');
 
+    // don't do this again: verifying empty fields
     if (
       itemName === '' || itemName === null ||
       +itemQuantity === NaN ||
@@ -112,7 +129,7 @@ export class RecordTransacsComponent implements OnInit {
 
     this.transaction.date = this.setDate();
 
-    this.itemService.searchItems().subscribe(jsonNames => {
+    this.itemService.getItemNames().subscribe(jsonNames => {
       this.arrJsonNames = jsonNames;
       if (this.arrJsonNames.length === 0) {
         this.validationFailed('error', 'Inventory has no records (temp error)');
@@ -132,7 +149,7 @@ export class RecordTransacsComponent implements OnInit {
         }
         i++;
       }
-      // input item exists in records
+      // input item exists in records and all fields good
 
       this.itemsArray.push({
         itemName: itemName,
@@ -152,7 +169,6 @@ export class RecordTransacsComponent implements OnInit {
           amount: itemQuantity * itemPrice
         });
         this.transaction.transactionType = 1;
-        // $itemData.not($('[name=record-sales] tfoot tr td#addButton')).html('');
       }
       if (transacType === 'purchase') {
         this.purchaseItems.push({
@@ -163,10 +179,10 @@ export class RecordTransacsComponent implements OnInit {
           amount: itemQuantity * itemPrice
         });
         this.transaction.transactionType = 2;
-        // $itemData.not($('[name=record-purchases] tfoot tr td#addButton')).html('');
       }
     });
     $itemData.not($('td#addButton')).html('');
+    $itemData.eq(0).focus();
     $itemData.eq(1).removeClass('error-field');
     $itemData.eq(2).removeClass('error-field');
   }
@@ -184,7 +200,6 @@ export class RecordTransacsComponent implements OnInit {
   }
 
   postSale() {
-    console.log('y;eaaj');
     const firstToast = this.addToast('wait', 'posting');
     this.transacService.postTransacs(this.transaction)
       .subscribe(response => {
@@ -293,6 +308,19 @@ export class RecordTransacsComponent implements OnInit {
     $('[data-text=Price]').html(itemObject.sellingPrice);
   }
 
+  clickAddButton(transacType) {
+    // simulates a click.
+    // i'm using this to add a new row to array of 'items to be added'
+    // when the enter_key is clicked from anywhere within the row that's
+    // currently being edited
+    this.validateItem(transacType);
+    // document.getElementById('addisiaButton').click();
+  }
+
+  getTotalItems() {
+    return this.itemsArray.length;
+  }
+
   validationFailed(popupType, message: string) {
     const toastOptions: ToastOptions = {
       title: '',
@@ -305,11 +333,10 @@ export class RecordTransacsComponent implements OnInit {
         this.toastyService.error(toastOptions);
         return;
       case 'warning':
-        this.formStatus = message;
-        // this.toastyService.warning(toastOptions);
+        this.formStatus.OK = false;
+        this.formStatus.text = message;
         break;
     }
-    console.log(message);
     return;
   }
 
@@ -319,7 +346,8 @@ export class RecordTransacsComponent implements OnInit {
       this.validationFailed('warning', 'Field must be a number!');
       return false;
     }
-    this.formStatus = 'All Good';
+    this.formStatus.OK = true;
+    this.formStatus.text = 'All Good';
     if (field === 'sqty') {
       this.getTotalSaleAmountOnItem();
     }

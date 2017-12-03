@@ -11,6 +11,15 @@
         height: 100%;
 
     }
+    .nav-tabs li a{
+        color: black;
+    }
+    .nav-tabs>li.active>a, .nav-tabs>li.active>a:focus{
+        background: #ecf0f1;
+    }
+    .nav-tabs>li>a:hover{
+        background: #e3e3e3;
+    }
     .nav-tabs a{
         padding: 0;
         width: 100%;
@@ -45,8 +54,11 @@ a .ion-android-remove-circle{
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);  
 
 }
-#np-form-status{
-    border: 1px solid red;
+.np-form-status-notok{
+    color: red;
+}
+.np-form-status-ok{
+    color: green;
 }
 .table>tfoot>tr>td{
     border-top: none;

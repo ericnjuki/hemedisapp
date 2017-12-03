@@ -24,12 +24,17 @@
       </tr>
     </tbody>
     <tfoot>
+      <tr [ngClass]="{
+        'np-form-status-ok':formStatus.OK,
+        'np-form-status-notok':!formStatus.OK}">
+        {{ formStatus.text }}
+      </tr>
       <tr>
-        <td contenteditable="true" data-text="Item" (blur)="checkIfEmpty(item, 'string')" #item appAutoComplete></td>
-        <td contenteditable="true" data-text="Unit" (blur)="checkIfEmpty(unit, 'string')" (input)="checkIfHasNumber(unit)" #unit></td>
-        <td contenteditable="true" data-text="Qty" (blur)="checkIfEmpty(qty, 'number')" (input)="checkIfNumber(qty)" #qty></td>
-        <td contenteditable="true" data-text="Purchase Cost" (blur)="checkIfEmpty(pcost, 'number')" (input)="checkIfNumber(pcost)" #pcost></td>
-        <td contenteditable="true" data-text="Selling Price" (blur)="checkIfEmpty(sprice, 'number')" (input)="checkIfNumber(sprice)" #sprice (keydown.enter)="clickAddButton()"></td>
+        <td contenteditable="true" data-text="Item" (blur)="checkIfEmpty(item, 'string')" (input)="clearRequiredError(item)"(keydown.enter)="clickAddButton()" #item></td>
+        <td contenteditable="true" data-text="Unit" (blur)="checkIfEmpty(unit, 'string')" (input)="clearRequiredError(unit);checkIfHasNumber(unit)" (keydown.enter)="clickAddButton()" #unit></td>
+        <td contenteditable="true" data-text="Qty" (blur)="checkIfEmpty(qty, 'number')" (input)="clearRequiredError(qty);checkIfNumber(qty)" (keydown.enter)="clickAddButton()" #qty></td>
+        <td contenteditable="true" data-text="Purchase Cost" (blur)="checkIfEmpty(pcost, 'number')" (input)="clearRequiredError(pcost);checkIfNumber(pcost)" (keydown.enter)="clickAddButton()" #pcost></td>
+        <td contenteditable="true" data-text="Selling Price" (blur)="checkIfEmpty(sprice, 'number')" (input)="clearRequiredError(sprice);checkIfNumber(sprice)" (keydown.enter)="clickAddButton()" #sprice></td>
         <td id="addButton">
           <a id="addisiaButton" class="pull-right" (click)="addItem()">
             <i class="icon ion-android-add-circle"></i>

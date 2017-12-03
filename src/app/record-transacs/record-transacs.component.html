@@ -43,14 +43,18 @@
               </tr>
             </tbody>
             <tfoot>
-              <tr id="np-form-status">{{ formStatus }}</tr>
+              <tr [ngClass]="{
+                'np-form-status-ok':formStatus.OK,
+                'np-form-status-notok':!formStatus.OK}">
+                {{ formStatus.text }}
+              </tr>
               <tr>
-                <td contenteditable="true" data-text="Item"></td>
-                <td contenteditable="true" data-text="Qty" (input)="checkIfNumber(sqty, 'sqty')" #sqty></td>
-                <td contenteditable="true" data-text="Price" (input)="checkIfNumber(sprice)" #sprice></td>
+                <td contenteditable="true" data-text="Item" (keydown.enter)="clickAddButton('sale')"></td>
+                <td contenteditable="true" data-text="Qty" (input)="checkIfNumber(sqty, 'sqty')" (keydown.enter)="clickAddButton('sale')" #sqty></td>
+                <td contenteditable="true" data-text="Price" (input)="checkIfNumber(sprice)" (keydown.enter)="clickAddButton('sale')" #sprice></td>
                 <td></td>
                 <td id="addButton">
-                  <a class="pull-right" (click)="validateItem('sale')">
+                  <a id="addisiaButton" class="pull-right" (click)="validateItem('sale')">
                     <i class="icon ion-android-add-circle"></i>
                   </a>
                 </td>
@@ -63,7 +67,9 @@
               </tr>
               <tr>
                 <td colspan="4">
-                  <button class="btn btn-success pull-right post" (click)="postSale()">Post</button>
+                  <button class="btn btn-success pull-right post" (click)="postSale()">
+                    Post {{ saleItems.length }} items
+                  </button>
                 </td>
               </tr>
             </tfoot>
@@ -107,14 +113,18 @@
               </tr>
             </tbody>
             <tfoot>
-              <tr id="np-form-status">{{ formStatus }}</tr>
+              <tr [ngClass]="{
+                'np-form-status-ok':formStatus.OK,
+                'np-form-status-notok':!formStatus.OK}">
+                {{ formStatus.text }}
+              </tr>
               <tr>
-                <td contenteditable="true" data-text="Item"></td>
-                <td contenteditable="true" data-text="Qty" (input)="checkIfNumber(pqty, 'pqty')" #pqty></td>
-                <td contenteditable="true" data-text="Price" (input)="checkIfNumber(pprice)" #pprice></td>
+                <td contenteditable="true" data-text="Item" (keydown.enter)="clickAddButton('purchase')"></td>
+                <td contenteditable="true" data-text="Qty" (input)="checkIfNumber(pqty, 'pqty')" (keydown.enter)="clickAddButton('purchase')" #pqty></td>
+                <td contenteditable="true" data-text="Price" (input)="checkIfNumber(pprice)" (keydown.enter)="clickAddButton('purchase')" #pprice></td>
                 <td></td>
                 <td id="addButton">
-                  <a class="pull-right" (click)="validateItem('purchase')">
+                  <a id="addisiaButton" class="pull-right" (click)="validateItem('purchase')">
                     <i class="icon ion-android-add-circle"></i>
                   </a>
                 </td>
@@ -126,7 +136,7 @@
               <tr>
                 <td colspan="5">
                   <button class="btn btn-success pull-right" (click)="postPurchase()">
-                    Post
+                    Post {{ purchaseItems.length }} items
                   </button>
                 </td>
               </tr>
