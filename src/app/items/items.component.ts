@@ -67,23 +67,32 @@ export class ItemsComponent implements OnInit {
       return;
     }
     const itemName = $itemData.eq(0).html();
-    const unit = $itemData.eq(4).html();
+    let unit;
     // .replace(regex) to remove all spaces from the value of the td;
     // fixed a bug where the value entered had a space character before it
-    const quantity = +$itemData.eq(3).html().replace(/\s+/g, '');
     const purchaseCost = +$itemData.eq(1).html().replace(/\s+/g, '');
     const sellingPrice = +$itemData.eq(2).html().replace(/\s+/g, '');
+    let quantity;
 
     const $QtyEl = $itemData.eq(3);
     if (!this.isEmpty($QtyEl, 'number') && !this.isNumber($QtyEl)) {
       toastOptions.msg = 'Quantity must be a number';
       this.toastyService.error(toastOptions);
       return;
+    } else if (this.isEmpty($QtyEl, 'number')) {
+      quantity = 1;
+    } else {
+      quantity = +$itemData.eq(3).html().replace(/\s+/g, '');
     }
     const $UnitEl = $itemData.eq(4);
-    if (!this.isEmpty($UnitEl, 'string') || !this.isEmpty($UnitEl, 'string') && this.hasNUmber($UnitEl)) {
+    if (this.isEmpty($UnitEl, 'string')) {
+      unit = 'pc';
+    } else if (this.hasNUmber($UnitEl)) {
       toastOptions.msg = 'Item unit has a number in it...';
       this.toastyService.warning(toastOptions);
+      unit = $itemData.eq(4).html();
+    } else {
+      unit = $itemData.eq(4).html();
     }
 
     const item = {
