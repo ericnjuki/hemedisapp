@@ -31,7 +31,7 @@ export class ItemsComponent implements OnInit {
       const $contentEditables = $('[contentEditable=true]');
       // focus on the first contenteditable field when this component is created
       setTimeout(() => {
-        $('table tfoot tr td').eq(0).focus();
+        $contentEditables.eq(0).focus();
       }, 0);
       // disables enter_key's action of adding a line-break in a contenteditable
       // as i've subscribed to the enter onclick event, setting it's action to
@@ -51,7 +51,7 @@ export class ItemsComponent implements OnInit {
       this.toastyService.error(toastOptions);
       return;
     }
-    const $itemData = $('[name=record-items] tfoot tr').eq(1).children('td');
+    const $itemData = $('[name=record-items] thead tr').eq(2).children('td');
     const itemName = $itemData.eq(0).html();
     const unit = $itemData.eq(1).html();
     // .replace(regex) to remove all spaces from the value of the td;
@@ -100,7 +100,7 @@ export class ItemsComponent implements OnInit {
             this.items = [];
           });
       });
-    const $itemData = $('[name=record-items] tfoot tr').eq(1).children('td');
+    const $itemData = $('[name=record-items] thead tr').eq(2).children('td');
     $itemData.eq(0).focus();
   }
 
@@ -138,7 +138,7 @@ export class ItemsComponent implements OnInit {
     return this.items.length;
   }
 
-  validationError(msg: string, type?: string) {
+  validationError(msg: string) {
     this.formStatus.OK = false;
     this.formStatus.text = msg;
   }
@@ -149,8 +149,6 @@ export class ItemsComponent implements OnInit {
       +$element.html().replace(/\s+/g, '') === NaN ||
       +$element.html().replace(/\s+/g, '') === 0
     ) {
-      $(element).addClass('error-field');
-      this.validationError('Required field!');
       this.somethingIsEmpty = true;
       return;
     }
@@ -158,8 +156,6 @@ export class ItemsComponent implements OnInit {
       $element.html().replace(/\s+/g, '') === null ||
       $element.html().replace(/\s+/g, '') === ''
     ) {
-      $(element).addClass('error-field');
-      this.validationError('Required field!');
       this.somethingIsEmpty = true;
       return;
     }
@@ -168,7 +164,6 @@ export class ItemsComponent implements OnInit {
   }
 
   clearRequiredError(element: HTMLInputElement) {
-    $(element).removeClass('error-field');
     this.formStatus.OK = true;
     this.formStatus.text = 'All Good';
   }
@@ -182,7 +177,7 @@ export class ItemsComponent implements OnInit {
 
   checkIfHasNumber(element: HTMLInputElement) {
     if (this.hasNUmber(element.innerHTML)) {
-      this.validationError('This is a unit, are you sure you want numbers in it?', 'warning');
+      this.validationError('This is a unit, are you sure you want numbers in it?');
     }
   }
 

@@ -30,15 +30,23 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let saleItem of saleItems; let saleItemIndex=index">
-                <td>{{ saleItem.item }}</td>
-                <td>{{ saleItem.quantity }}</td>
-                <td>{{ saleItem.price }}</td>
-                <td>{{ saleItem.amount }}</td>
-                <td>
-                  <a class="pull-right" (click)="removeSaleItem(saleItemIndex)">
-                    <i class="icon ion-android-remove-circle"></i>
-                  </a>
+              <tr>
+                <td colspan="5">
+                  <div class="np-scrollable">
+                    <table class="table">
+                      <tr *ngFor="let saleItem of saleItems; let saleItemIndex=index">
+                        <td class="col-md-4">{{ saleItem.item }}</td>
+                        <td class="col-md-2">{{ saleItem.quantity }}</td>
+                        <td class="col-md-3">{{ saleItem.price }}</td>
+                        <td class="col-md-2">{{ saleItem.amount }}</td>
+                        <td>
+                          <a class="pull-right" (click)="removeSaleItem(saleItemIndex)">
+                            <i class="icon ion-android-remove-circle"></i>
+                          </a>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
                 </td>
               </tr>
             </tbody>
@@ -61,9 +69,9 @@
               </tr>
               <tr>
                 <th>TOTAL</th>
+                <th></th>
+                <th></th>
                 <th>{{ getTotalSaleAmount() }}</th>
-                <th></th>
-                <th></th>
               </tr>
               <tr>
                 <td colspan="4">
@@ -100,15 +108,23 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let purchaseItem of purchaseItems; let purchaseItemIndex=index">
-                <td>{{ purchaseItem.item }}</td>
-                <td>{{ purchaseItem.quantity }}</td>
-                <td>{{ purchaseItem.price }}</td>
-                <td>{{ purchaseItem.amount }}</td>
-                <td>
-                  <a class="pull-right" (click)="removePurchaseItem(purchaseItemIndex)">
-                    <i class="icon ion-android-remove-circle"></i>
-                  </a>
+              <tr>
+                <td colspan="5">
+                  <div class="np-scrollable">
+                    <table class="table">
+                      <tr *ngFor="let purchaseItem of purchaseItems; let purchaseItemIndex=index">
+                        <td class="col-md-4">{{ purchaseItem.item }}</td>
+                        <td class="col-md-2">{{ purchaseItem.quantity }}</td>
+                        <td class="col-md-3">{{ purchaseItem.price }}</td>
+                        <td class="col-md-3">{{ purchaseItem.amount }}</td>
+                        <td>
+                          <a class="pull-right" (click)="removePurchaseItem(purchaseItemIndex)">
+                            <i class="icon ion-android-remove-circle"></i>
+                          </a>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
                 </td>
               </tr>
             </tbody>
@@ -131,6 +147,8 @@
               </tr>
               <tr>
                 <th>TOTAL</th>
+                <th></th>
+                <th></th>
                 <th>{{getTotalPurchaseAmount()}}</th>
               </tr>
               <tr>

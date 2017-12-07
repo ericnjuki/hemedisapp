@@ -60,6 +60,12 @@ a .ion-android-remove-circle{
 .np-form-status-ok{
     color: green;
 }
+.np-scrollable{
+    height: 15em;
+    width: 100%;
+    overflow-y: scroll;
+    border: 1px solid black;
+}
 .table>tfoot>tr>td{
     border-top: none;
     
