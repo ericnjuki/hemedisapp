@@ -1,5 +1,13 @@
-<div class="example-container mat-elevation-z8">
-  <button class="btn btn-primary" [disabled]="!updatedItems.length" (click)="postUpdate()">Update!</button>
+<div class="container">
+  <div class="col-md-7">
+    <input class="form-control"placeholder="Search" type="search">
+  </div>
+  <div class="col-md-4 pull-right">
+    <button class="btn btn-danger" (click)="enableEdits()">Edit</button>
+    <button class="btn btn-success" [disabled]="!updatedItems.length" (click)="postUpdate()">Save edits</button>
+  </div>
+</div>
+<div class="stock-container mat-elevation-z8">
   <mat-table #table [dataSource]="dataSource" matSort>
     <!-- ID Column -->
     <ng-container matColumnDef="itemName">

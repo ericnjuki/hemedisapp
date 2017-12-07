@@ -17,7 +17,7 @@ import { ToastyService, ToastyConfig, ToastOptions, ToastData } from 'ng2-toasty
 export class StockComponent implements OnInit, AfterViewInit {
   displayedColumns = ['itemName', 'quantity', 'unit', 'purchaseCost', 'sellingPrice'];
   dataSource: StockDataSource | null | any;
-  isContenteditable = true;
+  isContenteditable = false;
   updatedItems = [];
   itemToUpdate;
 
@@ -134,5 +134,9 @@ export class StockComponent implements OnInit, AfterViewInit {
       this.toastyService.success(toastOptions);
     }
     return toastId;
+  }
+
+  enableEdits() {
+    this.isContenteditable = true;
   }
 }
