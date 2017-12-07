@@ -7,6 +7,9 @@ import { Observable } from 'rxjs/Observable';
 import { MatTableDataSource } from '@angular/material/table';
 import { IItem } from 'app/interfaces/item.interface';
 import { ToastyService, ToastyConfig, ToastOptions, ToastData } from 'ng2-toasty';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import * as Fuse from 'fuse.js';
+import { Item } from 'app/shared/item.model';
 
 
 @Component({
@@ -15,11 +18,20 @@ import { ToastyService, ToastyConfig, ToastOptions, ToastData } from 'ng2-toasty
   styleUrls: ['./stock.component.css']
 })
 export class StockComponent implements OnInit, AfterViewInit {
-  displayedColumns = ['itemName', 'quantity', 'unit', 'purchaseCost', 'sellingPrice'];
-  dataSource: StockDataSource | null | any;
+  displayedColumns = ['itemName', 'quantity', 'unit', 'purchaseCost', 'sellingPrice', 'actions'];
+  dataSource: StockDataSource;
   isContenteditable = false;
   updatedItems = [];
   itemToUpdate;
+  searchResults: IItem[] = [];
+  fuseOptions = {
+    shouldSort: true,
+    threshold: 0.5,
+    distance: 100,
+    maxPatternLength: 32,
+    minMatchCharLength: 1,
+    keys: ['itemName']
+  };
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -31,7 +43,7 @@ export class StockComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    this.dataSource = new StockDataSource(this.itemService);
+    this.dataSource = new StockDataSource(this.paginator, this.sort, this.itemService);
     $(function () {
       $('[contenteditable=true]').focus(function () {
         const val = this.innerHTML;
@@ -44,8 +56,6 @@ export class StockComponent implements OnInit, AfterViewInit {
     })
   }
   ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
 
   }
 
@@ -134,6 +144,25 @@ export class StockComponent implements OnInit, AfterViewInit {
       this.toastyService.success(toastOptions);
     }
     return toastId;
+  }
+
+  filterItems(filterEl: HTMLInputElement) {
+    const term = filterEl.value.replace(/\s+/g, '');
+    if (term === '' || term === null || +term === NaN || +term === 0) {
+      this.dataSource = new StockDataSource(this.paginator, this.sort, this.itemService);
+      return;
+    }
+    this.itemService.getAllItems()
+      .subscribe(res => {
+        const fuse = new Fuse(res, this.fuseOptions);
+        const result = fuse.search(filterEl.value.toString());
+        this.searchResults = result.map(resultItem => {
+          let item: IItem = new Item();
+          item = <Item>resultItem;
+          return item;
+        });
+        this.dataSource.dataChange.next(this.searchResults);
+      });
   }
 
   enableEdits() {
