@@ -6,19 +6,19 @@
         <ul>
             <!-- add class active dynamically-->            
             <li class="side-nav-item">
-                <a routerLink="/stock">
+                <a routerLink="/stock" (click)="sidenavClicked(a1)" #a1>
                     <i class="nav-item-icon icon ion-ios-pricetags"></i>
                     Current Stock
                 </a>
             </li><!-- current Stock -->
             <li class="side-nav-item">
-                <a routerLink="/items">
+                <a routerLink="/items" (click)="sidenavClicked(a2)" #a2>
                     <i class="nav-item-icon icon ion-ios-pricetag-outline"></i>
                     Add New Items
                 </a>
             </li><!-- new items -->
             <li class="side-nav-item">
-                <a routerLink="/stats">
+                <a routerLink="/stats" (click)="sidenavClicked(a3)" #a3>
                     <i class="nav-item-icon icon ion-arrow-graph-up-right"></i>
                     Statistics
                 </a>
@@ -26,13 +26,13 @@
 
             
             <li class="side-nav-item"> <!-- add class active dynamically-->
-                <a routerLink="/transactions">
+                <a routerLink="/transactions" (click)="sidenavClicked(a4)" #a4>
                     <i class="nav-item-icon icon ion-ios-paper"></i>
                     Recent Transactions
                 </a>
             </li><!-- /.side-nav-item -->
             <li class="side-nav-item">
-                <a routerLink="/record">
+                <a routerLink="/record" (click)="sidenavClicked(a5)" #a5>
                     <i class="nav-item-icon icon ion-android-add"></i>
                     Record Transactions
                 </a>
