@@ -51,3 +51,6 @@ tfoot td:focus{
     cursor: pointer;
 
 }
+.error-field{
+    border-bottom: 2px solid red;
+}

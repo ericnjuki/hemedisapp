@@ -46,19 +46,45 @@ export class ItemsComponent implements OnInit {
       msg: 'Fill in the fields please',
       timeout: 5000,
     };
+    const $itemData = $('[name=record-items] thead tr').eq(2).children('td');
+
+    for (let i = 0; i <= 2; i++) {
+      const $el = $itemData.eq(i);
+      if (i === 0) {
+        if (!this.isValidInput($el, 'string')) {
+          return;
+        }
+        continue;
+      }
+      if (!this.isValidInput($el, 'number') || !this.isNumber($el)) {
+        return;
+      }
+    }
+
     if (this.somethingIsEmpty) {
       toastOptions.msg = 'Something is empty';
       this.toastyService.error(toastOptions);
       return;
     }
-    const $itemData = $('[name=record-items] thead tr').eq(2).children('td');
     const itemName = $itemData.eq(0).html();
-    const unit = $itemData.eq(1).html();
+    const unit = $itemData.eq(4).html();
     // .replace(regex) to remove all spaces from the value of the td;
     // fixed a bug where the value entered had a space character before it
-    const quantity = +$itemData.eq(2).html().replace(/\s+/g, '');
-    const purchaseCost = +$itemData.eq(3).html().replace(/\s+/g, '');
-    const sellingPrice = +$itemData.eq(4).html().replace(/\s+/g, '');
+    const quantity = +$itemData.eq(3).html().replace(/\s+/g, '');
+    const purchaseCost = +$itemData.eq(1).html().replace(/\s+/g, '');
+    const sellingPrice = +$itemData.eq(2).html().replace(/\s+/g, '');
+
+    const $QtyEl = $itemData.eq(3);
+    if (!this.isEmpty($QtyEl, 'number') && !this.isNumber($QtyEl)) {
+      toastOptions.msg = 'Quantity must be a number';
+      this.toastyService.error(toastOptions);
+      return;
+    }
+    const $UnitEl = $itemData.eq(4);
+    if (!this.isEmpty($UnitEl, 'string') || !this.isEmpty($UnitEl, 'string') && this.hasNUmber($UnitEl)) {
+      toastOptions.msg = 'Item unit has a number in it...';
+      this.toastyService.warning(toastOptions);
+    }
 
     const item = {
       itemName: itemName,
@@ -143,32 +169,50 @@ export class ItemsComponent implements OnInit {
     this.formStatus.text = msg;
   }
 
-  checkIfEmpty(element: HTMLInputElement, type) {
-    const $element = $(element);
+  isEmpty($element: JQuery<HTMLElement>, type) {
+    console.log($element.html().replace(/\s+/g, ''));
     if (type === 'number' &&
       +$element.html().replace(/\s+/g, '') === NaN ||
       +$element.html().replace(/\s+/g, '') === 0
     ) {
-      this.somethingIsEmpty = true;
-      return;
+      console.log(type + 'empty');
+      return true;
     }
     if (type === 'string' &&
       $element.html().replace(/\s+/g, '') === null ||
       $element.html().replace(/\s+/g, '') === ''
     ) {
-      this.somethingIsEmpty = true;
-      return;
+      console.log(type + 'empty');
+      console.log('string empty');
+      return true;
     }
-    this.clearRequiredError(element);
-    this.somethingIsEmpty = false;
+    console.log('shouldn\'t run');
+    return false
   }
 
-  clearRequiredError(element: HTMLInputElement) {
+  isValidInput($element: JQuery<HTMLElement>, type) {
+    this.somethingIsEmpty = this.isEmpty($element, type);
+    if (this.somethingIsEmpty) {
+      this.formStatus.OK = false;
+      this.formStatus.text = 'Fill in required fields!';
+      $element.addClass('error-field');
+      return false;
+    }
+    this.clearError($element);
+    return true;
+  }
+
+  clearError($element?) {
     this.formStatus.OK = true;
     this.formStatus.text = 'All Good';
+    if ($element !== undefined) {
+      $element = $($element);
+      $element.removeClass('error-field');
+    }
   }
-  checkIfNumber(element: HTMLInputElement) {
-    if (!this.isNumber(element.innerHTML)) {
+  isNumber($element?) {
+    $element = $($element);
+    if (!this.isNumeric($element.html())) {
       this.validationError('Field must be a number!');
       return false;
     }
@@ -181,7 +225,7 @@ export class ItemsComponent implements OnInit {
     }
   }
 
-  isNumber(value): boolean {
+  isNumeric(value): boolean {
     return !isNaN(parseFloat(value)) && isFinite(value);
   }
 
