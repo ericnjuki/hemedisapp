@@ -16,7 +16,9 @@ import { ToastyService, ToastyConfig, ToastOptions, ToastData } from 'ng2-toasty
 export class ItemsComponent implements OnInit {
   // array of items that are displayed so the user can see
   // what items they're going to post
-  items = [];
+  itemsForPurchase = [];
+  itemsForRecord = [];
+
   somethingIsEmpty = true;
 
   // to display errors during user input
@@ -80,7 +82,7 @@ export class ItemsComponent implements OnInit {
       this.toastyService.error(toastOptions);
       return;
     } else if (this.isEmpty($QtyEl, 'number')) {
-      quantity = 1;
+      quantity = 0;
     } else {
       quantity = +$itemData.eq(3).html().replace(/\s+/g, '');
     }
@@ -95,14 +97,23 @@ export class ItemsComponent implements OnInit {
       unit = $itemData.eq(4).html();
     }
 
-    const item = {
+    const itemForPurchase = {
       itemName: itemName,
       unit: unit,
       quantity: quantity,
       purchaseCost: purchaseCost,
       sellingPrice: sellingPrice
     };
-    this.items.push(item);
+    this.itemsForPurchase.push(itemForPurchase);
+
+    const itemForRecord = {
+      itemName: itemName,
+      unit: unit,
+      quantity: 0,
+      purchaseCost: purchaseCost,
+      sellingPrice: sellingPrice
+    }
+    this.itemsForRecord.push(itemForRecord);
     // clears row of contenteditable tds after its values are added to the
     // array of items above
     $itemData.not($('td#addButton')).html('');
@@ -111,12 +122,16 @@ export class ItemsComponent implements OnInit {
   }
 
   removeItem(x) {
-    this.items.splice(x, 1);
+    this.itemsForPurchase.splice(x, 1);
   }
 
   postItems() {
+    // will have quantitys set to 0: fix bug with quantity being added twice
+    console.log(this.itemsForPurchase);
+    console.log(this.itemsForRecord);
+
     const firstToast = this.addToast('wait');
-    this.itemService.addItems(this.items)
+    this.itemService.addItems(this.itemsForRecord)
       .subscribe(response => {
         this.toastyService.clear(firstToast);
         this.addToast();
@@ -126,13 +141,13 @@ export class ItemsComponent implements OnInit {
         let purchaseTransaction: ITransactionData;
         purchaseTransaction = {
           date: new Date().toISOString().substr(0, 10),
-          items: this.items,
+          items: this.itemsForPurchase,
           transactionType: 2
         }
         this.transacService.postTransacs(purchaseTransaction)
           .subscribe(res => {
             // clear all items from display; shows the user that items have been posted.
-            this.items = [];
+            this.itemsForPurchase = [];
           });
       });
     const $itemData = $('[name=record-items] thead tr').eq(2).children('td');
@@ -170,7 +185,7 @@ export class ItemsComponent implements OnInit {
   getNumberOfItems() {
     // using this to show the number of items that are going to be
     // posted in the add button
-    return this.items.length;
+    return this.itemsForPurchase.length;
   }
 
   validationError(msg: string) {
@@ -179,23 +194,18 @@ export class ItemsComponent implements OnInit {
   }
 
   isEmpty($element: JQuery<HTMLElement>, type) {
-    console.log($element.html().replace(/\s+/g, ''));
     if (type === 'number' &&
-      +$element.html().replace(/\s+/g, '') === NaN ||
-      +$element.html().replace(/\s+/g, '') === 0
+      +$element.html().replace(/\s+/g, '') === NaN
+      // || +$element.html().replace(/\s+/g, '') === 0
     ) {
-      console.log(type + 'empty');
       return true;
     }
     if (type === 'string' &&
       $element.html().replace(/\s+/g, '') === null ||
       $element.html().replace(/\s+/g, '') === ''
     ) {
-      console.log(type + 'empty');
-      console.log('string empty');
       return true;
     }
-    console.log('shouldn\'t run');
     return false
   }
 

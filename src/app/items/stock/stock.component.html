@@ -1,26 +1,31 @@
+<!-- Modal for conirming actions -->
 <np-modal [(visible)]="showDialog" [options]="options" (confirmed)="isConfirmed($event)">
   <!-- <button (click)="showModal(false)" class="btn">Close</button> -->
 </np-modal>
 
+<!-- search and actions -->
 <div class="alert" role="alert" id="result"></div>
 <div class="container">
   <div class="col-md-7">
     <input class="form-control"placeholder="Search" type="search" (input)="filterItems(filter)" #filter>
   </div>
   <div class="col-md-4 pull-right">
-    <button class="btn btn-danger" (click)="enableEdits()">Edit</button>
+    <button class="btn btn-info" (click)="enableEdits()">Edit</button>
     <button class="btn btn-success" [disabled]="!updatedItems.length" (click)="postUpdate()">Save edits</button>
+    <button class="btn btn-danger" [disabled]="!checkedItems.length" (click)="deleteMany()">Delete All</button>
   </div>
 </div>
+
+<!-- table of records -->
 <div class="stock-container mat-elevation-z8">
   <mat-table #table [dataSource]="dataSource" matSort>
     <!-- select Column -->
     <ng-container matColumnDef="multiselect">
       <mat-header-cell *matHeaderCellDef>
-        <input type="checkbox">
+        <input type="checkbox" [checked]="headerIsChecked" (change)="toggleAllChecked()">
       </mat-header-cell>
-      <mat-cell *matCellDef="let row" (input)="onItemInput(row, item)" #item>
-          <input type="checkbox">          
+      <mat-cell *matCellDef="let row">
+          <input class="dataCbox" type="checkbox" [checked]="allChecked" (focus)="getAllRows(row)" (change)="toggleSelectedRows(row, cBox.checked)" #cBox>          
       </mat-cell>
     </ng-container>
 
@@ -58,7 +63,7 @@
     <ng-container matColumnDef="actions">
       <mat-header-cell *matHeaderCellDef>Delete</mat-header-cell>
       <mat-cell *matCellDef="let row">
-        <button class="btn btn-danger" (click)="showModal(true, row.itemId)">
+        <button class="btn btn-danger" (click)="showModal(true, [], row.itemId)">
           <i class="icon ion-android-remove"></i>
         </button>
       </mat-cell>

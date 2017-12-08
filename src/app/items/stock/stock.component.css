@@ -1,3 +1,7 @@
+.red{
+  background: red;
+  margin: 2em;
+}
 .stock-container {
     display: flex;
     flex-direction: column;

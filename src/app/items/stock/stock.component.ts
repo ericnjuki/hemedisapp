@@ -37,6 +37,13 @@ export class StockComponent implements OnInit, AfterViewInit {
   options: NpModalOptions = new NpModalOptions();
   itemsToDelete: number[] = [];
 
+  // dealing with checked items
+  headerIsChecked;
+  allChecked;
+  checkAll = false;
+  checkedItems = [];
+  checkedRowItems = [];
+
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
@@ -87,10 +94,6 @@ export class StockComponent implements OnInit, AfterViewInit {
       });
     })
   }
-  ngAfterViewInit() {
-
-  }
-
   onItemInput(row: IItem, matCell: HTMLInputElement) {
     this.itemToUpdate = {
       'itemId': row.itemId,
@@ -234,14 +237,69 @@ export class StockComponent implements OnInit, AfterViewInit {
     this.showDialog = false;
     if (eventData) {
       this.removeItems(this.itemsToDelete);
+      this.headerIsChecked = false;
+      this.checkedItems = [];
       return;
     }
-    console.log('ok, wuss');
   }
 
-  showModal(flag, itemId) {
-    this.itemsToDelete.push(itemId);
+  showModal(flag, itemIds?: number[], itemId?: number, ) {
+    itemIds.push(itemId);
+    this.itemsToDelete = itemIds;
     this.options.body = 'Delete ' + this.itemsToDelete.length.toString() + ' items?';
     this.showDialog = flag;
+  }
+
+  deleteMany() {
+    const itemIds: number[] = [];
+    for (let i = 0; i < this.checkedItems.length; i++) {
+      itemIds.push(this.checkedItems[i].itemId);
+    }
+    this.showModal(true, itemIds);
+  }
+
+  toggleAllChecked() {
+    this.allChecked = !this.allChecked;
+    this.checkAll = !this.checkAll;
+    const event = new Event('focus');
+    const cBoxes = document.querySelectorAll('.dataCbox');
+    this.checkedRowItems = [];
+
+    for (let i = 0; i < cBoxes.length; i++) {
+      cBoxes[i].dispatchEvent(event);
+      (<HTMLInputElement>cBoxes[i]).checked = this.checkAll;
+    }
+    this.checkedRowItems.push('end');
+    if (this.checkAll) {
+      this.checkedItems = this.checkedRowItems.slice();
+      this.checkedItems.splice(this.checkedItems.indexOf('end'), 1);
+      return;
+    }
+    this.checkedItems = [];
+  }
+
+  toggleSelectedRows(row?, cBoxState?) {
+    // item is checked..
+    if (cBoxState) {
+      // and it's not in our array...
+      if (this.checkedItems.indexOf(row.itemId) === -1) {
+        // put it there
+        this.checkedItems.push(row);
+      }
+      return;
+    }
+    // item is unchecked
+    // and is in our array...
+    const i = this.checkedItems.indexOf(row.itemId)
+    if (i) {
+      // rm it!
+      this.checkedItems.splice(i, 1);
+    }
+  }
+
+  getAllRows(row) {
+    if (this.checkedRowItems.indexOf('end') === -1) {
+      this.checkedRowItems.push(row)
+    }
   }
 }
