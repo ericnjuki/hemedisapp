@@ -10,6 +10,7 @@ import { ToastyService, ToastyConfig, ToastOptions, ToastData } from 'ng2-toasty
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import * as Fuse from 'fuse.js';
 import { Item } from 'app/shared/item.model';
+import { NpModalOptions } from 'app/shared/np-modal-options';
 
 
 @Component({
@@ -18,7 +19,7 @@ import { Item } from 'app/shared/item.model';
   styleUrls: ['./stock.component.css']
 })
 export class StockComponent implements OnInit, AfterViewInit {
-  displayedColumns = ['itemName', 'quantity', 'unit', 'purchaseCost', 'sellingPrice', 'actions'];
+  displayedColumns = ['multiselect', 'itemName', 'quantity', 'unit', 'purchaseCost', 'sellingPrice', 'actions'];
   dataSource: StockDataSource;
   isContenteditable = false;
   updatedItems = [];
@@ -32,6 +33,9 @@ export class StockComponent implements OnInit, AfterViewInit {
     minMatchCharLength: 1,
     keys: ['itemName']
   };
+  showDialog = false;
+  options: NpModalOptions = new NpModalOptions();
+  itemsToDelete: number[] = [];
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -45,6 +49,7 @@ export class StockComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.dataSource = new StockDataSource(this.paginator, this.sort, this.itemService);
     $(function () {
+      $('div.alert').remove();
       $('[contenteditable=true]').focus(function () {
         const val = this.innerHTML;
         const $this = $(this);
@@ -52,6 +57,33 @@ export class StockComponent implements OnInit, AfterViewInit {
         setTimeout(function () {
           $this.val(val);
         }, 1);
+      });
+
+      const modalConfirm = function (callback) {
+
+        $('#btn-confirm').on('click', function () {
+          $('#mi-modal').modal('show');
+        });
+
+        $('#modal-btn-si').on('click', function () {
+          callback(true);
+          $('#mi-modal').modal('hide');
+        });
+
+        $('#modal-btn-no').on('click', function () {
+          callback(false);
+          $('#mi-modal').modal('hide');
+        });
+      };
+
+      modalConfirm(function (confirm) {
+        if (confirm) {
+          // Acciones si el usuario confirma
+          $('#result').html('CONFIRMADO');
+        } else {
+          // Acciones si el usuario no confirma
+          $('#result').html('NO CONFIRMADO');
+        }
       });
     })
   }
@@ -116,32 +148,48 @@ export class StockComponent implements OnInit, AfterViewInit {
     return rowData;
   }
   postUpdate() {
-    const firstToast = this.addToast('wait');
+    const firstToast = this.addToast('wait', 'Updating...');
     this.itemService.updateItems(this.updatedItems)
       .subscribe(response => {
         this.toastyService.clear(firstToast);
-        this.addToast();
+        this.addToast('success', 'Posted!');
         console.log(response);
         this.updatedItems = [];
       });
   }
 
-  addToast(toastType?) {
+  addToast(toastType: string, message: string) {
     let toastId;
     const toastOptions: ToastOptions = {
-      title: 'Update Status',
-      timeout: 5000,
-      theme: 'bootstrap',
+      title: '',
       onAdd: (toast: ToastData) => {
         toastId = toast.id
       }
     };
-    if (toastType === 'wait') {
-      toastOptions.msg = 'updating...';
-      this.toastyService.wait(toastOptions);
-    } else {
-      toastOptions.msg = 'Update successful!';
-      this.toastyService.success(toastOptions);
+    toastOptions.title = '';
+    toastOptions.msg = message;
+    toastOptions.theme = 'bootstrap';
+    toastOptions.timeout = 3000;
+
+    switch (toastType) {
+      case 'wait':
+        toastOptions.timeout = 23000;
+        this.toastyService.wait(toastOptions);
+        break;
+      case 'info':
+        this.toastyService.info(toastOptions);
+        break;
+      case 'success':
+        this.toastyService.success(toastOptions);
+        break;
+      case 'warning':
+        this.toastyService.warning(toastOptions);
+        break;
+      case 'error':
+        this.toastyService.error(toastOptions);
+        break;
+      default:
+        this.toastyService.default(toastOptions);
     }
     return toastId;
   }
@@ -165,7 +213,35 @@ export class StockComponent implements OnInit, AfterViewInit {
       });
   }
 
+  removeItems(itemIds: number[]) {
+    const firstToast = this.addToast('wait', 'Deleting...');
+    let arrNewItems: any[] = [];
+    this.itemService.deleteItems(this.itemsToDelete)
+      .subscribe(newItems => {
+        arrNewItems = newItems;
+        this.dataSource.dataChange.next(newItems);
+        this.toastyService.clear(firstToast);
+        this.addToast('info', 'Deleted!');
+      })
+    this.itemsToDelete = [];
+  }
+
   enableEdits() {
     this.isContenteditable = true;
+  }
+
+  isConfirmed(eventData) {
+    this.showDialog = false;
+    if (eventData) {
+      this.removeItems(this.itemsToDelete);
+      return;
+    }
+    console.log('ok, wuss');
+  }
+
+  showModal(flag, itemId) {
+    this.itemsToDelete.push(itemId);
+    this.options.body = 'Delete ' + this.itemsToDelete.length.toString() + ' items?';
+    this.showDialog = flag;
   }
 }

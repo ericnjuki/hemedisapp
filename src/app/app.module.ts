@@ -25,6 +25,7 @@ import { MatPaginatorModule, MatSortModule } from '@angular/material';
 
 // other components
 import { ToastyModule } from 'ng2-toasty';
+import { NpModalComponent } from './np-modal/np-modal.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import { ToastyModule } from 'ng2-toasty';
     StatisticsComponent,
     AutoCompleteDirective,
     ItemsComponent,
-    StockComponent
+    StockComponent,
+    NpModalComponent
   ],
   imports: [
     BrowserModule,

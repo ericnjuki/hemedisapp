@@ -1,6 +1,6 @@
 import { Item } from './../shared/item.model';
 import { Injectable, EventEmitter } from '@angular/core';
-import { Http, Response } from '@angular/http';
+import { Http, Response, RequestOptionsArgs, RequestOptions } from '@angular/http';
 import 'rxjs/add/operator/map';
 
 /**
@@ -8,7 +8,8 @@ import 'rxjs/add/operator/map';
  */
 @Injectable()
 export class ItemService {
-    private _url = 'http://localhost:1111/api/v1.0/items/';
+    private _url = 'http://localhost:51191/api/v1.0/items/';
+    private options: RequestOptions = new RequestOptions();
     public event: EventEmitter<any>;
 
     constructor(private http: Http) { }
@@ -27,5 +28,11 @@ export class ItemService {
 
     updateItems(items) {
         return this.http.put(this._url + 'u', items);
+    }
+
+    deleteItems(items: number[]) {
+        this.options.body = items;
+        return this.http.delete(this._url + 'd', this.options)
+            .map((respnse: Response) => respnse.json());
     }
 }

@@ -1,3 +1,8 @@
+<np-modal [(visible)]="showDialog" [options]="options" (confirmed)="isConfirmed($event)">
+  <!-- <button (click)="showModal(false)" class="btn">Close</button> -->
+</np-modal>
+
+<div class="alert" role="alert" id="result"></div>
 <div class="container">
   <div class="col-md-7">
     <input class="form-control"placeholder="Search" type="search" (input)="filterItems(filter)" #filter>
@@ -9,6 +14,16 @@
 </div>
 <div class="stock-container mat-elevation-z8">
   <mat-table #table [dataSource]="dataSource" matSort>
+    <!-- select Column -->
+    <ng-container matColumnDef="multiselect">
+      <mat-header-cell *matHeaderCellDef>
+        <input type="checkbox">
+      </mat-header-cell>
+      <mat-cell *matCellDef="let row" (input)="onItemInput(row, item)" #item>
+          <input type="checkbox">          
+      </mat-cell>
+    </ng-container>
+
     <!-- Item Column -->
     <ng-container matColumnDef="itemName">
       <mat-header-cell *matHeaderCellDef mat-sort-header> Item </mat-header-cell>
@@ -39,10 +54,14 @@
       <mat-cell *matCellDef="let row" [attr.contenteditable]="isContenteditable" (input)="onItemInput(row, sp)" #sp> {{row.sellingPrice}} </mat-cell>
     </ng-container>
 
-    <!-- Buying Price Column -->
+    <!-- Delete icons Column -->
     <ng-container matColumnDef="actions">
-      <mat-header-cell *matHeaderCellDef mat-sort-header>Actions</mat-header-cell>
-      <mat-cell *matCellDef="let row"><button class="btn btn-danger"><i class="icon ion-android-remove-circle"></i></button></mat-cell>
+      <mat-header-cell *matHeaderCellDef>Delete</mat-header-cell>
+      <mat-cell *matCellDef="let row">
+        <button class="btn btn-danger" (click)="showModal(true, row.itemId)">
+          <i class="icon ion-android-remove"></i>
+        </button>
+      </mat-cell>
     </ng-container>
 
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
