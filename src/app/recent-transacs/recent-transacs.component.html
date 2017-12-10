@@ -1,9 +1,51 @@
-<div class="container-fluid transacs">
+<!-- confirmation modal -->
+<np-modal [(visible)]="showDialog" [options]="modalOpts" (confirmed)="isConfirmed($event)">
+</np-modal>
+
+<div class="app-header">
+  <input type="search">
+</div>
+<div class="np-recent-container">
   <div class="row">
-  </div>
-  <div class="row">
-    <div class="col-md-8 col-md-offset-2">
-      <app-transaction-pill *ngFor="let pill of transactions let i = index" [transactionData]="transactions[i]" (click)="extendPill(i)"></app-transaction-pill>
+    <div class="col-md-12">
+      <div class="col-md-4 np-receipts" *ngFor="let transac of transactions">
+        <span class="btn btn-danger np-close-button" (click)="showModal(true, [], transac.transactionId)">X</span>
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>BISMILLAH TIMBER & H/W</mat-card-title>
+            <mat-card-subtitle *ngIf="transac.transactionType==1">Sale</mat-card-subtitle>
+            <mat-card-subtitle *ngIf="transac.transactionType==2">Purchase</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <table class="table">
+              <thead>
+                <th>qty</th>
+                <th>item</th>
+                <th>price</th>
+                <th>total</th>
+              </thead>
+              <tr *ngFor="let item of transac.items">
+                <td>{{ item.quantity }}x</td>
+                <td class="np-card-itemName">{{ item.itemName }}</td>
+                <td *ngIf="transac.transactionType==2" class="np-purchase-card">{{ item.purchaseCost }}</td>
+                <td *ngIf="transac.transactionType==1" class="np-sale-card">{{ item.sellingPrice }}</td>
+                <td *ngIf="transac.transactionType==2" class="np-purchase-card">{{ item.purchaseCost * item.quantity }}</td>
+                <td *ngIf="transac.transactionType==1" class="np-sale-card">{{ item.sellingPrice * item.quantity }}</td>
+              </tr>
+              <tr>
+                <td>
+                  <b>Total:</b>
+                </td>
+                <td></td>
+                <td></td>
+                <td>
+                  <b>{{ transac.total }}</b>
+                </td>
+              </tr>
+            </table>
+          </mat-card-content>
+        </mat-card>
+      </div>
     </div>
   </div>
 </div>

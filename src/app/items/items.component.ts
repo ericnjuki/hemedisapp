@@ -104,7 +104,7 @@ export class ItemsComponent implements OnInit {
       purchaseCost: purchaseCost,
       sellingPrice: sellingPrice
     };
-    this.itemsForPurchase.push(itemForPurchase);
+    this.itemsForPurchase.unshift(itemForPurchase);
 
     const itemForRecord = {
       itemName: itemName,
@@ -165,6 +165,7 @@ export class ItemsComponent implements OnInit {
       }
     };
     if (toastType === 'wait') {
+      toastOptions.timeout = 23000;
       toastOptions.msg = 'updating...';
       this.toastyService.wait(toastOptions);
     } else {

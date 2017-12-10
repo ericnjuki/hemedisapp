@@ -16,16 +16,16 @@ import { AutoCompleteDirective } from 'app/directives/autocomplete.directive';
 import { ItemService } from 'app/services/items.service';
 import { ItemsComponent } from './items/items.component';
 import { StockComponent } from './items/stock/stock.component';
+import { NpModalComponent } from './np-modal/np-modal.component';
 
 // angular material components
 import { MatTableModule } from '@angular/material/table';
 import { CdkTableModule } from '@angular/cdk/table';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatPaginatorModule, MatSortModule } from '@angular/material';
-
+import {MatCardModule} from '@angular/material/card';
 // other components
 import { ToastyModule } from 'ng2-toasty';
-import { NpModalComponent } from './np-modal/np-modal.component';
 
 @NgModule({
   declarations: [
@@ -50,6 +50,7 @@ import { NpModalComponent } from './np-modal/np-modal.component';
     BrowserAnimationsModule,
     MatPaginatorModule,
     MatSortModule,
+    MatCardModule,
     ToastyModule.forRoot(),
   ],
   providers: [TransactionService, ItemService],

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { ItemService } from 'app/services/items.service';
@@ -18,7 +18,7 @@ import { NpModalOptions } from 'app/shared/np-modal-options';
   templateUrl: './stock.component.html',
   styleUrls: ['./stock.component.css']
 })
-export class StockComponent implements OnInit, AfterViewInit {
+export class StockComponent implements OnInit {
   displayedColumns = ['multiselect', 'itemName', 'quantity', 'unit', 'purchaseCost', 'sellingPrice', 'actions'];
   dataSource: StockDataSource;
   isContenteditable = false;
@@ -219,7 +219,7 @@ export class StockComponent implements OnInit, AfterViewInit {
   removeItems(itemIds: number[]) {
     const firstToast = this.addToast('wait', 'Deleting...');
     let arrNewItems: any[] = [];
-    this.itemService.deleteItems(this.itemsToDelete)
+    this.itemService.deleteItems(itemIds)
       .subscribe(newItems => {
         arrNewItems = newItems;
         this.dataSource.dataChange.next(newItems);

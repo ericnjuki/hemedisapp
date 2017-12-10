@@ -1,5 +1,5 @@
 export interface IItem {
-    itemId?: number;
+    itemId: number;
     itemName: string;
     unit: string;
     quantity: number;

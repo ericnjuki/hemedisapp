@@ -35,6 +35,7 @@ export class RecordTransacsComponent implements OnInit {
   allItemsExist: boolean;
   arrJsonNames: Array<string> = [];
   salePurchaseFlag = 0;
+  selectedItem: Item;
 
   constructor(private transacService: TransactionService,
     private toastyService: ToastyService,
@@ -152,6 +153,7 @@ export class RecordTransacsComponent implements OnInit {
       // input item exists in records and all fields good
 
       this.itemsArray.push({
+        itemId: this.selectedItem.itemId,
         itemName: itemName,
         unit: itemUnit,
         quantity: itemQuantity,
@@ -305,6 +307,7 @@ export class RecordTransacsComponent implements OnInit {
   }
 
   handleItemData(itemObject) {
+    this.selectedItem = itemObject;
     $('[data-text=Price]').html(itemObject.sellingPrice);
   }
 
