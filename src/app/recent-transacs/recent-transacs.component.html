@@ -7,7 +7,7 @@
 </div>
 <div class="np-recent-container">
   <div class="row">
-    <div class="col-md-12">
+    <div [@npRecentTransacsAnimation]="transactions.length-1" class="col-md-12">
       <div class="col-md-4 np-receipts" *ngFor="let transac of transactions">
         <span class="btn btn-danger np-close-button" (click)="showModal(true, [], transac.transactionId)">X</span>
         <mat-card>

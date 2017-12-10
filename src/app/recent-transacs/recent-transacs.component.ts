@@ -4,7 +4,7 @@ import { TransactionData } from 'app/shared/transacs.model';
 import { ToastyService, ToastyConfig, ToastOptions, ToastData } from 'ng2-toasty';
 import { Item } from 'app/shared/item.model';
 import { NpModalOptions } from 'app/shared/np-modal-options';
-
+import { trigger, transition, style, animate, query, stagger } from '@angular/animations';
 /**
  * Gets recent transactions from a service and displays them
  * using child component "TransactionPillComponent"
@@ -12,7 +12,24 @@ import { NpModalOptions } from 'app/shared/np-modal-options';
 @Component({
   selector: 'app-recent-transacs',
   templateUrl: './recent-transacs.component.html',
-  styleUrls: ['./recent-transacs.component.css']
+  styleUrls: ['./recent-transacs.component.css'],
+  animations: [
+    trigger('npRecentTransacsAnimation', [
+      transition('* => *', [ // each time the binding value changes
+        query(':leave', [
+          stagger(100, [
+            animate('0.5s', style({ opacity: 0 }))
+          ]),
+        ], { optional: true }),
+        query(':enter', [
+          style({ opacity: 0 }),
+          stagger(100, [
+            animate('0.5s', style({ opacity: 1 }))
+          ])
+        ], { optional: true }),
+      ])
+    ])
+  ]
 })
 export class RecentTransacsComponent implements OnInit {
   // user interaction (modal)

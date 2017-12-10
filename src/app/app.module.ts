@@ -26,6 +26,7 @@ import { MatPaginatorModule, MatSortModule } from '@angular/material';
 import {MatCardModule} from '@angular/material/card';
 // other components
 import { ToastyModule } from 'ng2-toasty';
+import { DailyStatsComponent } from './statistics/daily-stats/daily-stats.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { ToastyModule } from 'ng2-toasty';
     AutoCompleteDirective,
     ItemsComponent,
     StockComponent,
-    NpModalComponent
+    NpModalComponent,
+    DailyStatsComponent
   ],
   imports: [
     BrowserModule,

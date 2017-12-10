@@ -14,14 +14,18 @@ import { ToastyService, ToastyConfig, ToastOptions, ToastData } from 'ng2-toasty
 })
 export class StatisticsComponent implements OnInit {
 
+  // on stats display
   today = new Date();
   statsDate = {
     year: this.today.getUTCFullYear(),
     month: this.today.getUTCMonth(),
     day: this.today.getUTCDay()
-
   };
   monthlyStats = [];
+
+  // view controllers
+  viewDetailed = false;
+  appMonths = [];
   constructor(
     private transacService: TransactionService,
     private toastyService: ToastyService,
@@ -29,12 +33,16 @@ export class StatisticsComponent implements OnInit {
 
   ngOnInit() {
     this.getStatsForYear(this.statsDate.year);
+    for (let i = 0; i <= 11; i++) {
+      this.appMonths.push(AppMonths[i]);
+    }
   }
 
   getStatsForYear(year: number) {
     const firstToast = this.addToast();
     this.transacService.getStatsData(year)
       .subscribe(theData => {
+        console.log(theData);
         // converting int months (i.e. 0, 1, 2...) into my enum strings (JAN, FEB...)
         for (const data of theData) {
           data.month = AppMonths[data.month];
@@ -43,6 +51,13 @@ export class StatisticsComponent implements OnInit {
         this.toastyService.clear(firstToast);
       });
   }
+
+  getStatsForMonth(month: string) {
+    this.viewDetailed = true;
+    console.log(this.viewDetailed);
+    // this.transacService.getMonthlyStatsData(month);
+  }
+
   previousYear() {
     const newYear = (+(this.statsDate.year) - 1);
     this.getStatsForYear(newYear);
