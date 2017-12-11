@@ -14,7 +14,7 @@ const APP_ROUTES: Routes = [
         path: 'stats',
         component: StatisticsComponent,
         children: [{
-            path: ':month',
+            path: ':year/:month/:day',
             component: DailyStatsComponent,
         }]
     },

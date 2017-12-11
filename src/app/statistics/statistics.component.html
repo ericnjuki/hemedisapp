@@ -1,11 +1,11 @@
 <div class="app-header">
   <div class="row">
     <div class="app-stats-header col-md-10 col-md-offset-1 clearfix">
-      <button class="btn pull-left col-md-2" (click)="previousYear()">
+      <button class="btn pull-left col-md-2" (click)="previousYear()" [routerLink]="['/stats', statsDate.year+1, 'JAN', '01']">
         <span class="ion-arrow-left-a"></span>
       </button>
       <h3 class="col-md-2 col-md-offset-3" [innerHTML]="statsDate.year"></h3>
-      <button class="btn pull-right col-md-2" (click)="nextYear()">
+      <button class="btn pull-right col-md-2" (click)="nextYear()" [routerLink]="['/stats', statsDate.year+1, 'JAN', '01']">
         <span class="ion-arrow-right-a"></span>
       </button>
     </div>
@@ -13,7 +13,7 @@
   <hr>
   <div class="row">
     <div class="col-md-10 col-md-push-1 np-month-buttons">
-      <button *ngFor="let month of appMonths" [routerLink]="['/stats', month]" class="col-md-1 btn np-btn-month" (click)="getStatsForMonth(month)">
+      <button *ngFor="let month of appMonths" [routerLink]="['/stats', statsDate.year, month, '01']" class="col-md-1 btn np-btn-month" (click)="changeDetailedView()">
         {{ month }}
       </button>
     </div>
@@ -22,7 +22,7 @@
 <router-outlet></router-outlet>
 <div class="container-fluid" *ngIf="!viewDetailed">
   <div class="row">
-    <div class="col-md-4 np-monthly-stats" *ngFor="let rowData of monthlyStats">
+    <div *ngFor="let rowData of monthlyStats" [routerLink]="['/stats', statsDate.year, rowData.month, '01']" class="col-md-4 np-monthly-stats" (click)="changeDetailedView()">
       <mat-card>
         <mat-card-header>
           <mat-card-title>

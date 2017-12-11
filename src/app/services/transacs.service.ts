@@ -22,11 +22,15 @@ export class TransactionService {
             .map((response: Response) => response.json());
     }
 
-    getStatsData(year: number) {
+    getStatsData(year: number, month: number, day: number) {
+        this.options.search = new URLSearchParams('date=' + year.toString() + '/' + month.toString() + '/' + day.toString());
+        return this._http.get(this._url + 'g/stats', this.options)
+            .map((response: Response) => response.json());
+    }
+    getStatsForYear(year: number) {
         this.options.search = new URLSearchParams('forYear=' + year.toString());
         return this._http.get(this._url + 'g/stats', this.options)
             .map((response: Response) => response.json());
-
     }
 
     postTransacs(transactionObject: ITransactionData) {

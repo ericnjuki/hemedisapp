@@ -40,9 +40,8 @@ export class StatisticsComponent implements OnInit {
 
   getStatsForYear(year: number) {
     const firstToast = this.addToast();
-    this.transacService.getStatsData(year)
+    this.transacService.getStatsForYear(year)
       .subscribe(theData => {
-        console.log(theData);
         // converting int months (i.e. 0, 1, 2...) into my enum strings (JAN, FEB...)
         for (const data of theData) {
           data.month = AppMonths[data.month];
@@ -52,10 +51,8 @@ export class StatisticsComponent implements OnInit {
       });
   }
 
-  getStatsForMonth(month: string) {
+  changeDetailedView() {
     this.viewDetailed = true;
-    console.log(this.viewDetailed);
-    // this.transacService.getMonthlyStatsData(month);
   }
 
   previousYear() {
