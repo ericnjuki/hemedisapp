@@ -12,24 +12,7 @@ import { trigger, transition, style, animate, query, stagger } from '@angular/an
 @Component({
   selector: 'app-recent-transacs',
   templateUrl: './recent-transacs.component.html',
-  styleUrls: ['./recent-transacs.component.css'],
-  animations: [
-    trigger('npRecentTransacsAnimation', [
-      transition('* => *', [ // each time the binding value changes
-        query(':leave', [
-          stagger(100, [
-            animate('0.5s', style({ opacity: 0 }))
-          ]),
-        ], { optional: true }),
-        query(':enter', [
-          style({ opacity: 0 }),
-          stagger(100, [
-            animate('0.5s', style({ opacity: 1 }))
-          ])
-        ], { optional: true }),
-      ])
-    ])
-  ]
+  styleUrls: ['./recent-transacs.component.css']
 })
 export class RecentTransacsComponent implements OnInit {
   // user interaction (modal)
@@ -54,9 +37,14 @@ export class RecentTransacsComponent implements OnInit {
     private transacService: TransactionService) { }
 
   ngOnInit() {
+    this.getTransacs();
+  }
+
+  getTransacs() {
     const firstToast = this.addToast('wait', 'Fetching records...');
     this.transacService.getTransacs(this.includeItems)
       .subscribe(allTransactions => {
+        this.toastyService.clear(firstToast);
         let maxItemNumber = 0;
         this.transactions = allTransactions;
         // for each transaction
@@ -81,7 +69,6 @@ export class RecentTransacsComponent implements OnInit {
               this.transactions[t].total += this.transactions[t].items[i].total;
             }
           }
-
         }
         // number of items in
         // transac with most items
@@ -96,20 +83,21 @@ export class RecentTransacsComponent implements OnInit {
           this.displayedTransacs.unshift(this.transactions[i]);
         }
       });
-    this.toastyService.clear(firstToast);
+    this.displayedTransacs = [];
+    this.transactions = [];
   }
 
   deleteTransacs(transacIds: number[]) {
     const firstToast = this.addToast('wait', 'Deleting...');
     // let arrNewTransacs: any[] = [];
     this.transacService.deleteTransacs(this.transacIdsToDelete)
-      .subscribe(newTransacs => {
+      .subscribe(() => {
         // arrNewTransacs = newTransacs;
         // update ngFored var here
-        this.transactions = newTransacs;
         this.toastyService.clear(firstToast);
         this.addToast('info', 'Deleted!');
-      })
+        this.getTransacs();
+      });
     this.transacIdsToDelete = [];
   }
 
