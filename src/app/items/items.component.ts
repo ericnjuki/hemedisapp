@@ -127,9 +127,6 @@ export class ItemsComponent implements OnInit {
 
   postItems() {
     // will have quantitys set to 0: fix bug with quantity being added twice
-    console.log(this.itemsForPurchase);
-    console.log(this.itemsForRecord);
-
     const firstToast = this.addToast('wait');
     this.itemService.addItems(this.itemsForRecord)
       .subscribe(response => {

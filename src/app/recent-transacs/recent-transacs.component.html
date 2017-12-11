@@ -3,16 +3,16 @@
 </np-modal>
 
 <div class="app-header">
-  <input type="search">
 </div>
 <div class="np-recent-container">
   <div class="row">
-    <div [@npRecentTransacsAnimation]="transactions.length-1" class="col-md-12">
-      <div class="col-md-4 np-receipts" *ngFor="let transac of transactions">
+    <div [@npRecentTransacsAnimation]="displayedTransacs.length-1" class="col-md-12">
+      <div class="col-md-4 np-receipts" *ngFor="let transac of displayedTransacs">
         <span class="btn btn-danger np-close-button" (click)="showModal(true, [], transac.transactionId)">X</span>
         <mat-card>
           <mat-card-header>
             <mat-card-title>BISMILLAH TIMBER & H/W</mat-card-title>
+            <mat-card-title>{{ transac.date }}</mat-card-title>
             <mat-card-subtitle *ngIf="transac.transactionType==1">Sale</mat-card-subtitle>
             <mat-card-subtitle *ngIf="transac.transactionType==2">Purchase</mat-card-subtitle>
           </mat-card-header>

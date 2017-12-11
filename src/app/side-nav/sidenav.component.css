@@ -1,18 +1,31 @@
 .side-nav-item a, .side-nav-item.active a, .side-nav-item.active a:hover, .side-nav-item.active a:focus {
     color: black;
 }
-a{
+
+.side-nav-item.active, .side-nav-item.active:focus {
+    background-color: rgba(44, 102, 150, .75);
+    color: white;
+}
+
+.side-nav-item.active a, .side-nav-item.active a:focus {
+    background-color: rgba(44, 102, 150, .75);
+    color: white;
+}
+
+a {
     background: white;
 }
 
-.side-nav .side-nav-item-heading > a {
+.side-nav .side-nav-item-heading>a {
     color: black;
     background-color: white;
     border-color: black;
 }
+
 .side-nav-child {
     background-color: white;
 }
+
 .nav-item-caret {
     font-weight: bold;
 }

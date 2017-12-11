@@ -12,11 +12,7 @@ const APP_ROUTES: Routes = [
     { path: 'record', component: RecordTransacsComponent },
     {
         path: 'stats',
-        component: StatisticsComponent,
-        children: [{
-            path: ':year/:month/:day',
-            component: DailyStatsComponent,
-        }]
+        component: StatisticsComponent
     },
     { path: 'stats', component: StatisticsComponent },
     { path: 'items', component: ItemsComponent },

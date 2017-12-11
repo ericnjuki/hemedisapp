@@ -34,12 +34,10 @@ export class TransactionService {
     }
 
     postTransacs(transactionObject: ITransactionData) {
-        console.log(transactionObject);
         return this._http.post(this._url + 'p', transactionObject);
     }
 
     deleteTransacs(transactionObjects: number[]) {
-        console.log(transactionObjects);
         this.options.body = transactionObjects;
         return this._http.delete(this._url + 'd', this.options)
             .map((response: Response) => response.json());

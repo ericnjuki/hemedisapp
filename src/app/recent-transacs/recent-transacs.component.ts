@@ -46,6 +46,7 @@ export class RecentTransacsComponent implements OnInit {
   items: Array<Item> = [];
   potato: Item = { itemId: -1, itemName: '', unit: '', quantity: 0, sellingPrice: 0, purchaseCost: 0 };
   total = 0;
+  displayedTransacs = [];
 
   constructor(
     private toastyService: ToastyService,
@@ -61,6 +62,12 @@ export class RecentTransacsComponent implements OnInit {
         // for each transaction
         for (let t = 0; t < this.transactions.length; t++) {
           this.transactions[t].total = 0;
+          const shortDateString = this.transactions[t].date.substr(0, 10);
+          const shortYear = shortDateString.substr(0, 4);
+          const shortMonth = shortDateString.substr(5, 2);
+          const shortDay = shortDateString.substr(8, 2);
+          this.transactions[t].date = shortDay + '/' + shortMonth + '/' + shortYear;
+
           // get items in transaction
           for (let i = 0; i < this.transactions[t].items.length; i++) {
             // calculate total of items in it, sum them and store them
@@ -83,15 +90,11 @@ export class RecentTransacsComponent implements OnInit {
             maxItemNumber = transac.items.length;
           }
         });
-        // adding fictional data to transacs with items
-        // less than transac with most items
-        // this.transactions.forEach((transac) => {
-        //   if (transac.items.length < maxItemNumber) {
-        //     for (let i = 0; i <= (maxItemNumber - transac.items.length); i++) {
-        //       transac.items.push(this.potato);
-        //     }
-        //   }
-        // });
+
+        // reverse order of transacs
+        for (let i = 0; i < this.transactions.length; i++) {
+          this.displayedTransacs.unshift(this.transactions[i]);
+        }
       });
     this.toastyService.clear(firstToast);
   }
