@@ -14,7 +14,8 @@
       <div class="row">
         <div class="col-md-10 col-md-push-1 app-sale-record-tab">
           <div class="app-record-header">
-            <input id="app-date" type="date" [value]="setDate()" (change)="updateDate(saleDate)" #saleDate>
+            <!-- <input id="app-date" type="date" [value]="setDate()" (change)="updateDate(saleDate)" #saleDate> -->
+            <input id="app-date" type="date" [(ngModel)]="selectedDate" #saleDate>
             <div class="pull-right">
               <small>Date:</small>
               <label for="app-date" [innerHTML]="setDate()"></label>

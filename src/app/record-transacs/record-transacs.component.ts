@@ -36,6 +36,7 @@ export class RecordTransacsComponent implements OnInit {
   arrJsonNames: Array<string> = [];
   salePurchaseFlag = 0;
   selectedItem: Item;
+  selectedDate = this.setDate();
 
   constructor(private transacService: TransactionService,
     private toastyService: ToastyService,
@@ -128,7 +129,7 @@ export class RecordTransacsComponent implements OnInit {
       return;
     }
 
-    this.transaction.date = this.setDate();
+    this.transaction.date = this.selectedDate;
 
     this.itemService.getItemNames().subscribe(jsonNames => {
       this.arrJsonNames = jsonNames;
@@ -298,10 +299,6 @@ export class RecordTransacsComponent implements OnInit {
     return currentDate;
   }
 
-  updateDate(newDate: HTMLInputElement) {
-    this.transaction.date = newDate.value;
-  }
-
   getTotalSaleAmountOnItem() {
     $('[name=record-sales] tfoot tr ').eq(1).children().eq(3)
       .html(
@@ -318,7 +315,6 @@ export class RecordTransacsComponent implements OnInit {
 
   handleItemData(itemObject) {
     const $bla = $('li.active a[data-toggle=tab]');
-    console.log($bla.html());
     this.selectedItem = itemObject;
     if ($bla.html().toUpperCase() === 'SALE') {
       $('[data-text=Price]').html(itemObject.sellingPrice);
