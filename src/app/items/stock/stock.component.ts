@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { ItemService } from 'app/services/items.service';
@@ -7,6 +7,10 @@ import { Observable } from 'rxjs/Observable';
 import { MatTableDataSource } from '@angular/material/table';
 import { IItem } from 'app/interfaces/item.interface';
 import { ToastyService, ToastyConfig, ToastOptions, ToastData } from 'ng2-toasty';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import * as Fuse from 'fuse.js';
+import { Item } from 'app/shared/item.model';
+import { NpModalOptions } from 'app/shared/np-modal-options';
 
 
 @Component({
@@ -14,12 +18,31 @@ import { ToastyService, ToastyConfig, ToastOptions, ToastData } from 'ng2-toasty
   templateUrl: './stock.component.html',
   styleUrls: ['./stock.component.css']
 })
-export class StockComponent implements OnInit, AfterViewInit {
-  displayedColumns = ['itemName', 'quantity', 'unit', 'purchaseCost', 'sellingPrice'];
-  dataSource: StockDataSource | null | any;
-  isContenteditable = true;
+export class StockComponent implements OnInit {
+  displayedColumns = ['multiselect', 'itemName', 'quantity', 'unit', 'purchaseCost', 'sellingPrice', 'actions'];
+  dataSource: StockDataSource;
+  isContenteditable = false;
   updatedItems = [];
   itemToUpdate;
+  searchResults: IItem[] = [];
+  fuseOptions = {
+    shouldSort: true,
+    threshold: 0.5,
+    distance: 100,
+    maxPatternLength: 32,
+    minMatchCharLength: 1,
+    keys: ['itemName']
+  };
+  showDialog = false;
+  options: NpModalOptions = new NpModalOptions();
+  itemsToDelete: number[] = [];
+
+  // dealing with checked items
+  headerIsChecked;
+  allChecked;
+  checkAll = false;
+  checkedItems = [];
+  checkedRowItems = [];
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -31,8 +54,9 @@ export class StockComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    this.dataSource = new StockDataSource(this.itemService);
+    this.dataSource = new StockDataSource(this.paginator, this.sort, this.itemService);
     $(function () {
+      $('div.alert').remove();
       $('[contenteditable=true]').focus(function () {
         const val = this.innerHTML;
         const $this = $(this);
@@ -41,14 +65,35 @@ export class StockComponent implements OnInit, AfterViewInit {
           $this.val(val);
         }, 1);
       });
+
+      const modalConfirm = function (callback) {
+
+        $('#btn-confirm').on('click', function () {
+          $('#mi-modal').modal('show');
+        });
+
+        $('#modal-btn-si').on('click', function () {
+          callback(true);
+          $('#mi-modal').modal('hide');
+        });
+
+        $('#modal-btn-no').on('click', function () {
+          callback(false);
+          $('#mi-modal').modal('hide');
+        });
+      };
+
+      modalConfirm(function (confirm) {
+        if (confirm) {
+          // Acciones si el usuario confirma
+          $('#result').html('CONFIRMADO');
+        } else {
+          // Acciones si el usuario no confirma
+          $('#result').html('NO CONFIRMADO');
+        }
+      });
     })
   }
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-
-  }
-
   onItemInput(row: IItem, matCell: HTMLInputElement) {
     this.itemToUpdate = {
       'itemId': row.itemId,
@@ -106,33 +151,155 @@ export class StockComponent implements OnInit, AfterViewInit {
     return rowData;
   }
   postUpdate() {
-    const firstToast = this.addToast('wait');
+    const firstToast = this.addToast('wait', 'Updating...');
     this.itemService.updateItems(this.updatedItems)
       .subscribe(response => {
         this.toastyService.clear(firstToast);
-        this.addToast();
+        this.addToast('success', 'Posted!');
         console.log(response);
         this.updatedItems = [];
       });
   }
 
-  addToast(toastType?) {
+  addToast(toastType: string, message: string) {
     let toastId;
     const toastOptions: ToastOptions = {
-      title: 'Update Status',
-      timeout: 5000,
-      theme: 'bootstrap',
+      title: '',
       onAdd: (toast: ToastData) => {
         toastId = toast.id
       }
     };
-    if (toastType === 'wait') {
-      toastOptions.msg = 'updating...';
-      this.toastyService.wait(toastOptions);
-    } else {
-      toastOptions.msg = 'Update successful!';
-      this.toastyService.success(toastOptions);
+    toastOptions.title = '';
+    toastOptions.msg = message;
+    toastOptions.theme = 'bootstrap';
+    toastOptions.timeout = 3000;
+
+    switch (toastType) {
+      case 'wait':
+        toastOptions.timeout = 23000;
+        this.toastyService.wait(toastOptions);
+        break;
+      case 'info':
+        this.toastyService.info(toastOptions);
+        break;
+      case 'success':
+        this.toastyService.success(toastOptions);
+        break;
+      case 'warning':
+        this.toastyService.warning(toastOptions);
+        break;
+      case 'error':
+        this.toastyService.error(toastOptions);
+        break;
+      default:
+        this.toastyService.default(toastOptions);
     }
     return toastId;
+  }
+
+  filterItems(filterEl: HTMLInputElement) {
+    const term = filterEl.value.replace(/\s+/g, '');
+    if (term === '' || term === null || +term === NaN || +term === 0) {
+      this.dataSource = new StockDataSource(this.paginator, this.sort, this.itemService);
+      return;
+    }
+    this.itemService.getAllItems()
+      .subscribe(res => {
+        const fuse = new Fuse(res, this.fuseOptions);
+        const result = fuse.search(filterEl.value.toString());
+        this.searchResults = result.map(resultItem => {
+          let item: IItem = new Item();
+          item = <Item>resultItem;
+          return item;
+        });
+        this.dataSource.dataChange.next(this.searchResults);
+      });
+  }
+
+  removeItems(itemIds: number[]) {
+    const firstToast = this.addToast('wait', 'Deleting...');
+    let arrNewItems: any[] = [];
+    this.itemService.deleteItems(itemIds)
+      .subscribe(newItems => {
+        arrNewItems = newItems;
+        this.dataSource.dataChange.next(newItems);
+        this.toastyService.clear(firstToast);
+        this.addToast('info', 'Deleted!');
+      })
+    this.itemsToDelete = [];
+  }
+
+  enableEdits() {
+    this.isContenteditable = true;
+  }
+
+  isConfirmed(eventData) {
+    this.showDialog = false;
+    if (eventData) {
+      this.removeItems(this.itemsToDelete);
+      this.headerIsChecked = false;
+      this.checkedItems = [];
+      return;
+    }
+  }
+
+  showModal(flag, itemIds?: number[], itemId?: number, ) {
+    itemIds.push(itemId);
+    this.itemsToDelete = itemIds;
+    this.options.body = 'Delete ' + this.itemsToDelete.length.toString() + ' items?';
+    this.showDialog = flag;
+  }
+
+  deleteMany() {
+    const itemIds: number[] = [];
+    for (let i = 0; i < this.checkedItems.length; i++) {
+      itemIds.push(this.checkedItems[i].itemId);
+    }
+    this.showModal(true, itemIds);
+  }
+
+  toggleAllChecked() {
+    this.allChecked = !this.allChecked;
+    this.checkAll = !this.checkAll;
+    const event = new Event('focus');
+    const cBoxes = document.querySelectorAll('.dataCbox');
+    this.checkedRowItems = [];
+
+    for (let i = 0; i < cBoxes.length; i++) {
+      cBoxes[i].dispatchEvent(event);
+      (<HTMLInputElement>cBoxes[i]).checked = this.checkAll;
+    }
+    this.checkedRowItems.push('end');
+    if (this.checkAll) {
+      this.checkedItems = this.checkedRowItems.slice();
+      this.checkedItems.splice(this.checkedItems.indexOf('end'), 1);
+      return;
+    }
+    this.checkedItems = [];
+  }
+
+  toggleSelectedRows(row?, cBoxState?) {
+    // item is checked..
+    if (cBoxState) {
+      // and it's not in our array...
+      if (this.checkedItems.indexOf(row.itemId) === -1) {
+        // put it there
+        this.checkedItems.push(row);
+      }
+      return;
+    }
+    // item is unchecked
+    // and is in our array...
+    const i = this.checkedItems.indexOf(row.itemId)
+    if (i) {
+      // rm it!
+      this.checkedItems.splice(i, 1);
+    }
+  }
+
+  getAllRows(row) {
+    if (this.checkedRowItems.indexOf('end') === -1) {
+      this.checkedRowItems.push(row)
+    }
   }
 }

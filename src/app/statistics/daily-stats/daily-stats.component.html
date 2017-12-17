@@ -1,0 +1,28 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>{{ currentMonth }} <span>{{ currentDay }}</span></mat-card-title>
+  </mat-card-header>
+  <hr>
+  <div class="row">
+    <mat-card-content class="col-md-2" (click)="previousDay()">
+      <div class="np-previous-day caret"></div>
+    </mat-card-content>
+    <mat-card-content class="col-md-8">
+      <table class="table table-condensed table-striped">
+        <thead>
+          <tr>
+            <th class="col-md-2">Quantity</th>
+            <th class="col-md-4">Item</th>
+            <th class="col-md-3">Price</th>
+            <th class="col-md-3">Amount</th>
+          </tr>
+        </thead>
+        <tr *ngFor="let item of dailyItems">
+        </tr>
+      </table>
+    </mat-card-content>
+    <mat-card-content class="col-md-2" (click)="nextDay()">
+      <div class="np-next-day caret"></div>
+    </mat-card-content>
+  </div>
+</mat-card>

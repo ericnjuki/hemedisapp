@@ -16,15 +16,17 @@ import { AutoCompleteDirective } from 'app/directives/autocomplete.directive';
 import { ItemService } from 'app/services/items.service';
 import { ItemsComponent } from './items/items.component';
 import { StockComponent } from './items/stock/stock.component';
+import { NpModalComponent } from './np-modal/np-modal.component';
 
 // angular material components
 import { MatTableModule } from '@angular/material/table';
 import { CdkTableModule } from '@angular/cdk/table';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatPaginatorModule, MatSortModule } from '@angular/material';
-
+import {MatCardModule} from '@angular/material/card';
 // other components
 import { ToastyModule } from 'ng2-toasty';
+import { DailyStatsComponent } from './statistics/daily-stats/daily-stats.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +38,9 @@ import { ToastyModule } from 'ng2-toasty';
     StatisticsComponent,
     AutoCompleteDirective,
     ItemsComponent,
-    StockComponent
+    StockComponent,
+    NpModalComponent,
+    DailyStatsComponent
   ],
   imports: [
     BrowserModule,
@@ -48,6 +52,7 @@ import { ToastyModule } from 'ng2-toasty';
     BrowserAnimationsModule,
     MatPaginatorModule,
     MatSortModule,
+    MatCardModule,
     ToastyModule.forRoot(),
   ],
   providers: [TransactionService, ItemService],

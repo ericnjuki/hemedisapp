@@ -22,7 +22,8 @@
         "assets/jquery-ui/jquery-ui.min.css"
       ],
       "scripts": [
-        "assets/jquery-ui/jquery-ui.js"
+        "assets/jquery-ui/jquery-ui.js",
+        "assets/bootstrap/js/bootstrap.min.js"
       ],
       "environmentSource": "environments/environment.ts",
       "environments": {

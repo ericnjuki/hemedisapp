@@ -23,7 +23,7 @@ aside {
 #ng{
     font-weight: bold;
     font-family: Courier New, Courier, monospace;
-    text-transform: uppercase;
+    text-transform: lowercase;
 
 }
 #pos{

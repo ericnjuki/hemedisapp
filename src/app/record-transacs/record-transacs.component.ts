@@ -35,6 +35,8 @@ export class RecordTransacsComponent implements OnInit {
   allItemsExist: boolean;
   arrJsonNames: Array<string> = [];
   salePurchaseFlag = 0;
+  selectedItem: Item;
+  selectedDate = this.setDate();
 
   constructor(private transacService: TransactionService,
     private toastyService: ToastyService,
@@ -127,7 +129,7 @@ export class RecordTransacsComponent implements OnInit {
       return;
     }
 
-    this.transaction.date = this.setDate();
+    this.transaction.date = this.selectedDate;
 
     this.itemService.getItemNames().subscribe(jsonNames => {
       this.arrJsonNames = jsonNames;
@@ -151,16 +153,17 @@ export class RecordTransacsComponent implements OnInit {
       }
       // input item exists in records and all fields good
 
-      this.itemsArray.push({
-        itemName: itemName,
-        unit: itemUnit,
-        quantity: itemQuantity,
-        purchaseCost: 0,
-        sellingPrice: itemPrice
-      });
-      this.transaction.items = this.itemsArray;
 
       if (transacType === 'sale') {
+        this.itemsArray.push({
+          itemId: this.selectedItem.itemId,
+          itemName: itemName,
+          unit: itemUnit,
+          quantity: itemQuantity,
+          purchaseCost: 0,
+          sellingPrice: itemPrice
+        });
+        this.transaction.items = this.itemsArray;
         this.saleItems.push({
           item: itemName,
           unit: itemUnit,
@@ -170,7 +173,17 @@ export class RecordTransacsComponent implements OnInit {
         });
         this.transaction.transactionType = 1;
       }
+
       if (transacType === 'purchase') {
+        this.itemsArray.push({
+          itemId: this.selectedItem.itemId,
+          itemName: itemName,
+          unit: itemUnit,
+          quantity: itemQuantity,
+          purchaseCost: itemPrice,
+          sellingPrice: 0
+        });
+        this.transaction.items = this.itemsArray;
         this.purchaseItems.push({
           item: itemName,
           unit: itemUnit,
@@ -286,10 +299,6 @@ export class RecordTransacsComponent implements OnInit {
     return currentDate;
   }
 
-  updateDate(newDate: HTMLInputElement) {
-    this.transaction.date = newDate.value;
-  }
-
   getTotalSaleAmountOnItem() {
     $('[name=record-sales] tfoot tr ').eq(1).children().eq(3)
       .html(
@@ -305,7 +314,16 @@ export class RecordTransacsComponent implements OnInit {
   }
 
   handleItemData(itemObject) {
-    $('[data-text=Price]').html(itemObject.sellingPrice);
+    const $bla = $('li.active a[data-toggle=tab]');
+    this.selectedItem = itemObject;
+    if ($bla.html().toUpperCase() === 'SALE') {
+      $('[data-text=Price]').html(itemObject.sellingPrice);
+
+    } else {
+      $('[data-text=Price]').html(itemObject.purchaseCost);
+
+    }
+
   }
 
   clickAddButton(transacType) {

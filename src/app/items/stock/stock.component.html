@@ -1,38 +1,82 @@
-<div class="example-container mat-elevation-z8">
-  <button class="btn btn-primary" [disabled]="!updatedItems.length" (click)="postUpdate()">Update!</button>
+<!-- Modal for conirming actions -->
+<np-modal [(visible)]="showDialog" [options]="options" (confirmed)="isConfirmed($event)">
+  <!-- <button (click)="showModal(false)" class="btn">Close</button> -->
+</np-modal>
+
+<!-- search and actions -->
+<div class="alert" role="alert" id="result"></div>
+<div class="container">
+  <div class="col-md-7">
+    <input class="form-control"placeholder="Search" type="search" (input)="filterItems(filter)" #filter>
+  </div>
+  <div class="col-md-4 pull-right">
+    <button class="btn btn-info" (click)="enableEdits()">Edit</button>
+    <button class="btn btn-success" [disabled]="!updatedItems.length" (click)="postUpdate()">Save edits</button>
+    <button class="btn btn-danger" [disabled]="!checkedItems.length" (click)="deleteMany()">Delete All</button>
+  </div>
+</div>
+
+<!-- table of records -->
+<div class="stock-container mat-elevation-z8">
   <mat-table #table [dataSource]="dataSource" matSort>
-    <!-- ID Column -->
+    <!-- select Column -->
+    <ng-container matColumnDef="multiselect">
+      <mat-header-cell *matHeaderCellDef>
+        <input type="checkbox" [checked]="headerIsChecked" (change)="toggleAllChecked()">
+      </mat-header-cell>
+      <mat-cell *matCellDef="let row">
+          <input class="dataCbox" type="checkbox" [checked]="allChecked" (focus)="getAllRows(row)" (change)="toggleSelectedRows(row, cBox.checked)" #cBox>          
+      </mat-cell>
+    </ng-container>
+
+    <!-- Item Column -->
     <ng-container matColumnDef="itemName">
-      <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Item </mat-header-cell>
       <mat-cell *matCellDef="let row" [attr.contenteditable]="isContenteditable" (input)="onItemInput(row, item)" #item> {{row.itemName}} </mat-cell>
     </ng-container>
 
-    <!-- Progress Column -->
+    <!-- Unit Column -->
     <ng-container matColumnDef="unit">
       <mat-header-cell *matHeaderCellDef> Unit </mat-header-cell>
       <mat-cell *matCellDef="let row" [attr.contenteditable]="isContenteditable" (input)="onItemInput(row, unit)" #unit> {{row.unit}} </mat-cell>
     </ng-container>
 
-    <!-- Name Column -->
+    <!-- Quantity Column -->
     <ng-container matColumnDef="quantity">
       <mat-header-cell *matHeaderCellDef> Quantity </mat-header-cell>
       <mat-cell *matCellDef="let row" [attr.contenteditable]="isContenteditable" (input)="onItemInput(row, qty)" #qty> {{row.quantity}} </mat-cell>
     </ng-container>
 
-    <!-- Color Column -->
+    <!-- Buying Price Column -->
     <ng-container matColumnDef="purchaseCost">
-      <mat-header-cell *matHeaderCellDef>Buying at</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Buying</mat-header-cell>
       <mat-cell *matCellDef="let row" [attr.contenteditable]="isContenteditable" (input)="onItemInput(row, bp)" #bp> {{row.purchaseCost}} </mat-cell>
     </ng-container>
-
-
-    <!-- Color Column -->
+    
+    <!-- Selling Price Column -->
     <ng-container matColumnDef="sellingPrice">
-      <mat-header-cell *matHeaderCellDef>Selling at</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Selling</mat-header-cell>
       <mat-cell *matCellDef="let row" [attr.contenteditable]="isContenteditable" (input)="onItemInput(row, sp)" #sp> {{row.sellingPrice}} </mat-cell>
+    </ng-container>
+
+    <!-- Delete icons Column -->
+    <ng-container matColumnDef="actions">
+      <mat-header-cell *matHeaderCellDef>Delete</mat-header-cell>
+      <mat-cell *matCellDef="let row">
+        <button class="btn btn-danger" (click)="showModal(true, [], row.itemId)">
+          <i class="icon ion-android-remove"></i>
+        </button>
+      </mat-cell>
     </ng-container>
 
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
     <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
   </mat-table>
+
+  <!-- [length]="datasource.dataChange.getValue().length" -->
+  <mat-paginator #paginator
+    [pageIndex]="0"
+    [pageSize]="25"
+    [pageSizeOptions]="[5, 10, 25, 100]">
+  </mat-paginator>
 </div>

@@ -1,31 +1,63 @@
+.red{
+    background: red;
+}
 .app-header{
     padding: 0;
     position: fixed;
 
 }
-.transacs{
-    margin-top: 56px;
-
-}
 div.row{
-    display: flex;
     align-items: center; 
-    margin: 0;
-    line-height: 56px; 
-
-}
-.pull-right{
-     display: flex; 
-     align-items: center;
-     left: 30%;
-
-}
-input{
-    line-height: auto;
-    height: 30px;
+    margin-top: 5em;
 
 }
 .bx-shadow{
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);    
-    
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);     
 }
+.np-receipts{
+    margin-bottom: 1em;
+
+    transition: all 1s ease-in-out;
+}
+mat-card{
+    height: 20em;
+    overflow: auto;
+    padding-top: 1em;
+}
+    mat-card:hover{
+    }
+    mat-card.selected{
+        border: 1px solid #ac2925;
+    
+    }
+mat-card-header{
+    display: block;
+}
+mat-card-title{
+    color: #2c3e50;
+    font-weight: bold;
+}
+
+.np-close-button{
+    position: absolute;
+    left: 89%;
+    top: 5px;
+    padding: 0.1px 4.5px;
+    color: white;
+    font-weight: bold;
+
+    z-index: 98;
+}
+/* .np-close-button{
+    position: absolute;
+    right: 3px;
+    top: -10px;
+    padding: 0.1px 4.5px;
+    border-radius: 50%;
+    border-width: 2px;
+    background-color: transparent;
+    color: #ac2925;
+    font-weight: bold;
+
+    z-index: 98;
+} */

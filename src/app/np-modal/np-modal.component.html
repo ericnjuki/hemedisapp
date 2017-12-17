@@ -1,0 +1,8 @@
+<div [@dialog] *ngIf="visible" class="dialog">
+  <div>{{ options.body }}</div>
+  <div class="np-button-group">
+    <button class="btn btn-success" (click)="confirmee(true);close()">Confirm</button>
+    <button class="btn btn-danger" (click)="confirmee(false);close()">Cancel</button>
+  </div>
+</div>
+<div *ngIf="visible" class="overlay" (click)="close()"></div>

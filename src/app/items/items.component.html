@@ -3,38 +3,22 @@
     <thead>
       <tr>
         <th class="col-md-4">Name</th>
-        <th class="col-md-2">Unit</th>
+        <th class="col-md-2">Buying Price</th>
+        <th class="col-md-2">Selling Price</th>
         <th class="col-md-1">Qty</th>
-        <th class="col-md-2">Purchase At</th>
-        <th class="col-md-2">Sell At</th>
+        <th class="col-md-2">Unit</th>
       </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let item of items let i=index">
-        <td>{{ item.itemName }}</td>
-        <td>{{ item.unit }}</td>
-        <td>{{ item.quantity }}</td>
-        <td>{{ item.purchaseCost }}</td>
-        <td>{{ item.sellingPrice }}</td>
-        <td>
-          <a class="pull-right" (click)="removeItem(i)">
-            <i class="icon ion-android-remove-circle"></i>
-          </a>
-        </td>
-      </tr>
-    </tbody>
-    <tfoot>
       <tr [ngClass]="{
         'np-form-status-ok':formStatus.OK,
         'np-form-status-notok':!formStatus.OK}">
         {{ formStatus.text }}
       </tr>
       <tr>
-        <td contenteditable="true" data-text="Item" (blur)="checkIfEmpty(item, 'string')" (input)="clearRequiredError(item)"(keydown.enter)="clickAddButton()" #item></td>
-        <td contenteditable="true" data-text="Unit" (blur)="checkIfEmpty(unit, 'string')" (input)="clearRequiredError(unit);checkIfHasNumber(unit)" (keydown.enter)="clickAddButton()" #unit></td>
-        <td contenteditable="true" data-text="Qty" (blur)="checkIfEmpty(qty, 'number')" (input)="clearRequiredError(qty);checkIfNumber(qty)" (keydown.enter)="clickAddButton()" #qty></td>
-        <td contenteditable="true" data-text="Purchase Cost" (blur)="checkIfEmpty(pcost, 'number')" (input)="clearRequiredError(pcost);checkIfNumber(pcost)" (keydown.enter)="clickAddButton()" #pcost></td>
-        <td contenteditable="true" data-text="Selling Price" (blur)="checkIfEmpty(sprice, 'number')" (input)="clearRequiredError(sprice);checkIfNumber(sprice)" (keydown.enter)="clickAddButton()" #sprice></td>
+        <td contenteditable="true" data-text="Item" (input)="clearError(item)"(keydown.enter)="clickAddButton()" #item></td>
+        <td contenteditable="true" data-text="Purchase Cost" (input)="clearError(pcost);isNumber(pcost)" (keydown.enter)="clickAddButton()" #pcost></td>
+        <td contenteditable="true" data-text="Selling Price" (input)="clearError(sprice);isNumber(sprice)" (keydown.enter)="clickAddButton()" #sprice></td>
+        <td contenteditable="true" data-text="Qty" (input)="clearError();isNumber(qty)" (keydown.enter)="clickAddButton()" #qty></td>
+        <td contenteditable="true" data-text="Unit" (input)="clearError();checkIfHasNumber(unit)" (keydown.enter)="clickAddButton()" #unit></td>
         <td id="addButton">
           <a id="addisiaButton" class="pull-right" (click)="addItem()">
             <i class="icon ion-android-add-circle"></i>
@@ -53,6 +37,23 @@
           </button>
         </td>
       </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of itemsForPurchase let i=index">
+        <td>{{ item.itemName }}</td>
+        <td>{{ item.purchaseCost }}</td>
+        <td>{{ item.sellingPrice }}</td>
+        <td>{{ item.quantity }}</td>
+        <td>{{ item.unit }}</td>
+        <td>
+          <a class="pull-right" (click)="removeItem(i)">
+            <i class="icon ion-android-remove-circle"></i>
+          </a>
+        </td>
+      </tr>
+    </tbody>
+    <tfoot>
+
     </tfoot>
   </table>
 </div>
