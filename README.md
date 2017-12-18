@@ -6,7 +6,8 @@ See **Running the app** section below for instructions on how to deploy.
 ## DEMO
 
 ___ng-pos___ requires a backend service that sends json data.
-~~Documentation for such a service is not yet provided~~. The api is on my github [here](https://www.github.com/ngpos-api) but a static demo for this app can be found here: [DEMO](https://ericnjuki.github.io/hemedisapp).
+~~Documentation for such a service is not yet provided~~. The api is on my github [here]
+(https://github.com/ericnjuki/ngpos-api) but a static demo for this app can be found here: [DEMO](https://ericnjuki.github.io/hemedisapp).
 
 ## Running the app
 
