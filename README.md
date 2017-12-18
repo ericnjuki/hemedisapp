@@ -23,26 +23,24 @@ Fill in the rest of the fields. And add the item to current transaction by press
 
 This validates the fields and produces errors if something isn't right.
 
-![Validation error](src/assets/docs-pics/error-field-must-be-number.png)
-
-<img src="assets/docs-pics/error-field-must-be-number.png" height="20px" width="100px"/>
+![Validation error](src/assets/docs-pics/error-field-must-be-number.png "Validation error")
 
 You can add multiple items to the same transaction!
 
-[pic]
+![Multiple items](src/assets/docs-pics/multiple-items.png "Multiple items")
 
 Don't forget to put in the date:
 
-[pic]
+![Use date picker](src/assets/docs-pics/date-picker.png "Select date of transaction")
 
 When you're done, post the transaction. You should get a notification if it's successful.
 
-[pic]
+![Posted!](src/assets/docs-pics/posted.png "On successful post")
 
 ### 2. Recent Transactions
 Self explanatory. The inspiration for this view came from a typical receipt book:
 
-[pic]
+![Recent transactions](src/assets/docs-pics/recent.png "Recent transactions view")
 
 The more recent ones appear first
 
@@ -67,7 +65,7 @@ This view is for showing 3 major stats on a monthly basis:
 
 If you click back to 2015, you will see the stats for the transaction we just recorded:
 
-[pic]
+![2015 statistics](src/assets/docs-pics/2015.jpg "2015 Stats")
 
 ### 4. Current Stock
 Here you can view all items in your inventory
