@@ -14,10 +14,10 @@
       <div class="row">
         <div class="col-md-10 col-md-push-1 app-sale-record-tab">
           <div class="app-record-header">
-            <input id="app-date" type="date" [value]="setDate()" (change)="updateDate(saleDate)" #saleDate>
+            <input id="app-date" type="date" [(ngModel)]="currentDate">
             <div class="pull-right">
               <small>Date:</small>
-              <label for="app-date" [innerHTML]="setDate()"></label>
+              <label for="app-date">{{ currentDate }}</label>
             </div>
           </div>
           <table class="table table-hover" name="record-sales">
@@ -91,10 +91,10 @@
       <div class="row">
         <div class="col-md-10 col-md-push-1 app-sale-record-tab">
           <div class="app-record-header">
-            <input id="app-date" type="date" [value]="setDate()" (change)="updateDate(purchaseDate)" #purchaseDate>
+            <input id="app-date" type="date" [(ngModel)]="currentDate">
             <div class="pull-right">
               <small>Date:</small>
-              <label for="app-date">12/12/12</label>
+              <label for="app-date">{{ currentDate }}</label>
             </div>
           </div>
           <table class="table table-hover" name="record-purchases">

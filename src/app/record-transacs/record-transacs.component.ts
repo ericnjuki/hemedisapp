@@ -36,6 +36,7 @@ export class RecordTransacsComponent implements OnInit {
   arrJsonNames: Array<string> = [];
   salePurchaseFlag = 0;
   selectedItem: Item;
+  currentDate = this.setDate();
 
   constructor(private transacService: TransactionService,
     private toastyService: ToastyService,
@@ -128,7 +129,7 @@ export class RecordTransacsComponent implements OnInit {
       return;
     }
 
-    this.transaction.date = this.setDate();
+    this.transaction.date = this.currentDate;
 
     this.itemService.getItemNames().subscribe(jsonNames => {
       this.arrJsonNames = jsonNames;
@@ -286,10 +287,6 @@ export class RecordTransacsComponent implements OnInit {
   setDate() {
     const currentDate = new Date().toISOString().substr(0, 10);
     return currentDate;
-  }
-
-  updateDate(newDate: HTMLInputElement) {
-    this.transaction.date = newDate.value;
   }
 
   getTotalSaleAmountOnItem() {
