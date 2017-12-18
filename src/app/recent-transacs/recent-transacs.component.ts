@@ -44,6 +44,7 @@ export class RecentTransacsComponent implements OnInit {
     const firstToast = this.addToast('wait', 'Fetching records...');
     this.transacService.getTransacs(this.includeItems)
       .subscribe(allTransactions => {
+        console.log(allTransactions);
         this.toastyService.clear(firstToast);
         let maxItemNumber = 0;
         this.transactions = allTransactions;

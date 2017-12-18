@@ -213,6 +213,7 @@ export class RecordTransacsComponent implements OnInit {
   }
 
   postSale() {
+    this.transaction.date = this.selectedDate;
     const firstToast = this.addToast('wait', 'posting');
     this.transacService.postTransacs(this.transaction)
       .subscribe(response => {
@@ -240,6 +241,7 @@ export class RecordTransacsComponent implements OnInit {
   }
 
   postPurchase() {
+    this.transaction.date = this.selectedDate;
     const firstToast = this.addToast('wait', 'posting..');
     this.transacService.postTransacs(this.transaction)
       .subscribe(response => {
