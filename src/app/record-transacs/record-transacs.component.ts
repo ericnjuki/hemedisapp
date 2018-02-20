@@ -36,11 +36,7 @@ export class RecordTransacsComponent implements OnInit {
   arrJsonNames: Array<string> = [];
   salePurchaseFlag = 0;
   selectedItem: Item;
-<<<<<<< HEAD
-  currentDate = this.setDate();
-=======
   selectedDate = this.setDate();
->>>>>>> refs/heads/master
 
   constructor(private transacService: TransactionService,
     private toastyService: ToastyService,
