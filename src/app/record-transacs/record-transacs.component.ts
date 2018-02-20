@@ -36,7 +36,11 @@ export class RecordTransacsComponent implements OnInit {
   arrJsonNames: Array<string> = [];
   salePurchaseFlag = 0;
   selectedItem: Item;
+<<<<<<< HEAD
+  currentDate = this.setDate();
+=======
   selectedDate = this.setDate();
+>>>>>>> refs/heads/master
 
   constructor(private transacService: TransactionService,
     private toastyService: ToastyService,
@@ -129,7 +133,11 @@ export class RecordTransacsComponent implements OnInit {
       return;
     }
 
+<<<<<<< HEAD
+    this.transaction.date = this.currentDate;
+=======
     this.transaction.date = this.selectedDate;
+>>>>>>> refs/heads/master
 
     this.itemService.getItemNames().subscribe(jsonNames => {
       this.arrJsonNames = jsonNames;
