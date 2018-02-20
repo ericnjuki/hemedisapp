@@ -22,7 +22,7 @@ div.row{
 mat-card{
     height: 20em;
     overflow: auto;
-    padding-top: 0;
+    padding-top: 1em;
 }
     mat-card:hover{
     }
@@ -37,7 +37,18 @@ mat-card-title{
     color: #2c3e50;
     font-weight: bold;
 }
+
 .np-close-button{
+    position: absolute;
+    left: 89%;
+    top: 5px;
+    padding: 0.1px 4.5px;
+    color: white;
+    font-weight: bold;
+
+    z-index: 98;
+}
+/* .np-close-button{
     position: absolute;
     right: 3px;
     top: -10px;
@@ -49,4 +60,4 @@ mat-card-title{
     font-weight: bold;
 
     z-index: 98;
-}
+} */

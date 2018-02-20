@@ -36,7 +36,11 @@ export class RecordTransacsComponent implements OnInit {
   arrJsonNames: Array<string> = [];
   salePurchaseFlag = 0;
   selectedItem: Item;
+<<<<<<< HEAD
   currentDate = this.setDate();
+=======
+  selectedDate = this.setDate();
+>>>>>>> refs/heads/master
 
   constructor(private transacService: TransactionService,
     private toastyService: ToastyService,
@@ -129,7 +133,11 @@ export class RecordTransacsComponent implements OnInit {
       return;
     }
 
+<<<<<<< HEAD
     this.transaction.date = this.currentDate;
+=======
+    this.transaction.date = this.selectedDate;
+>>>>>>> refs/heads/master
 
     this.itemService.getItemNames().subscribe(jsonNames => {
       this.arrJsonNames = jsonNames;
@@ -153,17 +161,17 @@ export class RecordTransacsComponent implements OnInit {
       }
       // input item exists in records and all fields good
 
-      this.itemsArray.push({
-        itemId: this.selectedItem.itemId,
-        itemName: itemName,
-        unit: itemUnit,
-        quantity: itemQuantity,
-        purchaseCost: 0,
-        sellingPrice: itemPrice
-      });
-      this.transaction.items = this.itemsArray;
 
       if (transacType === 'sale') {
+        this.itemsArray.push({
+          itemId: this.selectedItem.itemId,
+          itemName: itemName,
+          unit: itemUnit,
+          quantity: itemQuantity,
+          purchaseCost: 0,
+          sellingPrice: itemPrice
+        });
+        this.transaction.items = this.itemsArray;
         this.saleItems.push({
           item: itemName,
           unit: itemUnit,
@@ -173,7 +181,17 @@ export class RecordTransacsComponent implements OnInit {
         });
         this.transaction.transactionType = 1;
       }
+
       if (transacType === 'purchase') {
+        this.itemsArray.push({
+          itemId: this.selectedItem.itemId,
+          itemName: itemName,
+          unit: itemUnit,
+          quantity: itemQuantity,
+          purchaseCost: itemPrice,
+          sellingPrice: 0
+        });
+        this.transaction.items = this.itemsArray;
         this.purchaseItems.push({
           item: itemName,
           unit: itemUnit,
@@ -203,6 +221,7 @@ export class RecordTransacsComponent implements OnInit {
   }
 
   postSale() {
+    this.transaction.date = this.selectedDate;
     const firstToast = this.addToast('wait', 'posting');
     this.transacService.postTransacs(this.transaction)
       .subscribe(response => {
@@ -230,6 +249,7 @@ export class RecordTransacsComponent implements OnInit {
   }
 
   postPurchase() {
+    this.transaction.date = this.selectedDate;
     const firstToast = this.addToast('wait', 'posting..');
     this.transacService.postTransacs(this.transaction)
       .subscribe(response => {
@@ -304,8 +324,16 @@ export class RecordTransacsComponent implements OnInit {
   }
 
   handleItemData(itemObject) {
+    const $bla = $('li.active a[data-toggle=tab]');
     this.selectedItem = itemObject;
-    $('[data-text=Price]').html(itemObject.sellingPrice);
+    if ($bla.html().toUpperCase() === 'SALE') {
+      $('[data-text=Price]').html(itemObject.sellingPrice);
+
+    } else {
+      $('[data-text=Price]').html(itemObject.purchaseCost);
+
+    }
+
   }
 
   clickAddButton(transacType) {

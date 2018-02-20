@@ -1,44 +1,35 @@
 <div class="app-header">
   <div class="row">
     <div class="app-stats-header col-md-10 col-md-offset-1 clearfix">
-      <button class="btn pull-left col-md-2" (click)="previousYear()" [routerLink]="['/stats', statsDate.year+1, 'JAN', '01']">
+      <button class="btn pull-left col-md-2" (click)="previousYear()">
         <span class="ion-arrow-left-a"></span>
       </button>
-      <h3 class="col-md-2 col-md-offset-3" [innerHTML]="statsDate.year"></h3>
-      <button class="btn pull-right col-md-2" (click)="nextYear()" [routerLink]="['/stats', statsDate.year+1, 'JAN', '01']">
+      <h3 class="col-md-2 col-md-offset-3 pull-left" [innerHTML]="statsDate.year"></h3>
+      <button class="btn pull-left col-md-offset-3 col-md-2" (click)="nextYear()">
         <span class="ion-arrow-right-a"></span>
       </button>
     </div>
   </div>
-  <hr>
-  <div class="row">
-    <div class="col-md-10 col-md-push-1 np-month-buttons">
-      <button *ngFor="let month of appMonths" [routerLink]="['/stats', statsDate.year, month, '01']" class="col-md-1 btn np-btn-month" (click)="changeDetailedView()">
-        {{ month }}
-      </button>
-    </div>
-  </div>
 </div>
-<router-outlet></router-outlet>
 <div class="container-fluid" *ngIf="!viewDetailed">
   <div class="row">
-    <div *ngFor="let rowData of monthlyStats" [routerLink]="['/stats', statsDate.year, rowData.month, '01']" class="col-md-4 np-monthly-stats" (click)="changeDetailedView()">
+    <div *ngFor="let rowData of monthlyStats" class="col-md-4 np-monthly-stats">
       <mat-card>
         <mat-card-header>
           <mat-card-title>
             {{ rowData.month }}
             <mat-card-subtitle>
-              Sales profit:
-              <b> 62889</b>
+              Sales profit: 
+              <b>{{ rowData.profitLoss }}</b>
             </mat-card-subtitle>
           </mat-card-title>
           <br>
         </mat-card-header>
         <mat-card-content class="np-non-detailed">
           <mat-card-subtitle>
-            <b>Total sales: </b>121898</mat-card-subtitle>
+            <b>Total sales: </b>{{ rowData.sales }}</mat-card-subtitle>
           <mat-card-subtitle>
-            <b>Total purchases: </b>80268</mat-card-subtitle>
+            <b>Total purchases: </b>{{ rowData.purchases }}</mat-card-subtitle>
         </mat-card-content>
       </mat-card>
     </div>
