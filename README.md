@@ -6,8 +6,7 @@ See **Running the app** section below for instructions on how to deploy.
 ## DEMO
 
 ___ng-pos___ requires a backend service that sends json data.
-~~Documentation for such a service is not yet provided~~. The api is on my github [here]
-(https://github.com/ericnjuki/ngpos-api) but a static demo for this app can be found here: [DEMO](https://ericnjuki.github.io/hemedisapp).
+~~Documentation for such a service is not yet provided~~. The api is on my github [here](https://github.com/ericnjuki/ngpos-api) but a static demo for this app can be found here: [DEMO](https://ericnjuki.github.io/hemedisapp).
 
 ## Running the app
 
@@ -19,7 +18,7 @@ and is NOT guaranteed to work elsewhere :/
 
 * #### Building and Deploying the app locally (on IIS or APACHE), PART I
  * ###### Step 1
-    You can download the dist folder [here](https://github.com/ericnjuki/hemedisapp/releases/download/v0.1.1/dist.zip) and skip to *Step 6*.
+    You can download the dist folder [here](https://github.com/ericnjuki/hemedisapp/releases/download/v0.1.1/dist.zip) and skip to [*Step 6*](#step-6).
 
  * ###### Step 1
 
@@ -91,7 +90,7 @@ and is NOT guaranteed to work elsewhere :/
     `http://localhost:{set port}/api/v1.0/items/g`
     for IIS
 
-    *Make sure this is the url pointed to by the app as in Part I Step 3 above.*
+    *Make sure this is the url pointed to by the app as in [Part I Step 3](#step-3) above.*
     Mine was deployed to http://localhost:1111
 
     You should see something similar to this on the browser:
