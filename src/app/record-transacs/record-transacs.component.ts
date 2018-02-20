@@ -129,11 +129,7 @@ export class RecordTransacsComponent implements OnInit {
       return;
     }
 
-<<<<<<< HEAD
-    this.transaction.date = this.currentDate;
-=======
     this.transaction.date = this.selectedDate;
->>>>>>> refs/heads/master
 
     this.itemService.getItemNames().subscribe(jsonNames => {
       this.arrJsonNames = jsonNames;
