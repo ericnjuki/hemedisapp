@@ -18,9 +18,12 @@ export class SidenavComponent implements OnInit {
     });
   }
 
-  sidenavClicked(anchorElement: HTMLInputElement) {
+  sidenavClicked(anchorElement: HTMLInputElement, np_rt?) {
     $('li').removeClass('active');
     $(anchorElement).parent().addClass('active');
-  }
 
+    if (np_rt === 'np-rt') {
+        $('#content').addClass('content-lg');
+    }
+  }
 }

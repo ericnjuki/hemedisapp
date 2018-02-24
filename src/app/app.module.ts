@@ -3,6 +3,10 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { AppRouterModule } from 'app/app.routing';
+import { NgRedux, NgReduxModule } from '@angular-redux/store';
+import { combineReducers } from 'redux';
+import { INPState, rootReducer } from './store/store';
+import { IInitialState } from './interfaces/state.interface';
 
 // ng-pos components
 import { AppComponent } from './app.component';
@@ -54,9 +58,14 @@ import { DailyStatsComponent } from './statistics/daily-stats/daily-stats.compon
     MatSortModule,
     MatCardModule,
     ToastyModule.forRoot(),
+    NgReduxModule
   ],
   providers: [TransactionService, ItemService],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+  constructor(ngRedux: NgRedux<IInitialState>) {
+    ngRedux.configureStore(combineReducers({root: rootReducer}), {});
 
+  }
+}

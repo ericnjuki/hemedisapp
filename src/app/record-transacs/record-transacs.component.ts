@@ -1,3 +1,5 @@
+import { INPState } from './../store/store';
+import { NgRedux } from '@angular-redux/store';
 import { ItemService } from './../services/items.service';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ITransactionData } from 'app/interfaces/transacs.interface';
@@ -41,7 +43,11 @@ export class RecordTransacsComponent implements OnInit {
   constructor(private transacService: TransactionService,
     private toastyService: ToastyService,
     private toastyConfig: ToastyConfig,
-    private itemService: ItemService) { }
+    private itemService: ItemService,
+    private ngRedux: NgRedux<INPState>) {
+      this.ngRedux.subscribe(() => {
+      });
+    }
 
   ngOnInit() {
 
