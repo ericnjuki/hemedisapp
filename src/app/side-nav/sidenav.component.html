@@ -25,18 +25,19 @@
             </li><!-- Statistics - 1st level menu item -->
 
             
+            <li class="side-nav-item">
+                <a routerLink="/record" (click)="sidenavClicked(a5, 'np-rt')" #a5>
+                    <i class="nav-item-icon icon ion-android-add"></i>
+                    Record Transactions
+                </a>
+            </li><!-- record transactions -->
+            
             <li class="side-nav-item"> <!-- add class active dynamically-->
                 <a routerLink="/transactions" (click)="sidenavClicked(a4)" #a4>
                     <i class="nav-item-icon icon ion-ios-paper"></i>
                     Recent Transactions
                 </a>
             </li><!-- /.side-nav-item -->
-            <li class="side-nav-item">
-                <a routerLink="/record" (click)="sidenavClicked(a5)" #a5>
-                    <i class="nav-item-icon icon ion-android-add"></i>
-                    Record Transactions
-                </a>
-            </li><!-- record transactions -->
         </ul><!-- /nav ul-->
     </nav><!-- /nav-->
 

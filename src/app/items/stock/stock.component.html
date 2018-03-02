@@ -16,10 +16,16 @@
   </div>
 </div>
 
+<div class="np-stocks">
+  <np-grid [np-grid]="npGridConfig"></np-grid>
+</div>
+
+
 <!-- table of records -->
+<!--
 <div class="stock-container mat-elevation-z8">
   <mat-table #table [dataSource]="dataSource" matSort>
-    <!-- select Column -->
+    select Column
     <ng-container matColumnDef="multiselect">
       <mat-header-cell *matHeaderCellDef>
         <input type="checkbox" [checked]="headerIsChecked" (change)="toggleAllChecked()">
@@ -29,37 +35,37 @@
       </mat-cell>
     </ng-container>
 
-    <!-- Item Column -->
+    Item Column
     <ng-container matColumnDef="itemName">
       <mat-header-cell *matHeaderCellDef mat-sort-header> Item </mat-header-cell>
       <mat-cell *matCellDef="let row" [attr.contenteditable]="isContenteditable" (input)="onItemInput(row, item)" #item> {{row.itemName}} </mat-cell>
     </ng-container>
 
-    <!-- Unit Column -->
+    Unit Column
     <ng-container matColumnDef="unit">
       <mat-header-cell *matHeaderCellDef> Unit </mat-header-cell>
       <mat-cell *matCellDef="let row" [attr.contenteditable]="isContenteditable" (input)="onItemInput(row, unit)" #unit> {{row.unit}} </mat-cell>
     </ng-container>
 
-    <!-- Quantity Column -->
+    Quantity Column
     <ng-container matColumnDef="quantity">
       <mat-header-cell *matHeaderCellDef> Quantity </mat-header-cell>
       <mat-cell *matCellDef="let row" [attr.contenteditable]="isContenteditable" (input)="onItemInput(row, qty)" #qty> {{row.quantity}} </mat-cell>
     </ng-container>
 
-    <!-- Buying Price Column -->
+    Buying Price Column
     <ng-container matColumnDef="purchaseCost">
       <mat-header-cell *matHeaderCellDef mat-sort-header>Buying</mat-header-cell>
       <mat-cell *matCellDef="let row" [attr.contenteditable]="isContenteditable" (input)="onItemInput(row, bp)" #bp> {{row.purchaseCost}} </mat-cell>
     </ng-container>
     
-    <!-- Selling Price Column -->
+    Selling Price Column
     <ng-container matColumnDef="sellingPrice">
       <mat-header-cell *matHeaderCellDef mat-sort-header>Selling</mat-header-cell>
       <mat-cell *matCellDef="let row" [attr.contenteditable]="isContenteditable" (input)="onItemInput(row, sp)" #sp> {{row.sellingPrice}} </mat-cell>
     </ng-container>
 
-    <!-- Delete icons Column -->
+    Delete icons Column
     <ng-container matColumnDef="actions">
       <mat-header-cell *matHeaderCellDef>Delete</mat-header-cell>
       <mat-cell *matCellDef="let row">
@@ -73,10 +79,10 @@
     <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
   </mat-table>
 
-  <!-- [length]="datasource.dataChange.getValue().length" -->
   <mat-paginator #paginator
     [pageIndex]="0"
     [pageSize]="25"
     [pageSizeOptions]="[5, 10, 25, 100]">
   </mat-paginator>
-</div>
+</div> 
+-->
