@@ -31,6 +31,7 @@ import {MatCardModule} from '@angular/material/card';
 // other components
 import { ToastyModule } from 'ng2-toasty';
 import { DailyStatsComponent } from './statistics/daily-stats/daily-stats.component';
+import { NpGridComponent } from './np-grid/np-grid.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { DailyStatsComponent } from './statistics/daily-stats/daily-stats.compon
     ItemsComponent,
     StockComponent,
     NpModalComponent,
-    DailyStatsComponent
+    DailyStatsComponent,
+    NpGridComponent
   ],
   imports: [
     BrowserModule,

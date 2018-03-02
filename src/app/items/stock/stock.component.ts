@@ -44,6 +44,22 @@ export class StockComponent implements OnInit {
   checkedItems = [];
   checkedRowItems = [];
 
+  // configuring np-grid
+  npGridConfig = {
+    columns: [
+      {colName: 'bla', display: 'display'},
+      {colName: 'nada', display: false},
+      {colName: 'surf', display: true}
+    ],
+    data: [
+      {nada: 'ya', bla: 'ka', surf: 'in'},
+      {nada: 'yaa', bla: 'kaka', surf: 'ins'},
+      {nada: 'yaaa', bla: 'kakaka', surf: 'insi'},
+      {nada: 'yaaaa', bla: 'kakakaka', surf: 'insid'},
+      {nada: 'yaaaaa', bla: 'kakakakaka', surf: 'inside'}
+    ]
+  }
+
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
@@ -51,7 +67,7 @@ export class StockComponent implements OnInit {
     private itemService: ItemService,
     private toastyService: ToastyService,
     private toastyConfig: ToastyConfig) {
-  }
+    }
 
   ngOnInit() {
     this.dataSource = new StockDataSource(this.paginator, this.sort, this.itemService);

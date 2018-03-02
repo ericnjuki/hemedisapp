@@ -11,8 +11,10 @@ export class SidenavComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    $('[routerLink="/record"]').attr('id', 'np-default').parent('li').addClass('active');
-    document.getElementById('np-default').click();
+    // $('[routerLink="/record"]').attr('id', 'np-default').parent('li').addClass('active');
+    $('[routerLink="/stock"]').parent('li').addClass('active');
+    // document.getElementById('np-default').click();
+    // $('[routerLink="/stock"]').click();
     $('a').on('click', () => {
       $('.app-header').addClass('bx-shadow');
     });

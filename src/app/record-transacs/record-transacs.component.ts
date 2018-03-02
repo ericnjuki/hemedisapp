@@ -45,8 +45,6 @@ export class RecordTransacsComponent implements OnInit {
     private toastyConfig: ToastyConfig,
     private itemService: ItemService,
     private ngRedux: NgRedux<INPState>) {
-      this.ngRedux.subscribe(() => {
-      });
     }
 
   ngOnInit() {

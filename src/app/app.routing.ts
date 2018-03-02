@@ -7,7 +7,7 @@ import { StockComponent } from 'app/items/stock/stock.component';
 import { DailyStatsComponent } from 'app/statistics/daily-stats/daily-stats.component';
 
 const APP_ROUTES: Routes = [
-    { path: '', redirectTo: '/record', pathMatch: 'full' },
+    { path: '', redirectTo: '/stock', pathMatch: 'full' },
     { path: 'transactions', component: RecentTransacsComponent },
     { path: 'record', component: RecordTransacsComponent },
     {

@@ -1,0 +1,17 @@
+<table class="table table-hover table-striped">
+    <thead>
+      <tr>
+        <th><input type="checkbox"></th>
+        <th *ngFor="let col of gridData.columns">{{ col }}</th>
+      </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let dataRow of gridData.rows">
+          <td><input type="checkbox"></td>
+          <td *ngFor="let dataItem of gridData.columns">{{ dataRow[dataItem] }}</td>
+        </tr>
+      </tbody>
+      <tfoot>
+
+      </tfoot>
+</table>
