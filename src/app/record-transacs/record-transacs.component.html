@@ -12,25 +12,6 @@
   <div id="sale" class="tab-pane fade in active">
     <div class="container-fluid">
       <div class="row">
-        <div class="col-xs-8">items list
-          <table class="table table-hover" name="record-sales">
-            <thead>
-              <tr>
-                <th>Item</th>
-                <th>Base Price</th>
-                <th>per</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let miniItem of miniItems">
-                <td>{{ miniItem.item }}</td>
-                <td>{{ miniItem.sellingPrice }}</td>
-                <td>per {{ minitItem.unit }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="col-xs-4">receipt</div>
         <div class="col-md-10 col-md-push-1 app-sale-record-tab">
           <div class="app-record-header">
             <input id="app-date" type="date" [(ngModel)]="selectedDate">
@@ -101,10 +82,10 @@
               </tr>
             </tfoot>
           </table>
-        </div> <!-- table holder -->
-      </div> <!-- row -->
-    </div> <!-- container fluid -->
-  </div> <!-- sales tab -->
+        </div>
+      </div>
+    </div>
+  </div>
   <div id="purchase" class="tab-pane fade">
     <div class="container-fluid">
       <div class="row">

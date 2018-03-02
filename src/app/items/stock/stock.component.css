@@ -2,22 +2,6 @@
   background: red;
   margin: 2em;
 }
-
-.np-stocks{
-  max-height: 70%;
-
-}
-th{
-  padding: 8px;
-
-}
-
-
-
-
-
-
-/* old */
 .stock-container {
     display: flex;
     flex-direction: column;

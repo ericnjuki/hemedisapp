@@ -6,7 +6,6 @@ import * as fuzzy from 'fuzzy';
  * Activates jQuery's autocomplete feature on input/contenteditable/text elements
  */
 @Directive({
-    // tslint:disable-next-line:directive-selector
     selector: 'npAutoComplete'
 })
 export class AutoCompleteDirective {

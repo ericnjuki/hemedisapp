@@ -3,10 +3,6 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { AppRouterModule } from 'app/app.routing';
-import { NgRedux, NgReduxModule } from '@angular-redux/store';
-import { combineReducers } from 'redux';
-import { INPState, rootReducer } from './store/store';
-import { IInitialState } from './interfaces/state.interface';
 
 // ng-pos components
 import { AppComponent } from './app.component';
@@ -31,7 +27,6 @@ import {MatCardModule} from '@angular/material/card';
 // other components
 import { ToastyModule } from 'ng2-toasty';
 import { DailyStatsComponent } from './statistics/daily-stats/daily-stats.component';
-import { NpGridComponent } from './np-grid/np-grid.component';
 
 @NgModule({
   declarations: [
@@ -45,8 +40,7 @@ import { NpGridComponent } from './np-grid/np-grid.component';
     ItemsComponent,
     StockComponent,
     NpModalComponent,
-    DailyStatsComponent,
-    NpGridComponent
+    DailyStatsComponent
   ],
   imports: [
     BrowserModule,
@@ -60,14 +54,9 @@ import { NpGridComponent } from './np-grid/np-grid.component';
     MatSortModule,
     MatCardModule,
     ToastyModule.forRoot(),
-    NgReduxModule
   ],
   providers: [TransactionService, ItemService],
   bootstrap: [AppComponent]
 })
-export class AppModule {
-  constructor(ngRedux: NgRedux<IInitialState>) {
-    ngRedux.configureStore(combineReducers({root: rootReducer}), {});
+export class AppModule { }
 
-  }
-}
