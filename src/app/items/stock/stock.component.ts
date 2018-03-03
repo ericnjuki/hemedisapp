@@ -3,7 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { ItemService } from 'app/services/items.service';
 import { StockDataSource } from 'app/items/stock/stock.datasource';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs/Rx';
 import { MatTableDataSource } from '@angular/material/table';
 import { IItem } from 'app/interfaces/item.interface';
 import { ToastyService, ToastyConfig, ToastOptions, ToastData } from 'ng2-toasty';
@@ -19,7 +19,7 @@ import { NpModalOptions } from 'app/shared/np-modal-options';
   styleUrls: ['./stock.component.css']
 })
 export class StockComponent implements OnInit {
-  displayedColumns = ['multiselect', 'itemName', 'quantity', 'unit', 'purchaseCost', 'sellingPrice', 'actions'];
+  displayedColumns = ['itemName', 'quantity', 'unit', 'purchaseCost', 'sellingPrice', 'actions'];
   dataSource: StockDataSource;
   isContenteditable = false;
   updatedItems = [];
@@ -47,58 +47,17 @@ export class StockComponent implements OnInit {
   // configuring np-grid
   npGridConfig = {
     columns: [
-      {colName: 'nada', display: true},
-      {colName: 'bla', display: 'display'},
-      {colName: 'surf', display: true}
+      {colName: 'itemName', display: 'Item', sort: true},
+      {colName: 'sellingPrice', display: 'Selling Price', sort: true},
+      {colName: 'purchaseCost', display: 'Buying Price', sort: true},
+      {colName: 'quantity', display: 'Qty'},
+      {colName: 'unit', display: 'Units'},
+      {colName: 'actions'}
     ],
-    data: [
-      {nada: '1', bla: 'kaka', surf: 'ins'},
-      {nada: '2', bla: 'kaka', surf: 'ins'},
-      {nada: '3', bla: 'kaka', surf: 'ins'},
-      {nada: '4', bla: 'kaka', surf: 'ins'},
-      {nada: '5', bla: 'kaka', surf: 'ins'},
-      {nada: '6', bla: 'kaka', surf: 'ins'},
-      {nada: '7', bla: 'kaka', surf: 'ins'},
-      {nada: '8', bla: 'kaka', surf: 'ins'},
-      {nada: '9', bla: 'kaka', surf: 'ins'},
-      {nada: '10', bla: 'kaka', surf: 'ins'},
-      {nada: '11', bla: 'kaka', surf: 'ins'},
-      {nada: '12', bla: 'kaka', surf: 'ins'},
-      {nada: '13', bla: 'kaka', surf: 'ins'},
-      {nada: '14', bla: 'kaka', surf: 'ins'},
-      {nada: '15', bla: 'kaka', surf: 'ins'},
-      {nada: '16', bla: 'kaka', surf: 'ins'},
-      {nada: '17', bla: 'kaka', surf: 'ins'},
-      {nada: '18', bla: 'kaka', surf: 'ins'},
-      {nada: '19', bla: 'kaka', surf: 'ins'},
-      {nada: '20', bla: 'kaka', surf: 'ins'},
-      {nada: '21', bla: 'kaka', surf: 'ins'},
-      {nada: '22', bla: 'kaka', surf: 'ins'},
-      {nada: '23', bla: 'kaka', surf: 'ins'},
-      {nada: '24', bla: 'kaka', surf: 'ins'},
-      {nada: '25', bla: 'kaka', surf: 'ins'},
-      {nada: '26', bla: 'kaka', surf: 'ins'},
-      {nada: '27', bla: 'kaka', surf: 'ins'},
-      {nada: '28', bla: 'kaka', surf: 'ins'},
-      {nada: '29', bla: 'kaka', surf: 'ins'},
-      {nada: '30', bla: 'kaka', surf: 'ins'},
-      {nada: '31', bla: 'kaka', surf: 'ins'},
-      {nada: '32', bla: 'kaka', surf: 'ins'},
-      {nada: '33', bla: 'kaka', surf: 'ins'},
-      {nada: '34', bla: 'kaka', surf: 'ins'},
-      {nada: '35', bla: 'kaka', surf: 'ins'},
-      {nada: '36', bla: 'kaka', surf: 'ins'},
-      {nada: '37', bla: 'kaka', surf: 'ins'},
-      {nada: '38', bla: 'kaka', surf: 'ins'},
-      {nada: '39', bla: 'kaka', surf: 'ins'},
-      {nada: '40', bla: 'kaka', surf: 'ins'},
-      {nada: '41', bla: 'kaka', surf: 'ins'},
-      {nada: '42', bla: 'kaka', surf: 'ins'},
-      {nada: '43', bla: 'kaka', surf: 'ins'}
-    ],
-    extraCols: 1,
-    pagingOptions: [10, 25, 50, 100]
+    pagingOptions: [10, 25, 50, 100],
+    multiselect: true
   }
+  // configAsyncData;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -107,10 +66,18 @@ export class StockComponent implements OnInit {
     private itemService: ItemService,
     private toastyService: ToastyService,
     private toastyConfig: ToastyConfig) {
+      // this.itemService.getAllItems().subscribe((res) => {
+      //   // console.log(res);
+      //   this.configAsyncData = res;
+      // })
     }
+  // getData() {
+  //   return Observable.of(this.configAsyncData);
+  // }
 
   ngOnInit() {
     this.dataSource = new StockDataSource(this.paginator, this.sort, this.itemService);
+
     $(function () {
       $('div.alert').remove();
       $('[contenteditable=true]').focus(function () {

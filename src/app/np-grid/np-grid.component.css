@@ -8,3 +8,9 @@ table>tfoot>tr>td{
     vertical-align: middle;
     text-align: right;
 }
+.table>tbody>tr>td, .table>thead:first-child>tr:first-child>th{
+    text-align: center;
+}
+.pager>li{
+    cursor: pointer;
+}

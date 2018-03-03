@@ -1,3 +1,4 @@
+import { Observable } from 'rxjs/rx';
 import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
@@ -9,26 +10,42 @@ import { Component, OnInit, Input } from '@angular/core';
 export class NpGridComponent implements OnInit {
   // tslint:disable-next-line:no-input-rename
   @Input('np-grid') gridSettings: GridSettings
+  @Input() data: Observable<{}[]>
 
   allData: GridData = {columns: [], rows: []};
   paginator: Paginator = new Paginator();
 
+  // for sorting
+  sortDirection = 0;
+  currentSortedColumn = '';
+
   // view
   displayedData: GridData = {columns: [], rows: []};
+  extraCols = 0;
+  headerCols: HeaderColumn[] = [];
+  tdWidth;
 
   // view flags
   displayLeadingGap = false;
   displayEndingGap = false;
   nextDisabled;
   prevDisabled;
+  pagerFlag;
 
   constructor() {}
 
   ngOnInit() {
-    this.displayedData.columns = this.allData.columns = this.parseColumns(this.gridSettings.columns);
-    this.allData.rows = this.parseRows(this.gridSettings.data, this.displayedData.columns);
-    this.paginator.rowsPerPage = this.gridSettings.pagingOptions[0];
-    this.paginator = this.initializePager(this.paginator);
+    this.data.subscribe((res) => {
+      this.displayedData.columns = this.allData.columns = this.parseColumns(this.gridSettings.columns);
+      this.tdWidth = ((100 - (100 / 12)) / this.displayedData.columns.length) + '%';
+      this.allData.rows = this.parseRows(res, this.displayedData.columns);
+      if (typeof(this.gridSettings.pagingOptions) === 'undefined') {
+        this.pagerFlag = true;
+      }
+      this.paginator.rowsPerPage = this.pagerFlag ? 10 : this.gridSettings.pagingOptions[0];
+      this.paginator = this.initializePager(this.paginator);
+      this.updExtraCols();
+    });
   }
 
   initializePager(paginator: Paginator) {
@@ -40,8 +57,18 @@ export class NpGridComponent implements OnInit {
     const output: string[] = [];
     for (let i = 0; i < columnsToParse.length; i++) {
       const foreignColumn = columnsToParse[i];
-      if (foreignColumn.display || foreignColumn.display === 'display') {
+      if (foreignColumn.display) {
         output.push(foreignColumn.colName);
+        // setting header columns to value given by user
+        // and checking whether or not user chose them to be sortable
+        const header: HeaderColumn = {name: '', canSort: false};
+        header.name = foreignColumn.display;
+        if (foreignColumn.sort) {
+          header.canSort = true;
+        } else {
+          header.canSort = false;
+        }
+        this.headerCols.push(header);
       }
     }
     return output;
@@ -61,6 +88,59 @@ export class NpGridComponent implements OnInit {
       output.push(displayRow);
     }
     return output;
+  }
+
+  toggleSort(headerCol: HeaderColumn) {
+    // if column toggling sort is not currently sorted, start sort type from asc
+    if (this.currentSortedColumn !== headerCol.name) {
+      this.currentSortedColumn = headerCol.name;
+      this.sortDirection = 1;
+    } else {
+      // else change it's sort type retaining currentSortedColumn
+      this.sortDirection++;
+    }
+
+    // reset sort type when max is reached
+    if (this.sortDirection > 2) {
+      this.sortDirection = 0;
+    }
+    switch (this.sortDirection) {
+      case 0:
+        // default sort
+        this.sortColumn(headerCol.name, '');
+        break;
+      case 1:
+        this.sortColumn(headerCol.name, 'asc');
+        break;
+      case 2:
+        this.sortColumn(headerCol.name, 'desc');
+        break;
+      default:
+        console.log('Invalid sort order');
+    }
+  }
+  sortColumn(colDisplayName: string, dir: string) {
+    // if default, render data as is and return (!important)
+    if (dir === '') {  this.renderRows(this.allData.rows, this.paginator); return; }
+
+    const data = this.allData.rows.slice();
+    let chosenProp;
+
+    // getting the underlying column name
+    for (let i = 0; i < this.gridSettings.columns.length; i++) {
+      if (this.gridSettings.columns[i].display === colDisplayName) {
+        chosenProp = this.gridSettings.columns[i].colName;
+      }
+    }
+
+    // got this awesome algo from the world wide web
+    const sortedData = data.sort((compareThis, withThis) => {
+      const arbitValA = isNaN(+compareThis[chosenProp]) ? compareThis[chosenProp] : +compareThis[chosenProp];
+      const arbitValB = isNaN(+withThis[chosenProp]) ? withThis[chosenProp] : +withThis[chosenProp];
+
+      return (arbitValA < arbitValB ? -1 : 1) * (dir === 'asc' ? 1 : -1);
+    });
+    this.renderRows(sortedData, this.paginator);
   }
 
   renderRows(allRows: {}[], paginator: Paginator) {
@@ -111,6 +191,8 @@ export class NpGridComponent implements OnInit {
       pageCount = Math.ceil(rowCount / paginator.rowsPerPage);
       if (pageCount > 1) {
         this.paginator.lastPage = pageCount;
+      } else if (pageCount === 1) {
+        this.paginator.lastPage = 1;
       }
       return pageCount;
     } else if (rowCount < 10)  {
@@ -121,13 +203,22 @@ export class NpGridComponent implements OnInit {
     this.nextDisabled = this.paginator.lastPage === this.paginator.currentPage;
     this.prevDisabled = this.paginator.firstPage === this.paginator.currentPage;
   }
+  updExtraCols() {
+    let extraCols = 0;
+    if (this.gridSettings.multiselect) {
+      extraCols++;
+    }
+    if (!this.pagerFlag && this.gridSettings.pagingOptions.length > 0) {
+      extraCols--;
+    }
+    this.extraCols = extraCols;
+  }
 }
 
 class GridSettings {
   columns: Column[];
-  data: {}[];
-  extraCols: number;
   pagingOptions: number[];
+  multiselect;
 }
 
 class GridData {
@@ -137,7 +228,8 @@ class GridData {
 
 class Column {
   colName: string;
-  display?: boolean | string;
+  display?: string;
+  sort?: boolean;
 }
 
 class Paginator {
@@ -151,4 +243,9 @@ class Paginator {
     this.pageCount = this.firstPage = this.lastPage = this.currentPage = 1;
     this.rowsPerPage = 10;
   }
+}
+
+class HeaderColumn {
+  name: string;
+  canSort: boolean;
 }

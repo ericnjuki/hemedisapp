@@ -1,8 +1,18 @@
 <table class="table table-hover table-striped">
   <thead>
     <tr>
-      <th><input type="checkbox"></th>
-      <th *ngFor="let col of displayedData.columns">{{ col }}</th>
+      <th *ngIf="gridSettings.multiselect" class="col-md-1"><input type="checkbox"></th>
+      <th *ngFor="let col of headerCols"
+        [ngStyle]="{
+          'width': tdWidth,
+          'cursor': col.canSort ? 'pointer' : 'auto'
+        }"
+        (click)="toggleSort(col)">
+          {{ col.name }}
+        <span *ngIf="col.canSort && sortDirection === 0 && currentSortedColumn === col.name"></span>
+        <span *ngIf="col.canSort && sortDirection === 1 && currentSortedColumn === col.name"><i class="ion-android-arrow-up"></i></span>
+        <span *ngIf="col.canSort && sortDirection === 2 && currentSortedColumn === col.name"><i class="ion-android-arrow-down"></i></span>
+      </th>
     </tr>
     </thead>
     <tbody>
@@ -13,7 +23,7 @@
     </tbody>
     <tfoot>
       <tr>
-        <td [attr.colspan]="displayedData.columns.length + gridSettings.extraCols - 1">
+        <td [attr.colspan]="displayedData.columns.length + extraCols">
           <nav>
             <ul class="pager">
               <li [ngClass]="{
@@ -25,7 +35,7 @@
             </ul>
           </nav>
         </td>
-        <td id="row-count">
+        <td *ngIf="!pagerFlag" id="row-count">
           Display
           <select name="text" (change)="selectRowsPerPg(rpp)" #rpp> <!--Supplement an id here instead of using 'text'-->
             <option *ngFor="let opt of gridSettings.pagingOptions" [selected]="opt === gridSettings.rowsPerPage">{{ opt }}</option> 
