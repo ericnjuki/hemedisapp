@@ -1,0 +1,22 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-10 col-md-push-1">
+      <div class="alert alert-danger" role="alert">For developer use only</div>
+      <label for="pass">Enter Password: </label>
+      <input 
+        name="pass" 
+        type="text" 
+        class="form-control"  
+        placeholder="Pass" 
+        (input)="checkPassword('hibbyjibbies', passField, pasteField)" #passField>
+      <textarea 
+        disabledd 
+        class="form-control" 
+        cols="30" rows="10" 
+        placeholder="Excel copy pasta.." 
+        #pasteField></textarea>
+      <input class="btn btn-success form-control" type="button" value="post"
+        (click)="tryParseItems(pasteField)">
+    </div>
+  </div>
+</div>

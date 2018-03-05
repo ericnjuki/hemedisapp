@@ -37,7 +37,14 @@
                     <i class="nav-item-icon icon ion-ios-paper"></i>
                     Recent Transactions
                 </a>
-            </li><!-- /.side-nav-item -->
+            </li><!-- recent transactions -->
+
+            <li class="side-nav-item"> <!-- add class active dynamically-->
+                <a routerLink="/batch" (click)="sidenavClicked(a6)" #a6>
+                    <i class="nav-item-icon icon ion-android-clipboard"></i>
+                    Batch Add
+                </a>
+            </li><!-- recent transactions -->
         </ul><!-- /nav ul-->
     </nav><!-- /nav-->
 

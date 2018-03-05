@@ -32,6 +32,7 @@ import {MatCardModule} from '@angular/material/card';
 import { ToastyModule } from 'ng2-toasty';
 import { DailyStatsComponent } from './statistics/daily-stats/daily-stats.component';
 import { NpGridComponent } from './np-grid/np-grid.component';
+import { BatchAddComponent } from './batch-add/batch-add.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import { NpGridComponent } from './np-grid/np-grid.component';
     StockComponent,
     NpModalComponent,
     DailyStatsComponent,
-    NpGridComponent
+    NpGridComponent,
+    BatchAddComponent
   ],
   imports: [
     BrowserModule,

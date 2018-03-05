@@ -1,3 +1,4 @@
+import { BatchAddComponent } from './batch-add/batch-add.component';
 import { ItemsComponent } from './items/items.component';
 import { Routes, RouterModule } from '@angular/router';
 import { RecentTransacsComponent } from 'app/recent-transacs/recent-transacs.component';
@@ -17,6 +18,7 @@ const APP_ROUTES: Routes = [
     { path: 'stats', component: StatisticsComponent },
     { path: 'items', component: ItemsComponent },
     { path: 'stock', component: StockComponent },
+    { path: 'batch', component: BatchAddComponent },
 ];
 
 export const AppRouterModule = RouterModule.forRoot(APP_ROUTES);
