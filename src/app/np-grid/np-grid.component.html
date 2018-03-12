@@ -1,47 +1,96 @@
-<table class="table table-hover table-striped">
+<input class="form-control" placeholder="Search" type="search" (input)="filterItems(filter)" #filter>
+<!-- <div class="container">
+  <div class="col-md-12">
+  </div>
+  <div class="col-md-4 pull-right">
+    <button class="btn btn-info" (click)="enableEdits()">Edit</button>
+    <button class="btn btn-success" [disabled]="!updatedItems.length" (click)="postUpdate()">Save edits</button>
+    <button class="btn btn-danger" [disabled]="!checkedItems.length" (click)="deleteMany()">Delete All</button>
+  </div>
+</div> -->
+<table class="table" my-name="np-data">
   <thead>
     <tr>
       <th *ngIf="gridSettings.multiselect" class="col-md-1"><input type="checkbox"></th>
-      <th *ngFor="let col of headerCols"
+      <th *ngFor="let dataColumn of dataColumns"
         [ngStyle]="{
           'width': tdWidth,
-          'cursor': col.canSort ? 'pointer' : 'auto'
+          'cursor': dataColumn.canSort ? 'pointer' : 'auto'
         }"
-        (click)="toggleSort(col)">
-          {{ col.name }}
-        <span *ngIf="col.canSort && sortDirection === 0 && currentSortedColumn === col.name"></span>
-        <span *ngIf="col.canSort && sortDirection === 1 && currentSortedColumn === col.name"><i class="ion-android-arrow-up"></i></span>
-        <span *ngIf="col.canSort && sortDirection === 2 && currentSortedColumn === col.name"><i class="ion-android-arrow-down"></i></span>
+        (click)="toggleSort(dataColumn)">
+          {{ dataColumn.name }}
+        <span *ngIf="dataColumn.canSort && sortDirection === 0 && currentSorteddataColumnumn === dataColumn.name"></span>
+        <span *ngIf="dataColumn.canSort && sortDirection === 1 && currentSorteddataColumnumn === dataColumn.name"><i class="ion-android-arrow-up"></i></span>
+        <span *ngIf="dataColumn.canSort && sortDirection === 2 && currentSorteddataColumnumn === dataColumn.name"><i class="ion-android-arrow-down"></i></span>
       </th>
     </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let dataRow of displayedData.rows">
-        <td><input type="checkbox"></td>
-        <td *ngFor="let dataItem of displayedData.columns">{{ dataRow[dataItem] }}</td>
-      </tr>
-    </tbody>
-    <tfoot>
-      <tr>
-        <td [attr.colspan]="displayedData.columns.length + extraCols">
-          <nav>
-            <ul class="pager">
-              <li [ngClass]="{
-                    'disabled': prevDisabled
-                  }"><a (click)="previousPage()">Previous</a></li>
-              <li [ngClass]="{
-                    'disabled': nextDisabled
-                  }"><a (click)="nextPage()">Next</a></li>
-            </ul>
-          </nav>
-        </td>
-        <td *ngIf="!pagerFlag" id="row-count">
-          Display
-          <select name="text" (change)="selectRowsPerPg(rpp)" #rpp> <!--Supplement an id here instead of using 'text'-->
-            <option *ngFor="let opt of gridSettings.pagingOptions" [selected]="opt === gridSettings.rowsPerPage">{{ opt }}</option> 
-          </select>
-          rows per page
-        </td>
-      </tr>
-    </tfoot>
+  </thead>
+  <tbody>
+    <tr *ngFor="let dataRow of gridData.rows; let i = index">
+      <td [attr.colspan]="gridData.columns.length + extraCols + 1">
+        <table class="table"
+        [ngClass]="{
+          'table-hover': gridSettings.hover,
+          'npg-clickable': gridSettings.click
+        }">
+          <tbody>
+            <tr (click)="dataRowClicked(i, dataRow)">
+              <td *ngIf="gridSettings.multiselect"><input type="checkbox"></td>
+              <td *ngFor="let colName of gridData.columns" 
+                [attr.contenteditable]="dataEditable"
+                [ngStyle]="{'width': tdWidth}" #dataField
+                (input)="itemFieldChanged(dataRow, colName, dataField)">{{ dataRow[colName] }}</td>
+            </tr>
+            <ng-container *ngIf="additionalColumns.length > 0 && currentExtraColumn === i">
+            <tr *ngFor="let additionalColumn of additionalColumns; let j = index">
+              <th></th>    
+              <th>{{ additionalColumn.colName }} :</th>
+              <td [attr.colspan]="gridData.columns.length + extraCols - 1"
+                [attr.contenteditable]="dataEditable && !(additionalColumns[j].noEdit === true)"
+                (input)="additionalItemFieldChanged(dataRow, additionalColumn, additionalEl)" #additionalEl>
+                  {{ dataRow[additionalColumn.colName] }}
+              </td>
+            </tr>
+            <tr style="border-top: 2px solid white;">
+              <td></td>
+              <td [attr.colspan]="gridData.columns.length" style="text-align: right; padding: 2px;">
+                <button class="npg-btn-actions btn btn-sm"
+                  (click)="collapseDataRow()">x cancel</button>
+                <button *ngIf="!dataEditable" class="npg-btn-actions btn btn-sm btn-info"
+                  (click)="enableEdits()">edit</button>
+                <button *ngIf="dataEditable" class="npg-btn-actions btn btn-sm btn-success"
+                  (click)="updateData(dataRow)">save edits</button>
+                <button class="npg-btn-actions btn btn-sm btn-danger"
+                  (click)="deleteData(dataRow)">delete</button>
+              </td>
+            </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td [attr.colspan]="gridData.columns.length + extraCols">
+        <nav>
+          <ul class="pager">
+            <li [ngClass]="{
+                  'disabled': prevDisabled
+                }"><a (click)="previousPage()">Previous</a></li>
+            <li [ngClass]="{
+                  'disabled': nextDisabled
+                }"><a (click)="nextPage()">Next</a></li>
+          </ul>
+        </nav>
+      </td>
+      <td *ngIf="!pagerFlag" id="row-count">
+        Display
+        <select (change)="selectRowsPerPg(rpp)" #rpp>
+          <option *ngFor="let opt of gridSettings.pagingOptions" [selected]="opt === gridSettings.rowsPerPage">{{ opt }}</option> 
+        </select>
+        rows per page
+      </td>
+    </tr>
+  </tfoot>
 </table>

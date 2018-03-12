@@ -45,15 +45,21 @@ export class StockComponent implements OnInit {
   checkedRowItems = [];
 
   // configuring np-grid
+  data = [{}];
   npGridConfig = {
     columns: [
-      {colName: 'itemName', display: 'Item', sort: true},
+      {colName: 'itemName', display: 'Item', sort: true, id: true},
       {colName: 'sellingPrice', display: 'Selling Price', sort: true},
       {colName: 'purchaseCost', display: 'Buying Price', sort: true},
       {colName: 'quantity', display: 'Qty'},
       {colName: 'unit', display: 'Units'},
       {colName: 'actions'}
     ],
+    additionalColumns: [
+      {colName: 'aliases'},
+      {colName: 'itemId', noEdit: true}
+    ],
+    searchBy: ['itemName', 'aliases'],
     pagingOptions: [10, 25, 50, 100],
     multiselect: true
   }
@@ -77,6 +83,10 @@ export class StockComponent implements OnInit {
 
   ngOnInit() {
     this.dataSource = new StockDataSource(this.paginator, this.sort, this.itemService);
+    this.itemService.getAllItems()
+      .subscribe(res => {
+        this.data = res;
+      })
 
     $(function () {
       $('div.alert').remove();
@@ -117,6 +127,32 @@ export class StockComponent implements OnInit {
       });
     })
   }
+  onGridAction(eventData) {
+    // all incoming updated rows all share the same ids so...
+    let itemToUpdate = null;
+    for (let i = 0; i < eventData.length; i++) {
+      switch (eventData[i].action) {
+        case 'update':
+        // ...assign the first of them to this variable...
+          if (!itemToUpdate) {
+            itemToUpdate = eventData[i].row;
+          }
+          // ...and update this's fields accordingly...
+          itemToUpdate[eventData[i].col] = eventData[i].data
+          if (i === (eventData.length - 1)) {
+            // ...so that i push only a single row to db
+            this.updatedItems.push(itemToUpdate);
+            this.postUpdate();
+          }
+          break;
+        case 'delete':
+          this.itemsToDelete.push(eventData[i].row['itemId'])
+          this.removeItems(this.itemsToDelete);
+          break;
+      }
+    }
+    this.updatedItems = [];
+  }
   onItemInput(row: IItem, matCell: HTMLInputElement) {
     this.itemToUpdate = {
       'itemId': row.itemId,
@@ -124,7 +160,8 @@ export class StockComponent implements OnInit {
       'quantity': row.quantity,
       'unit': row.unit,
       'purchaseCost': row.purchaseCost,
-      'sellingPrice': row.sellingPrice
+      'sellingPrice': row.sellingPrice,
+      'aliases': row.aliases
 
     }
 
@@ -221,33 +258,33 @@ export class StockComponent implements OnInit {
   }
 
   filterItems(filterEl: HTMLInputElement) {
+    // this.searchTerm = filterEl.value;
     const term = filterEl.value.replace(/\s+/g, '');
     if (term === '' || term === null || +term === NaN || +term === 0) {
       this.dataSource = new StockDataSource(this.paginator, this.sort, this.itemService);
       return;
     }
-    this.itemService.getAllItems()
-      .subscribe(res => {
-        const fuse = new Fuse(res, this.fuseOptions);
-        const result = fuse.search(filterEl.value.toString());
-        this.searchResults = result.map(resultItem => {
-          let item: IItem = new Item();
-          item = <Item>resultItem;
-          return item;
-        });
-        this.dataSource.dataChange.next(this.searchResults);
-      });
+    // this.itemService.getAllItems()
+    //   .subscribe(res => {
+    //     const fuse = new Fuse(res, this.fuseOptions);
+    //     const result = fuse.search(filterEl.value.toString());
+    //     this.searchResults = result.map(resultItem => {
+    //       let item: IItem = new Item();
+    //       item = <Item>resultItem;
+    //       return item;
+    //     });
+    //     this.dataSource.dataChange.next(this.searchResults);
+    //   });
   }
 
   removeItems(itemIds: number[]) {
     const firstToast = this.addToast('wait', 'Deleting...');
-    let arrNewItems: any[] = [];
     this.itemService.deleteItems(itemIds)
       .subscribe(newItems => {
-        arrNewItems = newItems;
+        this.data = newItems;
+        this.addToast('info', 'Deleted!');
         this.dataSource.dataChange.next(newItems);
         this.toastyService.clear(firstToast);
-        this.addToast('info', 'Deleted!');
       })
     this.itemsToDelete = [];
   }

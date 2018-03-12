@@ -3,21 +3,18 @@
   <!-- <button (click)="showModal(false)" class="btn">Close</button> -->
 </np-modal>
 
-<!-- search and actions -->
-<div class="alert" role="alert" id="result"></div>
-<div class="container">
-  <div class="col-md-7">
-    <input class="form-control"placeholder="Search" type="search" (input)="filterItems(filter)" #filter>
-  </div>
-  <div class="col-md-4 pull-right">
-    <button class="btn btn-info" (click)="enableEdits()">Edit</button>
-    <button class="btn btn-success" [disabled]="!updatedItems.length" (click)="postUpdate()">Save edits</button>
-    <button class="btn btn-danger" [disabled]="!checkedItems.length" (click)="deleteMany()">Delete All</button>
-  </div>
-</div>
+<div class="np-scrollableeeeee">
+  <!-- search and actions -->
+  <div class="alert" role="alert" id="result"></div>
 
-<div class="np-stocks">
-  <np-grid [np-grid]="npGridConfig" [data]="itemService.getAllItems()"></np-grid>
+  
+  <!-- table of records -->
+  <div class="np-stocks">
+    <np-grid [np-grid]="npGridConfig" [data]="data" (action)="onGridAction($event)"></np-grid>
+    <!-- <ng-container *ngIf="data">
+      <np-grid [np-grid]="npGridConfig" [data]="itemService.getAllItems()" (action)="onGridAction($event)"></np-grid>
+    </ng-container> -->
+  </div>
 </div>
 
 

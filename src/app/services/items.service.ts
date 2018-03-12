@@ -8,7 +8,7 @@ import 'rxjs/add/operator/map';
  */
 @Injectable()
 export class ItemService {
-    private _url = 'http://localhost:1111/api/v1.0/items/';
+    private _url = 'http://localhost:51191/api/v1.0/items/';
     private options: RequestOptions = new RequestOptions();
     public event: EventEmitter<any>;
 

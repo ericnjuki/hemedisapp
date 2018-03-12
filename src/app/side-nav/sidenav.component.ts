@@ -11,10 +11,13 @@ export class SidenavComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    // $('[routerLink="/record"]').attr('id', 'np-default').parent('li').addClass('active');
-    $('[routerLink="/stock"]').parent('li').addClass('active');
-    // document.getElementById('np-default').click();
-    // $('[routerLink="/stock"]').click();
+    $('[routerLink="/record"]').parent('li').addClass('active');
+    const activeEl = document.getElementsByClassName('active');
+    const $activeEl = $(activeEl);
+    // remove side bar in the record transacs tab
+    if ($activeEl.attr('np-rt') === 'np-rt') {
+      $('#content').addClass('content-lg');
+    }
     $('a').on('click', () => {
       $('.app-header').addClass('bx-shadow');
     });

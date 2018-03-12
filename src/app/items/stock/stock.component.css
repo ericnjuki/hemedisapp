@@ -2,6 +2,11 @@
   background: red;
   margin: 2em;
 }
+.np-scrollable{
+  overflow-y: scroll;
+  overflow-x: hidden;
+
+}
 
 .np-stocks{
   max-height: 70%;

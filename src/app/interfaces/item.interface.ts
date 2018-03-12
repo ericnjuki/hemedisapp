@@ -5,5 +5,5 @@ export interface IItem {
     quantity: number;
     purchaseCost: number;
     sellingPrice: number;
-    aliases?: string[];
+    aliases?: string;
 }

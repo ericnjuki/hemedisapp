@@ -12,7 +12,6 @@ export class BatchAddComponent {
   constructor(private itemsService: ItemService) {}
 
   checkPassword(pass: string, passEl: HTMLInputElement, textAreaEl: HTMLInputElement) {
-    console.log(passEl.value);
     if (passEl.value === pass) {
       $(textAreaEl).removeAttr('disabled');
     }
@@ -21,7 +20,7 @@ export class BatchAddComponent {
     const items: IItem[] = [];
     const arrItems: string[] = textAreaEl.value.split('\n');
 
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < arrItems.length; i++) {
       const itemParts = arrItems[i].split('\t');
       const itemObj: IItem = {
         itemId: 0,
@@ -49,7 +48,7 @@ export class BatchAddComponent {
             itemObj.quantity = 0;
             break;
           case 5:
-            itemObj.aliases = itemParts[j].split(',');
+            itemObj.aliases = itemParts[j];
             break;
           default:
             console.log('Impossible error, but still, congratulations!');
@@ -59,9 +58,12 @@ export class BatchAddComponent {
       items.push(itemObj);
     }
     console.log('Items posted!');
-    // this.postItems(items);
+    this.postItems(items);
   }
   postItems(items: IItem[]) {
-    this.itemsService.addItems(items);
+    this.itemsService.addItems(items)
+      .subscribe(res => {
+        console.log(res);
+      });
   }
 }
