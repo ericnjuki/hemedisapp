@@ -34,7 +34,7 @@
           'npg-clickable': gridSettings.click
         }">
           <tbody>
-            <tr (click)="dataRowClicked(i, dataRow)">
+            <tr (click)="dataRowClicked(i, dataRow)" class="npg-datarow">
               <td *ngIf="gridSettings.multiselect"><input type="checkbox"></td>
               <td *ngFor="let colName of gridData.columns" 
                 [attr.contenteditable]="dataEditable"

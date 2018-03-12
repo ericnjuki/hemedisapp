@@ -3,6 +3,20 @@
 </np-modal>
 
 <div class="app-header">
+  <div class="np-recent-btn-holder col-md-1">
+    <select name="np-recent-years" (change)="changeYear(yearDropdown)" #yearDropdown>
+      <option [selected]="year === selectedYear" *ngFor="let year of yearOptions">{{ year }}</option>
+    </select>
+  </div>
+  <div class="np-recent-btn-holder col-md-10">
+    <button *ngFor="let month of monthStrings" class="np-recent-btn col-md-1 btn btn-default" 
+      [ngClass]="{
+        active: month === selectedMonth
+      }"
+      (click)="changeMonth(month)">
+      {{ month }}
+    </button>
+  </div>
 </div>
 <div class="np-recent-container">
   <div class="row">

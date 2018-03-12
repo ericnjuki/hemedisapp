@@ -1,6 +1,7 @@
 .red{
     background: red;
 }
+
 input[type=search]{
     margin: 1em 5%;
     width: 90%;
@@ -20,6 +21,13 @@ table>tfoot>tr>td{
     text-align: center;
 }
 
+.npg-datarow{
+    border: 2px solid transparent;
+    transition: all 0.1s ease-out;
+}
+.npg-datarow.clicked{
+    border: 2px solid rgba(44, 102, 150, .75);
+}
 .pager>li{
     cursor: pointer;
 }

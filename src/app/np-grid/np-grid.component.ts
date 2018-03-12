@@ -294,6 +294,10 @@ export class NpGridComponent implements OnInit {
     }
     // expands/collapses an expandable row
     dataRowClicked(index: number, rowObj?)  {
+      $('.npg-datarow').eq(index).addClass('clicked');
+      setTimeout(function() {
+        $('.npg-datarow').eq(index).removeClass('clicked');
+      }, 150);
       // first action is to toggle row open/close if there're additional cols
 
       // toggle only when there aren't cells currently being edited

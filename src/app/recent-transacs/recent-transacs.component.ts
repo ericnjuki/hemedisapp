@@ -1,3 +1,4 @@
+import { AppMonths } from './../shared/enums/months.enum';
 import { Component, OnInit } from '@angular/core';
 import { TransactionService } from 'app/services/transacs.service';
 import { TransactionData } from 'app/shared/transacs.model';
@@ -21,6 +22,10 @@ export class RecentTransacsComponent implements OnInit {
   transacIdsToDelete: number[] = [];
   showDialog = false;
 
+  selectedMonth = AppMonths[new Date().getUTCMonth().valueOf()];
+  selectedYear = new Date().getUTCFullYear().valueOf();
+  yearOptions = [];
+
   // fetching data
   includeItems = true;
 
@@ -30,6 +35,7 @@ export class RecentTransacsComponent implements OnInit {
   potato: Item = { itemId: -1, itemName: '', unit: '', quantity: 0, sellingPrice: 0, purchaseCost: 0 };
   total = 0;
   displayedTransacs = [];
+  monthStrings = [];
 
   constructor(
     private toastyService: ToastyService,
@@ -37,12 +43,32 @@ export class RecentTransacsComponent implements OnInit {
     private transacService: TransactionService) { }
 
   ngOnInit() {
-    this.getTransacs();
+    this.getTransacs(new Date().toUTCString());
+    for (const month in AppMonths) {
+      if (typeof AppMonths[month] === 'number') {
+        this.monthStrings.push(month);
+      }
+    }
+    this.updateYearOpts();
   }
 
-  getTransacs() {
+  changeYear(yearOpts: HTMLSelectElement) {
+    const selectedYear = parseInt(yearOpts.selectedOptions[0].value, 10);
+    this.selectedYear = selectedYear;
+
+    const forDate = new Date(Date.UTC(this.selectedYear, AppMonths[this.selectedMonth])).toUTCString();
+    this.getTransacs(forDate);
+  }
+  changeMonth(selectedMonth) {
+    this.selectedMonth = selectedMonth;
+
+    const forDate = new Date(Date.UTC(this.selectedYear, AppMonths[this.selectedMonth])).toUTCString();
+    this.getTransacs(forDate);
+  }
+
+  getTransacs(date: string) {
     const firstToast = this.addToast('wait', 'Fetching records...');
-    this.transacService.getTransacs(this.includeItems)
+    this.transacService.getTransacs(date, this.includeItems)
       .subscribe(allTransactions => {
         console.log(allTransactions);
         this.toastyService.clear(firstToast);
@@ -88,6 +114,16 @@ export class RecentTransacsComponent implements OnInit {
     this.transactions = [];
   }
 
+  updateYearOpts() {
+    for (let i = -4; i <= 4; i++) {
+      if (i === 0) {
+        this.yearOptions.push(this.selectedYear);
+        continue;
+      }
+      this.yearOptions.push(this.selectedYear + i);
+    }
+  }
+
   deleteTransacs(transacIds: number[]) {
     const firstToast = this.addToast('wait', 'Deleting...');
     // let arrNewTransacs: any[] = [];
@@ -97,7 +133,8 @@ export class RecentTransacsComponent implements OnInit {
         // update ngFored var here
         this.toastyService.clear(firstToast);
         this.addToast('info', 'Deleted!');
-        this.getTransacs();
+        const forDate = new Date(Date.UTC(this.selectedYear, AppMonths[this.selectedMonth])).toUTCString();
+        this.getTransacs(forDate);
       });
     this.transacIdsToDelete = [];
   }
@@ -126,9 +163,9 @@ export class RecentTransacsComponent implements OnInit {
     this.showDialog = flag;
   }
 
-  extendPill(i: number) {
-    $('.pill').eq(i).children('.app-panel-body').toggleClass('panel-clicked app-panel-body-lg');
-  }
+  // extendPill(i: number) {
+  //   $('.pill').eq(i).children('.app-panel-body').toggleClass('panel-clicked app-panel-body-lg');
+  // }
 
   addToast(toastType: string, message: string) {
     let toastId;

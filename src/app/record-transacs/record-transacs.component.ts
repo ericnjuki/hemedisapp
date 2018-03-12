@@ -261,16 +261,16 @@ export class RecordTransacsComponent implements OnInit {
     this.validateItems(this.transacType);
 
     if (this.transaction.items) {
-      console.log(this.transaction.items);
-      console.log('sales posted!');
-      // this.transaction.date = this.selectedDate;
-      // const firstToast = this.addToast('wait', 'posting');
-      // this.transacService.postTransacs(this.transaction)
-      //   .subscribe(response => {
-      //     this.toastyService.clear(firstToast);
-      //     this.addToast('success', 'Posted!');
-      //     console.log(response);
-      //   });
+      this.transaction.date = this.selectedDate;
+      this.transaction.transactionType = 1;
+
+      const firstToast = this.addToast('wait', 'posting');
+      this.transacService.postTransacs(this.transaction)
+        .subscribe(response => {
+          this.toastyService.clear(firstToast);
+          this.addToast('success', 'Posted!');
+          console.log(response);
+        });
 
       // clear all posted sales from display
       this.saleItems = [];
@@ -280,16 +280,16 @@ export class RecordTransacsComponent implements OnInit {
     this.validateItems(this.transacType);
 
     if (this.transaction.items) {
-      console.log(this.transaction.items);
-      console.log('purchases posted!');
-      // this.transaction.date = this.selectedDate;
-      // const firstToast = this.addToast('wait', 'posting..');
-      // this.transacService.postTransacs(this.transaction)
-      //   .subscribe(response => {
-      //     this.toastyService.clear(firstToast);
-      //     this.addToast('success', 'Posted!');
-      //     console.log(response);
-      //   });
+      this.transaction.date = this.selectedDate;
+      this.transaction.transactionType = 2;
+
+      const firstToast = this.addToast('wait', 'posting..');
+      this.transacService.postTransacs(this.transaction)
+        .subscribe(response => {
+          this.toastyService.clear(firstToast);
+          this.addToast('success', 'Posted!');
+          console.log(response);
+        });
 
       // clear all posted purchases from display
       this.purchaseItems = [];

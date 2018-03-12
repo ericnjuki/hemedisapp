@@ -12,8 +12,8 @@ export class TransactionService {
     private options: RequestOptions = new RequestOptions();
 
     constructor(private _http: Http) { }
-    getTransacs(includeItems: boolean) {
-        this.options.search = new URLSearchParams('includeItems=true');
+    getTransacs(date, includeItems: boolean) {
+        this.options.search = new URLSearchParams('includeItems=true&' + 'forDate=' + date);
         if (includeItems) {
             return this._http.get(this._url + 'g', this.options)
                 .map((response: Response) => response.json());

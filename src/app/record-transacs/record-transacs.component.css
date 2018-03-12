@@ -18,8 +18,9 @@
         background: rgba(44, 102, 150, .75);
         color: ghostwhite;
     }
-    .nav-tabs>li>a:hover{
-        background: #e3e3e3;
+    .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus:hover{
+        background: rgba(38, 86, 126, 0.75);
+        color: ghostwhite;
     }
     .nav-tabs a{
         padding: 0;
