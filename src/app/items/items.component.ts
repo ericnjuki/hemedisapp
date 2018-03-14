@@ -132,20 +132,8 @@ export class ItemsComponent implements OnInit {
       .subscribe(response => {
         this.toastyService.clear(firstToast);
         this.addToast();
-        console.log(response);
-        // if adding new items was successful, add
-        // new record of them as purchases
-        let purchaseTransaction: ITransactionData;
-        purchaseTransaction = {
-          date: new Date().toISOString().substr(0, 10),
-          items: this.itemsForPurchase,
-          transactionType: 2
-        }
-        this.transacService.postTransacs(purchaseTransaction)
-          .subscribe(res => {
-            // clear all items from display; shows the user that items have been posted.
-            this.itemsForPurchase = [];
-          });
+      }, err => {
+        this.toastyService.clear(firstToast);
       });
     const $itemData = $('[name=record-items] thead tr').eq(2).children('td');
     $itemData.eq(0).focus();
@@ -154,7 +142,7 @@ export class ItemsComponent implements OnInit {
   addToast(toastType?) {
     let toastId;
     const toastOptions: ToastOptions = {
-      title: 'Update Status',
+      title: '',
       timeout: 5000,
       theme: 'bootstrap',
       onAdd: (toast: ToastData) => {
@@ -162,11 +150,11 @@ export class ItemsComponent implements OnInit {
       }
     };
     if (toastType === 'wait') {
-      toastOptions.timeout = 23000;
-      toastOptions.msg = 'updating...';
+      toastOptions.timeout = 230000;
+      toastOptions.msg = 'adding...';
       this.toastyService.wait(toastOptions);
     } else {
-      toastOptions.msg = 'Update successful!';
+      toastOptions.msg = 'Item added successfully!';
       this.toastyService.success(toastOptions);
     }
     return toastId;

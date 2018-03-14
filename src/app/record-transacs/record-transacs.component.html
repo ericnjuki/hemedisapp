@@ -13,7 +13,7 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-5">
-          <np-grid [np-grid]="npGridConfig" [data]="data" (action)="onGridAction($event)"></np-grid>          
+          <np-grid [np-grid]="npGridConfig_sales" [data]="data" (action)="onGridAction($event)"></np-grid>          
         </div> <!-- items list -->
         <div class="col-md-7">
           <div class="col-md-12 app-sale-record-tab">
@@ -40,8 +40,6 @@
                       <table class="table" name="sales-receipt">
                         <tr *ngFor="let saleItem of saleItems; let saleItemIndex=index">
                           <td class="col-md-2">
-                            <!-- CHECK: bug -> this doesn't work: -->
-                            <!-- <input [(ngModel)]="saleItem.quantity" type="number" class="form-control"> -->
                             <input [(ngModel)]="saleItem.quantity" type="number" class="form-control" min="1"
                               style="margin-left: 0;"
                               (input)="saleItemQtyChanged(saleItemIndex, saleItemQtyField)" #saleItemQtyField>
@@ -52,8 +50,6 @@
                             (input)="saleItemPriceChanged(saleItemIndex, saleItemPriceField)" #saleItemPriceField>
                               {{ saleItem.sellingPrice }}
                           </td>
-                          <!-- CHECK: bug -> event binding causes cursor to jump to beginning of contenteditable field -->
-                          <!-- https://github.com/facebook/react/issues/2047#issuecomment-144194817 -->
                           <td contenteditable="true" class="col-md-2"
                             (blur)="saleItemAmtFinal(saleItemIndex, saleItemAmtField)"
                             (input)="saleItemAmtChanged(saleItemIndex, saleItemAmtField)" #saleItemAmtField>
@@ -71,27 +67,11 @@
                 </tr>
               </tbody>
               <tfoot>
-                <!-- <tr [ngClass]="{
-                  'np-form-status-ok':formStatus.OK,
-                  'np-form-status-notok':!formStatus.OK}">
-                  {{ formStatus.text }}
-                </tr>
-                <tr>
-                  <td contenteditable="true" data-text="Item" (keydown.enter)="clickAddButton('sale')"></td>
-                  <td contenteditable="true" data-text="Qty" (input)="checkIfNumber(sqty, 'sqty')" (keydown.enter)="clickAddButton('sale')" #sqty></td>
-                  <td contenteditable="true" data-text="Price" (input)="checkIfNumber(sprice)" (keydown.enter)="clickAddButton('sale')" #sprice></td>
-                  <td></td>
-                  <td id="addButton">
-                    <a id="addisiaButton" class="pull-right" (click)="validateItem('sale')">
-                      <i class="icon ion-android-add-circle"></i>
-                    </a>
-                  </td>
-                </tr> -->
                 <tr>
                   <th>TOTAL</th>
                   <th></th>
                   <th></th>
-                  <th>{{ getTotalSaleAmount('sale') }}</th>
+                  <th>{{ getTotalSaleAmount() }}</th>
                 </tr>
                 <tr>
                   <td colspan="4">
@@ -117,7 +97,7 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-5">
-          <np-grid [np-grid]="npGridConfig" [data]="data" (action)="onGridAction($event)"></np-grid>          
+          <np-grid [np-grid]="npGridConfig_purchases" [data]="data" (action)="onGridAction($event)"></np-grid>          
         </div> <!-- items list -->
         <div class="col-md-7">
           <div class="col-md-12 app-purchase-record-tab">
@@ -172,22 +152,6 @@
                 </tr>
               </tbody>
               <tfoot>
-                <!-- <tr [ngClass]="{
-                  'np-form-status-ok':formStatus.OK,
-                  'np-form-status-notok':!formStatus.OK}">
-                  {{ formStatus.text }}
-                </tr>
-                <tr>
-                  <td contenteditable="true" data-text="Item" (keydown.enter)="clickAddButton('purchase')"></td>
-                  <td contenteditable="true" data-text="Qty" (input)="checkIfNumber(pqty, 'pqty')" (keydown.enter)="clickAddButton('purchase')" #pqty></td>
-                  <td contenteditable="true" data-text="Price" (input)="checkIfNumber(pprice)" (keydown.enter)="clickAddButton('purchase')" #pprice></td>
-                  <td></td>
-                  <td id="addButton">
-                    <a id="addisiaButton" class="pull-right" (click)="validateItem('purchase')">
-                      <i class="icon ion-android-add-circle"></i>
-                    </a>
-                  </td>
-                </tr> -->
                 <tr>
                   <th>TOTAL</th>
                   <th></th>

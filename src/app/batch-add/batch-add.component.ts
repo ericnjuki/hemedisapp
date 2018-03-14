@@ -17,53 +17,57 @@ export class BatchAddComponent {
     }
   }
   tryParseItems(textAreaEl: HTMLInputElement) {
-    const items: IItem[] = [];
-    const arrItems: string[] = textAreaEl.value.split('\n');
-
-    for (let i = 0; i < arrItems.length; i++) {
-      const itemParts = arrItems[i].split('\t');
-      const itemObj: IItem = {
-        itemId: 0,
-        itemName: '',
-        purchaseCost: 0,
-        sellingPrice: 0,
-        unit: 'pc',
-        quantity: 0
-      };
-      for (let j = 0; j < itemParts.length; j++) {
-        switch (j) {
-          case 0:
-            itemObj.itemName = itemParts[j];
-            break;
-          case 1:
-            itemObj.purchaseCost = typeof(+itemParts[j]) === 'number' ? +itemParts[j] : 0;
-            break;
-          case 2:
-            itemObj.sellingPrice = typeof(+itemParts[j]) === 'number' ? +itemParts[j] : 0;
-            break;
-          case 3:
-            itemObj.unit = itemParts[j] === '' ? 'pc' : itemParts[j];
-            break;
-          case 4:
-            itemObj.quantity = 0;
-            break;
-          case 5:
-            itemObj.aliases = itemParts[j];
-            break;
-          default:
-            console.log('Impossible error, but still, congratulations!');
+    if (textAreaEl.value.length > 0) {
+      const items: IItem[] = [];
+      const arrItems: string[] = textAreaEl.value.split('\n');
+      for (let i = 0; i < arrItems.length; i++) {
+        const itemParts = arrItems[i].split('\t');
+        const itemObj: IItem = {
+          itemId: 0,
+          itemName: '',
+          purchaseCost: 0,
+          sellingPrice: 0,
+          unit: 'pc',
+          quantity: 0
+        };
+        for (let j = 0; j < itemParts.length; j++) {
+          switch (j) {
+            case 0:
+              itemObj.itemName = itemParts[j];
+              break;
+            case 1:
+              itemObj.purchaseCost = typeof(+itemParts[j]) === 'number' ? +itemParts[j] : 0;
+              break;
+            case 2:
+              itemObj.sellingPrice = typeof(+itemParts[j]) === 'number' ? +itemParts[j] : 0;
+              break;
+            case 3:
+              itemObj.unit = itemParts[j] === '' ? 'pc' : itemParts[j];
+              break;
+            case 4:
+              itemObj.quantity = 0;
+              break;
+            case 5:
+              itemObj.aliases = itemParts[j];
+              break;
+            default:
+              console.log('Impossible error, but still, congratulations!');
+          }
         }
+        items.push(itemObj);
       }
-      console.log(itemObj);
-      items.push(itemObj);
+      this.postItems(items);
+    } else {
+      console.log('nothing to post');
     }
-    console.log('Items posted!');
-    this.postItems(items);
+
   }
   postItems(items: IItem[]) {
     this.itemsService.addItems(items)
       .subscribe(res => {
-        console.log(res);
+        alert('successfull');
+      }, err => {
+        alert('not successful, try again later');
       });
   }
 }

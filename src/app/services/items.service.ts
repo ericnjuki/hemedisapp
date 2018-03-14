@@ -1,3 +1,4 @@
+import { HttpInterceptor } from './../shared/error handlers/interceptor.http';
 import { Item } from './../shared/item.model';
 import { Injectable, EventEmitter } from '@angular/core';
 import { Http, Response, RequestOptionsArgs, RequestOptions } from '@angular/http';
@@ -8,11 +9,11 @@ import 'rxjs/add/operator/map';
  */
 @Injectable()
 export class ItemService {
-    private _url = 'http://localhost:51191/api/v1.0/items/';
+    private _url = 'http://localhost:1111/api/v1.0/items/';
     private options: RequestOptions = new RequestOptions();
     public event: EventEmitter<any>;
 
-    constructor(private http: Http) { }
+    constructor(private http: HttpInterceptor) { }
     getAllItems() {
         return this.http.get(this._url + 'g')
             .map(response => response.json());

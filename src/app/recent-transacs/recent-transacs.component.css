@@ -53,35 +53,16 @@ div.row{
     color: white;
 }
 
-/* mat-card{
+mat-card{
     height: 20em;
     overflow: auto;
     padding-top: 1em;
 }
-    mat-card:hover{
-    }
-    mat-card.selected{
-        border: 1px solid #ac2925;
-    
-    }
+
 mat-card-header{
     display: block;
 }
 mat-card-title{
     color: #2c3e50;
     font-weight: bold;
-} */
-
-/* .np-close-button{
-    position: absolute;
-    right: 3px;
-    top: -10px;
-    padding: 0.1px 4.5px;
-    border-radius: 50%;
-    border-width: 2px;
-    background-color: transparent;
-    color: #ac2925;
-    font-weight: bold;
-
-    z-index: 98;
-} */
+}

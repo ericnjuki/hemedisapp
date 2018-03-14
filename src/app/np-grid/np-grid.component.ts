@@ -1,7 +1,8 @@
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/rx';
-import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import * as Fuse from 'fuse.js';
+import { Subject } from 'rxjs/Subject';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -9,7 +10,7 @@ import * as Fuse from 'fuse.js';
   templateUrl: './np-grid.component.html',
   styleUrls: ['./np-grid.component.css']
 })
-export class NpGridComponent implements OnInit {
+export class NpGridComponent implements OnInit, OnDestroy {
   // tslint:disable-next-line:no-input-rename
   @Input('np-grid') gridSettings: GridSettings
   @Input()
@@ -24,6 +25,7 @@ export class NpGridComponent implements OnInit {
   // #region local_variables
     gridData: GridData = {columns: [], rows: []};
     allData: GridData = {columns: [], rows: []};
+    private ngUnsubscribe: Subject<any> = new Subject();
 
     // this
     private _data: BehaviorSubject<{}[]> = new BehaviorSubject([]);
@@ -67,23 +69,9 @@ export class NpGridComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {
-    // // orignal
-    // this.data.subscribe((res) => {
-    //   this.gridData.columns = this.parseColumns(this.gridSettings.columns);
-    //   this.additionalColumns = this.gridSettings.additionalColumns;
-    //   this.fuseOptions.keys = this.gridSettings.searchBy;
-    //   this.tdWidth = ((100 - (100 / 12)) / this.gridData.columns.length) + '%';
-    //   this.gridData.rows = this.allData.rows = res;
-    //   if (typeof(this.gridSettings.pagingOptions) === 'undefined') {
-    //     this.pagerFlag = true;
-    //   }
-    //   this.paginator.rowsPerPage = this.pagerFlag ? 10 : this.gridSettings.pagingOptions[0];
-    //   this.paginator = this.initializePager(this.paginator);
-    //   this.updExtraCols();
-    // });
-
-    // behavioursubject approach // CHECK: why this gets called twice
-    this._data.subscribe((res) => {
+    this._data
+    .takeUntil(this.ngUnsubscribe)
+    .subscribe((res) => {
       this.gridData.columns = this.parseColumns(this.gridSettings.columns);
       this.dataColumns = this.parseColumnHeaders(this.gridSettings.columns);
       if (this.gridSettings.additionalColumns) {
@@ -99,22 +87,10 @@ export class NpGridComponent implements OnInit {
       this.paginator = this.initializePager(this.paginator);
       this.updExtraCols();
     });
-
-    // // ngif approach
-    //   this.gridData.columns = this.parseColumns(this.gridSettings.columns);
-    //   this.additionalColumns = this.gridSettings.additionalColumns;
-    //   this.fuseOptions.keys = this.gridSettings.searchBy;
-    //   this.tdWidth = ((100 - (100 / 12)) / this.gridData.columns.length) + '%';
-    //   this.gridData.rows = this.allData.rows = this.data;
-    //   if (typeof(this.gridSettings.pagingOptions) === 'undefined') {
-    //     this.pagerFlag = true;
-    //   }
-    //   this.paginator.rowsPerPage = this.pagerFlag ? 10 : this.gridSettings.pagingOptions[0];
-    //   this.paginator = this.initializePager(this.paginator);
-    //   this.updExtraCols();
   }
-  ngOnChnges(changes: SimpleChanges) {
-
+  ngOnDestroy() {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 
   initializePager(paginator: Paginator) {
@@ -294,10 +270,13 @@ export class NpGridComponent implements OnInit {
     }
     // expands/collapses an expandable row
     dataRowClicked(index: number, rowObj?)  {
-      $('.npg-datarow').eq(index).addClass('clicked');
-      setTimeout(function() {
-        $('.npg-datarow').eq(index).removeClass('clicked');
-      }, 150);
+      // grid row responds to click event (by momentarily coloring the row border)
+      if (this.gridSettings.click) {
+        $('.npg-datarow').eq(index).addClass('clicked');
+        setTimeout(function() {
+          $('.npg-datarow').eq(index).removeClass('clicked');
+        }, 150);
+      }
       // first action is to toggle row open/close if there're additional cols
 
       // toggle only when there aren't cells currently being edited
@@ -458,7 +437,7 @@ export class NpGridComponent implements OnInit {
 
   class HeaderColumn {
     name: string;
-    canSort: boolean;
+    canSort?: boolean;
   }
 
   class ActionResult {

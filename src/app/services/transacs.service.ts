@@ -1,3 +1,4 @@
+import { HttpInterceptor } from './../shared/error handlers/interceptor.http';
 import { Injectable } from '@angular/core';
 import { Http, Response, RequestOptions, RequestOptionsArgs, URLSearchParams } from '@angular/http';
 import 'rxjs/add/operator/map';
@@ -7,11 +8,11 @@ import { ITransactionData } from 'app/interfaces/transacs.interface';
  */
 @Injectable()
 export class TransactionService {
-    private _url = 'http://localhost:51191/api/v1.0/transacs/';
+    private _url = 'http://localhost:1111/api/v1.0/transacs/';
 
     private options: RequestOptions = new RequestOptions();
 
-    constructor(private _http: Http) { }
+    constructor(private _http: HttpInterceptor) { }
     getTransacs(date, includeItems: boolean) {
         this.options.search = new URLSearchParams('includeItems=true&' + 'forDate=' + date);
         if (includeItems) {

@@ -2,14 +2,9 @@ import { AppMonths } from './../shared/enums/months.enum';
 import { Component, OnInit } from '@angular/core';
 import { TransactionService } from 'app/services/transacs.service';
 import { TransactionData } from 'app/shared/transacs.model';
-import { ToastyService, ToastyConfig, ToastOptions, ToastData } from 'ng2-toasty';
-import { Item } from 'app/shared/item.model';
+import { ToastyService, ToastOptions, ToastData } from 'ng2-toasty';
 import { NpModalOptions } from 'app/shared/np-modal-options';
-import { trigger, transition, style, animate, query, stagger } from '@angular/animations';
-/**
- * Gets recent transactions from a service and displays them
- * using child component "TransactionPillComponent"
- */
+
 @Component({
   selector: 'app-recent-transacs',
   templateUrl: './recent-transacs.component.html',
@@ -17,7 +12,6 @@ import { trigger, transition, style, animate, query, stagger } from '@angular/an
 })
 export class RecentTransacsComponent implements OnInit {
   // user interaction (modal)
-  checkedTransacs: any[];
   modalOpts: NpModalOptions = new NpModalOptions();
   transacIdsToDelete: number[] = [];
   showDialog = false;
@@ -31,15 +25,11 @@ export class RecentTransacsComponent implements OnInit {
 
   // displayed data
   transactions: Array<TransactionData> = [];
-  items: Array<Item> = [];
-  potato: Item = { itemId: -1, itemName: '', unit: '', quantity: 0, sellingPrice: 0, purchaseCost: 0 };
-  total = 0;
   displayedTransacs = [];
   monthStrings = [];
 
   constructor(
     private toastyService: ToastyService,
-    private toastyConfig: ToastyConfig,
     private transacService: TransactionService) { }
 
   ngOnInit() {
@@ -70,7 +60,6 @@ export class RecentTransacsComponent implements OnInit {
     const firstToast = this.addToast('wait', 'Fetching records...');
     this.transacService.getTransacs(date, this.includeItems)
       .subscribe(allTransactions => {
-        console.log(allTransactions);
         this.toastyService.clear(firstToast);
         let maxItemNumber = 0;
         this.transactions = allTransactions;
@@ -109,6 +98,8 @@ export class RecentTransacsComponent implements OnInit {
         for (let i = 0; i < this.transactions.length; i++) {
           this.displayedTransacs.unshift(this.transactions[i]);
         }
+      }, err => {
+        this.toastyService.clear(firstToast);
       });
     this.displayedTransacs = [];
     this.transactions = [];
@@ -139,19 +130,10 @@ export class RecentTransacsComponent implements OnInit {
     this.transacIdsToDelete = [];
   }
 
-  deleteMany() {
-    const transacIds: number[] = [];
-    for (let i = 0; i < this.checkedTransacs.length; i++) {
-      transacIds.push(this.checkedTransacs[i].itemId);
-    }
-    this.showModal(true, transacIds);
-  }
-
   isConfirmed(eventData) {
     this.showDialog = false;
     if (eventData) {
       this.deleteTransacs(this.transacIdsToDelete);
-      this.checkedTransacs = [];
       return;
     }
   }
@@ -162,10 +144,6 @@ export class RecentTransacsComponent implements OnInit {
     this.modalOpts.body = 'Delete ' + this.transacIdsToDelete.length.toString() + ' transactions?';
     this.showDialog = flag;
   }
-
-  // extendPill(i: number) {
-  //   $('.pill').eq(i).children('.app-panel-body').toggleClass('panel-clicked app-panel-body-lg');
-  // }
 
   addToast(toastType: string, message: string) {
     let toastId;

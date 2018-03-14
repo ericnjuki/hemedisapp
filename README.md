@@ -68,7 +68,7 @@ and is NOT guaranteed to work elsewhere :/
 
     (APACHE) copy dist folder to `htdocs` folder, (and rename it). Browse `localhost:8080/dist` to access the app
 
-    _For other deployment options, google how to deploy angular apps._
+    _For other deployment options, search how to deploy angular apps._
 
 * #### Building and Deploying the app locally (on IIS or APACHE) PART II
 
@@ -97,7 +97,7 @@ and is NOT guaranteed to work elsewhere :/
     ![Output](src/assets/docs-pics/array-of-item.png)
 
 
-    _For other deployment options, google how to deploy ASP.NET WebAPI 2 applications._
+    _For other deployment options, search how to deploy ASP.NET WebAPI 2 applications._
 
 You can now visit the deployed angular site and Try interacting with the site; Instuctions below:
 
@@ -107,18 +107,12 @@ You have 5 different views:
  * ### 1. Record Transactions
     This is the default landing page/view and cannot be changed.
     This is where you record transactions i.e sale or purchase.
-    - You do this by typing name of item in the item field:
 
-        ![Suggested items](src/assets/docs-pics/item-suggestion.png)
-
-        and picking one from the suggestions. If the item you are trying to transact with is not in the suggestions, you will not be allowed to post the transaction. Why?
-        An item must exist in your records for you transact with it! This is key to maintaining integrity of your data.
-
-    - Fill in the rest of the fields. And add the item to current transaction by pressing Enter of clicking the add button. 
-
-        This validates the fields and produces errors if something isn't right.
-
-        ![Validation error](src/assets/docs-pics/error-field-must-be-number.png "Validation error")
+    I have reworked this view a bit in v0.2.0 to include a searchable table of items right next to what I call
+    'the receipt'. 
+    - You can now just find the item you're interested in quickly, and click on it to add it to the receipt.
+      You can click on it repeatedly to increase its quantity!
+      The receipt is now also editable so you can change prices of items as you see fit.
 
     - You can add multiple items to the same transaction!
 
@@ -137,6 +131,8 @@ You have 5 different views:
 
     ![Recent transactions](src/assets/docs-pics/recent.png "Recent transactions view")
 
+    In v0.2.0, I have added buttons for each month and a dropdown for + or - 4 years from the current year
+    which when chosen, show all the transactions for that month in that year.
     The more recent ones appear first
 
     You have the ability to delete transactions which is present only if you realise you made an error after posting.
@@ -171,6 +167,15 @@ You have 5 different views:
 * ### 5. Add New Items
     Here you, add items that are NOT already in your inventory. If the item is in your inventory, you should update it in Current Stock.
     Quantity and Unit fields are optional and default to 0 and pc respectively. This is dangerous as when you sell items with 0 quantity, they quantity goes negative (this doesn't affect the statistics though)
+
+* ### 6. Batch Add
+    This is a new (v0.2.0) view that enables you to add large amounts of data to the system. (You previously had
+    to add each item 1 by 1 to the system. Yes, developers are stupid at times)
+    The textarea where you paste is disabled. Type in __hibbyjibbies__ in the password field to unlock
+
+    I did this because this is a one-or-two-time view and really isn't designed to be an entry point to the system (it has no validation of items so be careful what you copy paste)
+
+    The format of data that should go in there is e.g. excel data (rows separated by newline '\n' and columns by tabs '\t') and as I type this I just remembered that the column headers are hard-coded so sounds like v0.2.1 is coming out soon.
 
 ## Typical work flow
 1. You begin your workflow by adding (a) new item(s) in the Add New Items tab.
