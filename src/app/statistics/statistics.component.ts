@@ -24,7 +24,6 @@ export class StatisticsComponent implements OnInit {
   monthlyStats = [];
 
   // view controllers
-  viewDetailed = false;
   appMonths = [];
   constructor(
     private transacService: TransactionService,
@@ -48,11 +47,9 @@ export class StatisticsComponent implements OnInit {
         }
         this.monthlyStats = theData;
         this.toastyService.clear(firstToast);
+      }, err => {
+        this.toastyService.clear(firstToast);
       });
-  }
-
-  changeDetailedView() {
-    this.viewDetailed = true;
   }
 
   previousYear() {

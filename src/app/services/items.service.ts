@@ -1,3 +1,4 @@
+import { HttpInterceptor } from './../shared/error handlers/interceptor.http';
 import { Item } from './../shared/item.model';
 import { Injectable, EventEmitter } from '@angular/core';
 import { Http, Response, RequestOptionsArgs, RequestOptions } from '@angular/http';
@@ -12,7 +13,7 @@ export class ItemService {
     private options: RequestOptions = new RequestOptions();
     public event: EventEmitter<any>;
 
-    constructor(private http: Http) { }
+    constructor(private http: HttpInterceptor) { }
     getAllItems() {
         return this.http.get(this._url + 'g')
             .map(response => response.json());

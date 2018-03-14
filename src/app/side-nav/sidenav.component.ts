@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Route, Routes } from '@angular/router';
 
 @Component({
   selector: 'app-sidenav',
@@ -8,14 +8,19 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class SidenavComponent implements OnInit {
 
-  constructor() { }
+  constructor(private activeRoute: ActivatedRoute) { }
 
   ngOnInit() {
-    $('[routerLink="/record"]').attr('id', 'np-default').parent('li').addClass('active');
-    document.getElementById('np-default').click();
+    const activeEl = document.getElementsByClassName('active');
+    const $activeEl = $(activeEl);
+    // remove side bar in the record transacs tab
+    if ($activeEl.attr('np-rt') === 'np-rt') {
+      $('#content').addClass('content-lg');
+    }
     $('a').on('click', () => {
       $('.app-header').addClass('bx-shadow');
     });
+    $('[routerLink="/record"]').parent('li').addClass('active');
   }
 
   sidenavClicked(anchorElement: HTMLInputElement) {

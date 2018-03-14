@@ -11,7 +11,7 @@
     </div>
   </div>
 </div>
-<div class="container-fluid" *ngIf="!viewDetailed">
+<div class="container-fluid">
   <div class="row">
     <div *ngFor="let rowData of monthlyStats" class="col-md-4 np-monthly-stats">
       <mat-card>
@@ -35,39 +35,3 @@
     </div>
   </div>
 </div>
-
-<!-- <div class="container-fluid">
-  <div class="row">
-    <div class="col-md-10 col-md-push-1">
-      <table class="table table-hover">
-        <thead>
-          <tr>
-            <th class="col-md-3">Month</th>
-            <th class="col-md-3">Sales</th>
-            <th class="col-md-3">Purchases</th>
-            <th class="col-md-3">Profit/Loss</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let rowData of monthlyStats">
-            <td>
-              <b>{{ rowData.month }}</b>
-            </td>
-            <td>{{ rowData.sales }}</td>
-            <td>{{ rowData.purchases }}</td>
-            <td>{{ rowData.profitLoss }}</td>
-          </tr>
-        </tbody>
-        <tfoot>
-          <tr>
-            <th>TOTAL</th>
-            <th></th>
-            <th></th>
-            <th></th>
-          </tr>
-        </tfoot>
-      </table>
-    </div>
-  </div>
-</div> -->

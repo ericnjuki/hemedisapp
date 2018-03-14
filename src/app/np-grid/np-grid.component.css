@@ -1,0 +1,53 @@
+.red{
+    background: red;
+}
+
+input[type=search]{
+    margin: 1em 5%;
+    width: 90%;
+}
+.np-data-container{
+    max-height: 100vh;
+    overflow-y: scroll;
+}
+tfoot tr{
+    text-align: center;
+}
+table>tfoot>tr>td{
+    vertical-align: middle;
+    text-align: right;
+}
+.table>tbody>tr>td, .table>tbody>tr>th, .table>thead:first-child>tr:first-child>th{
+    text-align: center;
+}
+
+.npg-datarow{
+    border: 2px solid transparent;
+    transition: all 0.1s ease-out;
+}
+.npg-datarow.clicked{
+    border: 2px solid rgba(44, 102, 150, .75);
+}
+.pager>li{
+    cursor: pointer;
+}
+table[my-name="np-data"]>tbody>tr>td{
+    padding: 0;
+}
+table[my-name="np-data"]>tbody>tr>td>table{
+    margin: 0;
+}
+
+td tr:nth-child(2){
+    height: 5em;
+}
+.npg-btn-actions{
+    margin: 0;
+    padding: 3px 1em;
+    width: 7em;
+    height: 100%;
+    cursor: pointer;
+}
+.npg-clickable{
+    user-select: none;
+}
