@@ -50,7 +50,6 @@ import { BatchAddComponent } from './batch-add/batch-add.component';
     BrowserAnimationsModule,
     MatCardModule,
     ToastyModule.forRoot(),
-    NgReduxModule
   ],
   providers: [HttpInterceptor, TransactionService, ItemService, {provide: ErrorHandler, useClass: NpErrorHandler}],
   bootstrap: [AppComponent]

@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-
 declare var $: any;
 
 @Component({
@@ -13,6 +12,7 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     $(function () {
       $('.app-header').addClass('bx-shadow');
+
     });
   }
 }

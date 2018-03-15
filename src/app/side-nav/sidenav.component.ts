@@ -23,12 +23,9 @@ export class SidenavComponent implements OnInit {
     $('[routerLink="/record"]').parent('li').addClass('active');
   }
 
-  sidenavClicked(anchorElement: HTMLInputElement, np_rt?) {
+  sidenavClicked(anchorElement: HTMLInputElement) {
     $('li').removeClass('active');
     $(anchorElement).parent().addClass('active');
-
-    if (np_rt === 'np-rt') {
-        $('#content').addClass('content-lg');
-    }
   }
+
 }
