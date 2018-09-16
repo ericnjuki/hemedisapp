@@ -15,10 +15,12 @@
         color: black;
     }
     .nav-tabs>li.active>a, .nav-tabs>li.active>a:focus{
-        background: #ecf0f1;
+        background: rgba(44, 102, 150, .75);
+        color: ghostwhite;
     }
-    .nav-tabs>li>a:hover{
-        background: #e3e3e3;
+    .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus:hover{
+        background: rgba(38, 86, 126, 0.75);
+        color: ghostwhite;
     }
     .nav-tabs a{
         padding: 0;
@@ -76,16 +78,13 @@ tfoot td~td{
 }
 tfoot td:focus{
     border-bottom: 2px solid blue;
-
 }
 
 [contentEditable=true]:empty:not(:focus):before{
     content:attr(data-text)
-
 }
 [contentEditable=true]::before{
     color: gray;
-
 }
 #addButton i{
     cursor: pointer;

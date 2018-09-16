@@ -1,10 +1,10 @@
-<npAutoComplete (itemData)="handleItemData($event)"></npAutoComplete>
+<!-- <npAutoComplete (itemData)="handleItemData($event)"></npAutoComplete> -->
 <ul class="nav nav-tabs app-tabs app-header">
   <li class="active">
-    <a data-toggle="tab" href="#sale">Sale</a>
+    <a data-toggle="tab" href="#sale" (click)="changeTransacType('sale')">Sale</a>
   </li>
   <li>
-    <a data-toggle="tab" href="#purchase">Purchase</a>
+    <a data-toggle="tab" href="#purchase" (click)="changeTransacType('purchase')">Purchase</a>
   </li>
 </ul>
 
@@ -12,175 +12,168 @@
   <div id="sale" class="tab-pane fade in active">
     <div class="container-fluid">
       <div class="row">
-        <div class="col-xs-8">items list
-          <table class="table table-hover" name="record-sales">
-            <thead>
-              <tr>
-                <th>Item</th>
-                <th>Base Price</th>
-                <th>per</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let miniItem of miniItems">
-                <td>{{ miniItem.item }}</td>
-                <td>{{ miniItem.sellingPrice }}</td>
-                <td>per {{ minitItem.unit }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="col-xs-4">receipt</div>
-        <div class="col-md-10 col-md-push-1 app-sale-record-tab">
-          <div class="app-record-header">
-            <input id="app-date" type="date" [(ngModel)]="selectedDate">
-            <div class="pull-right">
-              <small>Date:</small>
-              <label for="app-date">{{ selectedDate }}</label>
+        <div class="col-md-5">
+          <np-grid [np-grid]="npGridConfig_sales" [data]="data" (action)="onGridAction($event)"></np-grid>          
+        </div> <!-- items list -->
+        <div class="col-md-7">
+          <div class="col-md-12 app-sale-record-tab">
+            <div class="app-record-header">
+              <input id="app-date" type="date" [(ngModel)]="selectedDate">
+              <div class="pull-right">
+                <small>Date:</small>
+                <label for="app-date">{{ selectedDate }}</label>
+              </div>
             </div>
-          </div>
-          <table class="table table-hover" name="record-sales">
-            <thead>
-              <tr>
-                <th class="col-md-4">Item</th>
-                <th class="col-md-2">Qty</th>
-                <th class="col-md-3">Price</th>
-                <th class="col-md-3">Amount</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td colspan="5">
-                  <div class="np-scrollable">
-                    <table class="table">
-                      <tr *ngFor="let saleItem of saleItems; let saleItemIndex=index">
-                        <td class="col-md-4">{{ saleItem.item }}</td>
-                        <td class="col-md-2">{{ saleItem.quantity }}</td>
-                        <td class="col-md-3">{{ saleItem.price }}</td>
-                        <td class="col-md-2">{{ saleItem.amount }}</td>
-                        <td>
-                          <a class="pull-right" (click)="removeSaleItem(saleItemIndex)">
-                            <i class="icon ion-android-remove-circle"></i>
-                          </a>
-                        </td>
-                      </tr>
-                    </table>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-            <tfoot>
-              <tr [ngClass]="{
-                'np-form-status-ok':formStatus.OK,
-                'np-form-status-notok':!formStatus.OK}">
-                {{ formStatus.text }}
-              </tr>
-              <tr>
-                <td contenteditable="true" data-text="Item" (keydown.enter)="clickAddButton('sale')"></td>
-                <td contenteditable="true" data-text="Qty" (input)="checkIfNumber(sqty, 'sqty')" (keydown.enter)="clickAddButton('sale')" #sqty></td>
-                <td contenteditable="true" data-text="Price" (input)="checkIfNumber(sprice)" (keydown.enter)="clickAddButton('sale')" #sprice></td>
-                <td></td>
-                <td id="addButton">
-                  <a id="addisiaButton" class="pull-right" (click)="validateItem('sale')">
-                    <i class="icon ion-android-add-circle"></i>
-                  </a>
-                </td>
-              </tr>
-              <tr>
-                <th>TOTAL</th>
-                <th></th>
-                <th></th>
-                <th>{{ getTotalSaleAmount() }}</th>
-              </tr>
-              <tr>
-                <td colspan="4">
-                  <button class="btn btn-success pull-right post" (click)="postSale()">
-                    Post {{ saleItems.length }} items
-                  </button>
-                </td>
-              </tr>
-            </tfoot>
-          </table>
-        </div> <!-- table holder -->
+            <table class="table table-hover" name="record-sales">
+              <thead>
+                <tr>
+                  <th class="col-md-2">Qty</th>
+                  <th class="col-md-4">Item</th>
+                  <th class="col-md-3">Price</th>
+                  <th class="col-md-3">Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td colspan="5">
+                    <div class="np-scrollable">
+                      <table class="table" name="sales-receipt">
+                        <tr *ngFor="let saleItem of saleItems; let saleItemIndex=index">
+                          <td class="col-md-2">
+                            <input [(ngModel)]="saleItem.quantity" type="number" class="form-control" min="1"
+                              style="margin-left: 0;"
+                              (input)="saleItemQtyChanged(saleItemIndex, saleItemQtyField)" #saleItemQtyField>
+                          </td>
+                          <td class="col-md-4">{{ saleItem.itemName }}</td>
+                          <td contenteditable="true" class="col-md-3" 
+                            (blur)="saleItemPriceFinal(saleItemIndex, saleItemPriceField)"
+                            (input)="saleItemPriceChanged(saleItemIndex, saleItemPriceField)" #saleItemPriceField>
+                              {{ saleItem.sellingPrice }}
+                          </td>
+                          <td contenteditable="true" class="col-md-2"
+                            (blur)="saleItemAmtFinal(saleItemIndex, saleItemAmtField)"
+                            (input)="saleItemAmtChanged(saleItemIndex, saleItemAmtField)" #saleItemAmtField>
+                              {{ saleItem.amount }}
+                          </td>
+                          <td>
+                            <a class="pull-right" (click)="removeSaleItem(saleItemIndex)">
+                              <i class="icon ion-android-remove-circle"></i>
+                            </a>
+                          </td>
+                        </tr>
+                      </table>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>TOTAL</th>
+                  <th></th>
+                  <th></th>
+                  <th>{{ getTotalSaleAmount() }}</th>
+                </tr>
+                <tr>
+                  <td colspan="4">
+                    <button class="btn btn-info pull-right"
+                      (click)="clearReceipt()">Clear receipt</button>
+                  </td>
+                  <td>
+                    <button class="btn btn-success pull-right post" 
+                      (click)="postSale()">
+                        Post {{ saleItems.length }} items
+                    </button>
+                  </td>
+                </tr>
+              </tfoot>
+            </table><!-- sales receipt table -->
+          </div> <!-- sales table holder -->
+        </div> <!-- sales receipt -->
       </div> <!-- row -->
     </div> <!-- container fluid -->
   </div> <!-- sales tab -->
+  <!-- the below is just a clone of the above, with names changed from 'sale' to 'purchase' -->
   <div id="purchase" class="tab-pane fade">
     <div class="container-fluid">
       <div class="row">
-        <div class="col-md-10 col-md-push-1 app-sale-record-tab">
-          <div class="app-record-header">
-            <input id="app-date" type="date" [(ngModel)]="selectedDate">
-            <div class="pull-right">
-              <small>Date:</small>
-              <label for="app-date">{{ selectedDate }}</label>
-            </div>
-          </div>
-          <table class="table table-hover" name="record-purchases">
-            <thead>
-              <tr>
-                <th class="col-md-4">Item</th>
-                <th class="col-md-2">Quantity</th>
-                <th class="col-md-3">Price</th>
-                <th class="col-md-3">Amount</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td colspan="5">
-                  <div class="np-scrollable">
-                    <table class="table">
-                      <tr *ngFor="let purchaseItem of purchaseItems; let purchaseItemIndex=index">
-                        <td class="col-md-4">{{ purchaseItem.item }}</td>
-                        <td class="col-md-2">{{ purchaseItem.quantity }}</td>
-                        <td class="col-md-3">{{ purchaseItem.price }}</td>
-                        <td class="col-md-3">{{ purchaseItem.amount }}</td>
-                        <td>
-                          <a class="pull-right" (click)="removePurchaseItem(purchaseItemIndex)">
-                            <i class="icon ion-android-remove-circle"></i>
-                          </a>
-                        </td>
-                      </tr>
-                    </table>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-            <tfoot>
-              <tr [ngClass]="{
-                'np-form-status-ok':formStatus.OK,
-                'np-form-status-notok':!formStatus.OK}">
-                {{ formStatus.text }}
-              </tr>
-              <tr>
-                <td contenteditable="true" data-text="Item" (keydown.enter)="clickAddButton('purchase')"></td>
-                <td contenteditable="true" data-text="Qty" (input)="checkIfNumber(pqty, 'pqty')" (keydown.enter)="clickAddButton('purchase')" #pqty></td>
-                <td contenteditable="true" data-text="Price" (input)="checkIfNumber(pprice)" (keydown.enter)="clickAddButton('purchase')" #pprice></td>
-                <td></td>
-                <td id="addButton">
-                  <a id="addisiaButton" class="pull-right" (click)="validateItem('purchase')">
-                    <i class="icon ion-android-add-circle"></i>
-                  </a>
-                </td>
-              </tr>
-              <tr>
-                <th>TOTAL</th>
-                <th></th>
-                <th></th>
-                <th>{{getTotalPurchaseAmount()}}</th>
-              </tr>
-              <tr>
-                <td colspan="5">
-                  <button class="btn btn-success pull-right" (click)="postPurchase()">
-                    Post {{ purchaseItems.length }} items
-                  </button>
-                </td>
-              </tr>
-            </tfoot>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+        <div class="col-md-5">
+          <np-grid [np-grid]="npGridConfig_purchases" [data]="data" (action)="onGridAction($event)"></np-grid>          
+        </div> <!-- items list -->
+        <div class="col-md-7">
+          <div class="col-md-12 app-purchase-record-tab">
+            <div class="app-record-header">
+              <input id="app-date" type="date" [(ngModel)]="selectedDate">
+              <div class="pull-right">
+                <small>Date:</small>
+                <label for="app-date">{{ selectedDate }}</label>
+              </div>
+            </div><!-- purchases tab header -->
+            <table class="table table-hover" name="record-purchases">
+              <thead>
+                <tr>
+                  <th class="col-md-2">Quantity</th>
+                  <th class="col-md-4">Item</th>
+                  <th class="col-md-3">Price</th>
+                  <th class="col-md-3">Amount</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td colspan="5">
+                    <div class="np-scrollable">
+                      <table class="table" name="purchases-receipt">
+                        <tr *ngFor="let purchaseItem of purchaseItems; let purchaseItemIndex=index">
+                          <td class="col-md-2">                            
+                            <input [(ngModel)]="purchaseItem.quantity" type="number" class="form-control" min="1"
+                            style="margin-left: 0;"
+                            (input)="purchaseItemQtyChanged(purchaseItemIndex, purchaseItemQtyField)" #purchaseItemQtyField>
+                          </td>
+                          <td contenteditable="true" class="col-md-4">{{ purchaseItem.itemName }}</td>
+                          <td contenteditable="true" class="col-md-3" 
+                            (blur)="purchaseItemCostFinal(purchaseItemIndex, purchaseItemCostField)" 
+                            (input)="purchaseItemChanged(purchaseItemIndex, purchaseItemCostField)" #purchaseItemCostField>
+                              {{ purchaseItem.purchaseCost }}
+                          </td>
+                          <td contenteditable="true" class="col-md-3" 
+                            (blur)="purchaseItemAmtFinal(purchaseItemIndex, purchaseItemAmtField)" 
+                            (input)="purchaseItemChanged(purchaseItemIndex, purchaseItemAmtField)" #purchaseItemAmtField>
+                              {{ purchaseItem.amount }}
+                          </td>
+                          <td>
+                            <a class="pull-right" (click)="removePurchaseItem(purchaseItemIndex)">
+                              <i class="icon ion-android-remove-circle"></i>
+                            </a>
+                          </td>
+                        </tr>
+                      </table>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>TOTAL</th>
+                  <th></th>
+                  <th></th>
+                  <th>{{getTotalPurchaseAmount()}}</th>
+                </tr>
+                <tr>
+                  <td colspan="4">
+                    <button class="btn btn-info pull-right"
+                      (click)="clearReceipt()">Clear receipt</button>
+                  </td>
+                  <td>
+                    <button class="btn btn-success" (click)="postPurchase()">
+                      Post {{ purchaseItems.length }} items
+                    </button>
+                  </td>
+                </tr>
+              </tfoot>
+            </table><!-- purchases receipt table -->
+          </div><!-- purchases table holder -->
+        </div><!-- purchases receipt -->
+      </div><!-- row -->
+    </div><!-- container fluid -->
+  </div><!-- purchases tab -->
+</div><!-- tabs holder -->

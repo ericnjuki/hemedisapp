@@ -16,17 +16,13 @@ import { ToastyService, ToastyConfig, ToastOptions, ToastData } from 'ng2-toasty
 export class ItemsComponent implements OnInit {
   // array of items that are displayed so the user can see
   // what items they're going to post
-  itemsForPurchase = [];
   itemsForRecord = [];
 
   somethingIsEmpty = true;
 
   // to display errors during user input
   formStatus = { OK: true, text: 'All Good' }; constructor(private itemService: ItemService,
-
-    private toastyService: ToastyService,
-    private toastyConfig: ToastyConfig,
-    private transacService: TransactionService) { }
+    private toastyService: ToastyService) { }
 
   ngOnInit() {
     $(function () {
@@ -97,24 +93,14 @@ export class ItemsComponent implements OnInit {
       unit = $itemData.eq(4).html();
     }
 
-    const itemForPurchase = {
-      itemId: -1,
+    const itemForRecord = {
       itemName: itemName,
       unit: unit,
       quantity: quantity,
       purchaseCost: purchaseCost,
       sellingPrice: sellingPrice
-    };
-    this.itemsForPurchase.unshift(itemForPurchase);
-
-    const itemForRecord = {
-      itemName: itemName,
-      unit: unit,
-      quantity: 0,
-      purchaseCost: purchaseCost,
-      sellingPrice: sellingPrice
     }
-    this.itemsForRecord.push(itemForRecord);
+    this.itemsForRecord.unshift(itemForRecord);
     // clears row of contenteditable tds after its values are added to the
     // array of items above
     $itemData.not($('td#addButton')).html('');
@@ -123,7 +109,7 @@ export class ItemsComponent implements OnInit {
   }
 
   removeItem(x) {
-    this.itemsForPurchase.splice(x, 1);
+    this.itemsForRecord.splice(x, 1);
   }
 
   postItems() {
@@ -132,20 +118,9 @@ export class ItemsComponent implements OnInit {
       .subscribe(response => {
         this.toastyService.clear(firstToast);
         this.addToast();
-        console.log(response);
-        // if adding new items was successful, add
-        // new record of them as purchases
-        let purchaseTransaction: ITransactionData;
-        purchaseTransaction = {
-          date: new Date().toISOString().substr(0, 10),
-          items: this.itemsForPurchase,
-          transactionType: 2
-        }
-        this.transacService.postTransacs(purchaseTransaction)
-          .subscribe(res => {
-            // clear all items from display; shows the user that items have been posted.
-            this.itemsForPurchase = [];
-          });
+        this.itemsForRecord = [];
+      }, err => {
+        this.toastyService.clear(firstToast);
       });
     const $itemData = $('[name=record-items] thead tr').eq(2).children('td');
     $itemData.eq(0).focus();
@@ -154,7 +129,7 @@ export class ItemsComponent implements OnInit {
   addToast(toastType?) {
     let toastId;
     const toastOptions: ToastOptions = {
-      title: 'Update Status',
+      title: '',
       timeout: 5000,
       theme: 'bootstrap',
       onAdd: (toast: ToastData) => {
@@ -162,11 +137,11 @@ export class ItemsComponent implements OnInit {
       }
     };
     if (toastType === 'wait') {
-      toastOptions.timeout = 23000;
-      toastOptions.msg = 'updating...';
+      toastOptions.timeout = 230000;
+      toastOptions.msg = 'adding...';
       this.toastyService.wait(toastOptions);
     } else {
-      toastOptions.msg = 'Update successful!';
+      toastOptions.msg = 'Item added successfully!';
       this.toastyService.success(toastOptions);
     }
     return toastId;
@@ -183,7 +158,7 @@ export class ItemsComponent implements OnInit {
   getNumberOfItems() {
     // using this to show the number of items that are going to be
     // posted in the add button
-    return this.itemsForPurchase.length;
+    return this.itemsForRecord.length;
   }
 
   validationError(msg: string) {

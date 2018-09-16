@@ -1,3 +1,4 @@
+import { HttpInterceptor } from './../shared/error handlers/interceptor.http';
 import { Injectable } from '@angular/core';
 import { Http, Response, RequestOptions, RequestOptionsArgs, URLSearchParams } from '@angular/http';
 import 'rxjs/add/operator/map';
@@ -11,9 +12,9 @@ export class TransactionService {
 
     private options: RequestOptions = new RequestOptions();
 
-    constructor(private _http: Http) { }
-    getTransacs(includeItems: boolean) {
-        this.options.search = new URLSearchParams('includeItems=true');
+    constructor(private _http: HttpInterceptor) { }
+    getTransacs(date, includeItems: boolean) {
+        this.options.search = new URLSearchParams('includeItems=true&' + 'forDate=' + date);
         if (includeItems) {
             return this._http.get(this._url + 'g', this.options)
                 .map((response: Response) => response.json());

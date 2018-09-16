@@ -7,5 +7,6 @@ export class Item implements IItem {
     public quantity: number;
     public sellingPrice: number;
     public purchaseCost: number;
+    public aliases?: string;
     public total?: number;
 }

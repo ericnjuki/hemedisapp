@@ -1,16 +1,6 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
+import { Component, OnInit } from '@angular/core';
 import { ItemService } from 'app/services/items.service';
-import { StockDataSource } from 'app/items/stock/stock.datasource';
-import { Observable } from 'rxjs/Rx';
-import { MatTableDataSource } from '@angular/material/table';
-import { IItem } from 'app/interfaces/item.interface';
-import { ToastyService, ToastyConfig, ToastOptions, ToastData } from 'ng2-toasty';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import * as Fuse from 'fuse.js';
-import { Item } from 'app/shared/item.model';
-import { NpModalOptions } from 'app/shared/np-modal-options';
+import { ToastyService, ToastOptions, ToastData } from 'ng2-toasty';
 
 
 @Component({
@@ -19,67 +9,41 @@ import { NpModalOptions } from 'app/shared/np-modal-options';
   styleUrls: ['./stock.component.css']
 })
 export class StockComponent implements OnInit {
-  displayedColumns = ['itemName', 'quantity', 'unit', 'purchaseCost', 'sellingPrice', 'actions'];
-  dataSource: StockDataSource;
   isContenteditable = false;
   updatedItems = [];
-  itemToUpdate;
-  searchResults: IItem[] = [];
-  fuseOptions = {
-    shouldSort: true,
-    threshold: 0.5,
-    distance: 100,
-    maxPatternLength: 32,
-    minMatchCharLength: 1,
-    keys: ['itemName']
-  };
-  showDialog = false;
-  options: NpModalOptions = new NpModalOptions();
   itemsToDelete: number[] = [];
 
-  // dealing with checked items
-  headerIsChecked;
-  allChecked;
-  checkAll = false;
-  checkedItems = [];
-  checkedRowItems = [];
-
   // configuring np-grid
+  data = [{}];
   npGridConfig = {
     columns: [
-      {colName: 'itemName', display: 'Item', sort: true},
+      {colName: 'itemName', display: 'Item', sort: true, id: true},
       {colName: 'sellingPrice', display: 'Selling Price', sort: true},
       {colName: 'purchaseCost', display: 'Buying Price', sort: true},
       {colName: 'quantity', display: 'Qty'},
       {colName: 'unit', display: 'Units'},
       {colName: 'actions'}
     ],
+    additionalColumns: [
+      {colName: 'aliases'},
+      {colName: 'itemId', noEdit: true}
+    ],
+    searchBy: ['itemName', 'aliases'],
     pagingOptions: [10, 25, 50, 100],
     multiselect: true
   }
-  // configAsyncData;
-
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
 
   constructor(
     private itemService: ItemService,
-    private toastyService: ToastyService,
-    private toastyConfig: ToastyConfig) {
-      // this.itemService.getAllItems().subscribe((res) => {
-      //   // console.log(res);
-      //   this.configAsyncData = res;
-      // })
-    }
-  // getData() {
-  //   return Observable.of(this.configAsyncData);
-  // }
+    private toastyService: ToastyService) {}
 
   ngOnInit() {
-    this.dataSource = new StockDataSource(this.paginator, this.sort, this.itemService);
+    this.itemService.getAllItems()
+      .subscribe(res => {
+        this.data = res;
+      })
 
     $(function () {
-      $('div.alert').remove();
       $('[contenteditable=true]').focus(function () {
         const val = this.innerHTML;
         const $this = $(this);
@@ -88,100 +52,57 @@ export class StockComponent implements OnInit {
           $this.val(val);
         }, 1);
       });
-
-      const modalConfirm = function (callback) {
-
-        $('#btn-confirm').on('click', function () {
-          $('#mi-modal').modal('show');
-        });
-
-        $('#modal-btn-si').on('click', function () {
-          callback(true);
-          $('#mi-modal').modal('hide');
-        });
-
-        $('#modal-btn-no').on('click', function () {
-          callback(false);
-          $('#mi-modal').modal('hide');
-        });
-      };
-
-      modalConfirm(function (confirm) {
-        if (confirm) {
-          // Acciones si el usuario confirma
-          $('#result').html('CONFIRMADO');
-        } else {
-          // Acciones si el usuario no confirma
-          $('#result').html('NO CONFIRMADO');
-        }
-      });
     })
   }
-  onItemInput(row: IItem, matCell: HTMLInputElement) {
-    this.itemToUpdate = {
-      'itemId': row.itemId,
-      'itemName': row.itemName,
-      'quantity': row.quantity,
-      'unit': row.unit,
-      'purchaseCost': row.purchaseCost,
-      'sellingPrice': row.sellingPrice
-
-    }
-
-    if (this.updatedItems.length === 0) {
-      // First item from my table to be updated
-      this.updatedItems.push(this.addUpdatedItems(this.itemToUpdate, matCell));
-    } else {
-      for (let i = 0; i < this.updatedItems.length; i++) {
-        if (this.updatedItems[i].itemId === this.itemToUpdate.itemId) {
-          // This item has been updated before, replace it with a new update
-          this.updatedItems.push(this.addUpdatedItems(this.updatedItems[i], matCell));
-          this.updatedItems.splice(i, 1);
-          return;
+  onGridAction(eventData) {
+    // all incoming updated rows all share the same ids so...
+    let itemToUpdate = null;
+    for (let i = 0; i < eventData.length; i++) {
+      switch (eventData[i].action) {
+        case 'update':
+        // ...assign the first of them to this variable...
+          if (!itemToUpdate) {
+            itemToUpdate = eventData[i].row;
+          }
+          // ...and update this's fields accordingly...
+          itemToUpdate[eventData[i].col] = eventData[i].data
+          if (i === (eventData.length - 1)) {
+            // ...so that i push only a single row to db
+            this.updatedItems.push(itemToUpdate);
+            this.postUpdate();
+          }
+          break;
+        case 'delete':
+          this.itemsToDelete.push(eventData[i].row['itemId'])
+          break;
         }
       }
-      // This item hasn't been updated before, simply add it to my updated items
-      this.updatedItems.push(this.addUpdatedItems(this.itemToUpdate, matCell));
+    // because if we put it in the switch block, they get deleted one by one (too many api calls)
+    if (this.itemsToDelete.length > 0) {
+      this.removeItems(this.itemsToDelete);
     }
+    this.updatedItems = [];
   }
-  addUpdatedItems(rowData, cellData): IItem {
-    // loop through displayed columns
-    for (const col of this.displayedColumns) {
-      // angular(i think) assigns each mat-cell a class
-      // corresponding to the column it's in e.g mat-column-itemName
-      if (cellData.getAttribute('class').indexOf(col) !== -1) {
-        switch (col) {
-          case 'itemName':
-            rowData[col] = cellData.innerHTML;
-            return rowData;
-          case 'quantity':
-            rowData[col] = cellData.innerHTML;
-            return rowData;
-          case 'unit':
-            rowData[col] = cellData.innerHTML;
-            return rowData;
-          case 'purchaseCost':
-            rowData[col] = cellData.innerHTML;
-            return rowData;
-          case 'sellingPrice':
-            rowData[col] = cellData.innerHTML;
-            return rowData;
-        }
-      } else {
-        console.log('this is an impossible error for now, you\'re forked!');
-      }
-    }
-    return rowData;
-  }
+
   postUpdate() {
     const firstToast = this.addToast('wait', 'Updating...');
     this.itemService.updateItems(this.updatedItems)
       .subscribe(response => {
         this.toastyService.clear(firstToast);
         this.addToast('success', 'Posted!');
-        console.log(response);
         this.updatedItems = [];
       });
+  }
+
+  removeItems(itemIds: number[]) {
+    const firstToast = this.addToast('wait', 'Deleting...');
+    this.itemService.deleteItems(itemIds)
+      .subscribe(newItems => {
+        this.data = newItems;
+        this.addToast('info', 'Deleted!');
+        this.toastyService.clear(firstToast);
+      })
+    this.itemsToDelete = [];
   }
 
   addToast(toastType: string, message: string) {
@@ -220,109 +141,7 @@ export class StockComponent implements OnInit {
     return toastId;
   }
 
-  filterItems(filterEl: HTMLInputElement) {
-    const term = filterEl.value.replace(/\s+/g, '');
-    if (term === '' || term === null || +term === NaN || +term === 0) {
-      this.dataSource = new StockDataSource(this.paginator, this.sort, this.itemService);
-      return;
-    }
-    this.itemService.getAllItems()
-      .subscribe(res => {
-        const fuse = new Fuse(res, this.fuseOptions);
-        const result = fuse.search(filterEl.value.toString());
-        this.searchResults = result.map(resultItem => {
-          let item: IItem = new Item();
-          item = <Item>resultItem;
-          return item;
-        });
-        this.dataSource.dataChange.next(this.searchResults);
-      });
-  }
-
-  removeItems(itemIds: number[]) {
-    const firstToast = this.addToast('wait', 'Deleting...');
-    let arrNewItems: any[] = [];
-    this.itemService.deleteItems(itemIds)
-      .subscribe(newItems => {
-        arrNewItems = newItems;
-        this.dataSource.dataChange.next(newItems);
-        this.toastyService.clear(firstToast);
-        this.addToast('info', 'Deleted!');
-      })
-    this.itemsToDelete = [];
-  }
-
   enableEdits() {
     this.isContenteditable = true;
-  }
-
-  isConfirmed(eventData) {
-    this.showDialog = false;
-    if (eventData) {
-      this.removeItems(this.itemsToDelete);
-      this.headerIsChecked = false;
-      this.checkedItems = [];
-      return;
-    }
-  }
-
-  showModal(flag, itemIds?: number[], itemId?: number, ) {
-    itemIds.push(itemId);
-    this.itemsToDelete = itemIds;
-    this.options.body = 'Delete ' + this.itemsToDelete.length.toString() + ' items?';
-    this.showDialog = flag;
-  }
-
-  deleteMany() {
-    const itemIds: number[] = [];
-    for (let i = 0; i < this.checkedItems.length; i++) {
-      itemIds.push(this.checkedItems[i].itemId);
-    }
-    this.showModal(true, itemIds);
-  }
-
-  toggleAllChecked() {
-    this.allChecked = !this.allChecked;
-    this.checkAll = !this.checkAll;
-    const event = new Event('focus');
-    const cBoxes = document.querySelectorAll('.dataCbox');
-    this.checkedRowItems = [];
-
-    for (let i = 0; i < cBoxes.length; i++) {
-      cBoxes[i].dispatchEvent(event);
-      (<HTMLInputElement>cBoxes[i]).checked = this.checkAll;
-    }
-    this.checkedRowItems.push('end');
-    if (this.checkAll) {
-      this.checkedItems = this.checkedRowItems.slice();
-      this.checkedItems.splice(this.checkedItems.indexOf('end'), 1);
-      return;
-    }
-    this.checkedItems = [];
-  }
-
-  toggleSelectedRows(row?, cBoxState?) {
-    // item is checked..
-    if (cBoxState) {
-      // and it's not in our array...
-      if (this.checkedItems.indexOf(row.itemId) === -1) {
-        // put it there
-        this.checkedItems.push(row);
-      }
-      return;
-    }
-    // item is unchecked
-    // and is in our array...
-    const i = this.checkedItems.indexOf(row.itemId)
-    if (i) {
-      // rm it!
-      this.checkedItems.splice(i, 1);
-    }
-  }
-
-  getAllRows(row) {
-    if (this.checkedRowItems.indexOf('end') === -1) {
-      this.checkedRowItems.push(row)
-    }
   }
 }
