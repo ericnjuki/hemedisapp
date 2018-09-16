@@ -3,8 +3,8 @@ import { NgModule, ErrorHandler } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { AppRouterModule } from 'app/app.routing';
-import { NgRedux, NgReduxModule } from '@angular-redux/store';
-import { combineReducers } from 'redux';
+// import { NgRedux, NgReduxModule } from '@angular-redux/store';
+// import { combineReducers } from 'redux';
 
 // ng-pos components
 import { NpErrorHandler } from './shared/error handlers/np.handler';

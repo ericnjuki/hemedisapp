@@ -2,8 +2,10 @@
     background: red;
 }
 
-input[type=search]{
+.np-data-manip {
     margin: 1em 5%;
+  }
+.np-data-manip-search {
     width: 90%;
 }
 .np-data-container{

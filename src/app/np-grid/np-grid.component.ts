@@ -48,6 +48,10 @@ export class NpGridComponent implements OnInit, OnDestroy {
       keys: []
     };
 
+    // checking items
+    headerIsChecked: boolean;
+    checkedItems = [];
+
     // view
     dataColumns: HeaderColumn[] = [];
     dataRows: {}[] = [];
@@ -303,6 +307,32 @@ export class NpGridComponent implements OnInit, OnDestroy {
       }
     }
 
+    toggleAllChecked() {
+      const checkEvent = new Event('change');
+      this.headerIsChecked = this.headerIsChecked ? false : true;
+
+      const checkboxes = document.querySelectorAll('td>[type=checkbox]');
+      for (let i = 0; i < checkboxes.length; i++) {
+        // i thought either of the following statements would suffice for:
+        // 1. visually checking the checkbox
+        // 2. dispatching the change event to show when checkbox value changes
+        // turns out you need both.
+        // TODO: check what events are fired when you normally click a checkbox
+        (<HTMLInputElement>checkboxes[i]).checked = this.headerIsChecked;
+        checkboxes[i].dispatchEvent(checkEvent);
+      }
+    }
+    checkItemRow(checkBoxEl: HTMLInputElement, rowObj) {
+      if (checkBoxEl.checked) {
+        this.checkedItems.push(rowObj);
+      } else {
+        const index = $.inArray(rowObj, this.checkedItems);
+        if (index !== -1) {
+          this.checkedItems.splice(index, 1);
+        }
+      }
+    }
+
     enableEdits() {
       this.dataEditable = !this.dataEditable;
     }
@@ -373,12 +403,23 @@ export class NpGridComponent implements OnInit, OnDestroy {
     this.collapseDataRow();
     this.actionResults = [];
   }
-  deleteData(rowObj) {
+  deleteItem(rowObj) {
     this.actionResults = [];
     this.actionResults.push({action: 'delete', row: rowObj});
     this.action.emit(this.actionResults);
     this.collapseDataRow();
     this.actionResults = [];
+  }
+  deleteMany(rowObjs) {
+    this.actionResults = [];
+    for (let i = 0; i < rowObjs.length; i++) {
+      this.actionResults.push({action: 'delete', row: rowObjs[i]});
+    }
+    this.action.emit(this.actionResults);
+    this.collapseDataRow();
+    this.actionResults = [];
+    this.checkedItems = [];
+    this.headerIsChecked = false;
   }
 
   // calculates the number of pages on display

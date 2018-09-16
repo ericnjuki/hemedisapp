@@ -1,8 +1,19 @@
-<input class="form-control" placeholder="Search" type="search" (input)="filterItems(filter)" #filter>
+<div *ngIf="gridSettings.multiselect" class="col-md-12 np-data-manip">
+  <div class="col-md-7">
+    <input class="form-control" placeholder="Search" type="search" (input)="filterItems(filter)" #filter>
+  </div>
+  <div class="col-md-2 col-md-push-2">
+    <button class="btn btn-danger" [disabled]="!checkedItems.length" (click)="deleteMany(checkedItems)">Delete Selected</button>
+  </div>
+</div>
+<input *ngIf="!gridSettings.multiselect" class="np-data-manip-search form-control np-data-manip" placeholder="Search" type="search" (input)="filterItems(filter)" #filter>
+
 <table class="table" my-name="np-data">
   <thead>
     <tr>
-      <th *ngIf="gridSettings.multiselect" class="col-md-1"><input type="checkbox"></th>
+      <th *ngIf="gridSettings.multiselect" class="col-md-1">
+          <input type="checkbox" [checked]="headerIsChecked" (change)="toggleAllChecked()">
+      </th>
       <th *ngFor="let dataColumn of dataColumns"
         [ngStyle]="{
           'width': tdWidth,
@@ -10,9 +21,9 @@
         }"
         (click)="toggleSort(dataColumn)">
           {{ dataColumn.name }}
-        <span *ngIf="dataColumn.canSort && sortDirection === 0 && currentSorteddataColumnumn === dataColumn.name"></span>
-        <span *ngIf="dataColumn.canSort && sortDirection === 1 && currentSorteddataColumnumn === dataColumn.name"><i class="ion-android-arrow-up"></i></span>
-        <span *ngIf="dataColumn.canSort && sortDirection === 2 && currentSorteddataColumnumn === dataColumn.name"><i class="ion-android-arrow-down"></i></span>
+        <span *ngIf="dataColumn.canSort && sortDirection === 0 && currentSortedColumn === dataColumn.name"></span>
+        <span *ngIf="dataColumn.canSort && sortDirection === 1 && currentSortedColumn === dataColumn.name"><i class="ion-android-arrow-up"></i></span>
+        <span *ngIf="dataColumn.canSort && sortDirection === 2 && currentSortedColumn === dataColumn.name"><i class="ion-android-arrow-down"></i></span>
       </th>
     </tr>
   </thead>
@@ -25,9 +36,11 @@
           'npg-clickable': gridSettings.click
         }">
           <tbody>
-            <tr (click)="dataRowClicked(i, dataRow)" class="npg-datarow">
-              <td *ngIf="gridSettings.multiselect"><input type="checkbox"></td>
-              <td *ngFor="let colName of gridData.columns" 
+            <tr class="npg-datarow">
+              <td *ngIf="gridSettings.multiselect">
+                <input type="checkbox" (change)="checkItemRow(itemCheckBoxEl, dataRow)" #itemCheckBoxEl>
+              </td>
+              <td (click)="dataRowClicked(i, dataRow)" *ngFor="let colName of gridData.columns" 
                 [attr.contenteditable]="dataEditable"
                 [ngStyle]="{'width': tdWidth}" #dataField
                 (input)="itemFieldChanged(dataRow, colName, dataField)">{{ dataRow[colName] }}</td>
@@ -52,7 +65,7 @@
                 <button *ngIf="dataEditable" class="npg-btn-actions btn btn-sm btn-success"
                   (click)="updateData(dataRow)">save edits</button>
                 <button class="npg-btn-actions btn btn-sm btn-danger"
-                  (click)="deleteData(dataRow)">delete</button>
+                  (click)="deleteItem(dataRow)">delete</button>
               </td>
             </tr>
             </ng-container>

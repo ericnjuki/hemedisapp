@@ -65,9 +65,10 @@ export class BatchAddComponent {
   postItems(items: IItem[]) {
     this.itemsService.addItems(items)
       .subscribe(res => {
-        alert('successfull');
+        alert('Successful');
+        $('textarea').val('');
       }, err => {
-        alert('not successful, try again later');
+        alert('Not successful, try again later');
       });
   }
 }

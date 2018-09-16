@@ -74,9 +74,12 @@ export class StockComponent implements OnInit {
           break;
         case 'delete':
           this.itemsToDelete.push(eventData[i].row['itemId'])
-          this.removeItems(this.itemsToDelete);
           break;
+        }
       }
+    // because if we put it in the switch block, they get deleted one by one (too many api calls)
+    if (this.itemsToDelete.length > 0) {
+      this.removeItems(this.itemsToDelete);
     }
     this.updatedItems = [];
   }
