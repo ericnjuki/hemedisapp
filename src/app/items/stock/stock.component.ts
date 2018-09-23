@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ItemService } from 'app/services/items.service';
 import { ToastyService, ToastOptions, ToastData } from 'ng2-toasty';
-
+import { NgRedux, select } from 'ng2-redux';
+import { IAppState } from '../../interfaces/appstate.interface';
 
 @Component({
   selector: 'app-stock',
@@ -33,15 +34,22 @@ export class StockComponent implements OnInit {
     multiselect: true
   }
 
+  // view
+  prefillBtnStatus;
+
+  // from the state
+  @select((s: IAppState) => s.stockItems) stateStockItems;
+
   constructor(
     private itemService: ItemService,
-    private toastyService: ToastyService) {}
+    private toastyService: ToastyService,
+    private ngRedux: NgRedux<IAppState>) {}
 
   ngOnInit() {
-    this.itemService.getAllItems()
-      .subscribe(res => {
-        this.data = res;
-      })
+    this.stateStockItems
+    .subscribe(items => {
+      this.data = items;
+    })
 
     $(function () {
       $('[contenteditable=true]').focus(function () {

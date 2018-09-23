@@ -119,8 +119,6 @@ export class ItemsComponent implements OnInit {
         this.toastyService.clear(firstToast);
         this.addToast();
         this.itemsForRecord = [];
-      }, err => {
-        this.toastyService.clear(firstToast);
       });
     const $itemData = $('[name=record-items] thead tr').eq(2).children('td');
     $itemData.eq(0).focus();

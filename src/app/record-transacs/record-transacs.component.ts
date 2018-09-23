@@ -4,6 +4,8 @@ import { TransactionData } from 'app/shared/transacs.model';
 import { Item } from 'app/shared/item.model';
 import { TransactionService } from 'app/services/transacs.service';
 import { ToastyService, ToastOptions, ToastData } from 'ng2-toasty';
+import { select } from 'ng2-redux';
+import { IAppState } from '../interfaces/appstate.interface';
 
 /**
  * Where transactions (both sale and purchase) are recorded from
@@ -62,10 +64,11 @@ export class RecordTransacsComponent implements OnInit {
   selectedItem: Item;
   selectedDate = this.setDate();
 
+  // from state
+  @select((s: IAppState) => s.stockItems) stateStockItems;
+
   constructor(private transacService: TransactionService,
-    private toastyService: ToastyService,
-    private itemService: ItemService) {
-    }
+    private toastyService: ToastyService) {}
 
   ngOnInit() {
 
@@ -74,11 +77,9 @@ export class RecordTransacsComponent implements OnInit {
       const $contentEditables = $('[contentEditable=true]');
       $contentEditables.keypress(function (e) { return e.which !== 13; });
     });
-    this.itemService.getAllItems()
+    this.stateStockItems
       .subscribe(res => {
         this.data = res;
-      }, err => {
-        this.data = [{itemName: 'empty set', sellingPrice: 'empty set', unit: 'empty set'}]
       })
   }
 

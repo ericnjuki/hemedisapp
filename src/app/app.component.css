@@ -1,32 +1,42 @@
-.content-header, .side-header{
-    border-bottom: 1px solid black;
-
+.content-header,
+.side-header {
+  border-bottom: 1px solid black;
 }
-.content-header, .side-left, .side-header {
-    background-color: white;
-    color: black;
-
+.content-header,
+.side-left,
+.side-header {
+  background-color: white;
+  color: black;
 }
 #brand {
-    text-align: center;
+  text-align: center;
 }
 #brand a {
-    color: black;
-    text-transform: lowercase;
-    padding-right: 1.7em;
-
+  color: black;
+  text-transform: lowercase;
+  padding-right: 1.7em;
 }
 aside {
-    border-right: 1px solid black;
-
+  border-right: 1px solid black;
 }
-#ng{
-    font-weight: bold;
-    font-family: Courier New, Courier, monospace;
-    text-transform: lowercase;
-
+#ng {
+  font-weight: bold;
+  font-family: Courier New, Courier, monospace;
+  text-transform: lowercase;
 }
-#pos{
-    font-family: cursive;
-
+#pos {
+  font-family: cursive;
+}
+.np-panel {
+  height: 50px;
+  padding: 10px;
+  background-color: #cacaca;
+  clear: both;
+}
+.np-right {
+  position: relative;
+  right: 0;
+}
+.np-demo-message {
+  line-height: 30px;
 }
