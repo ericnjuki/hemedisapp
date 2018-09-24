@@ -419,7 +419,7 @@ export class NpGridComponent implements OnInit, OnDestroy {
     this.collapseDataRow();
     this.actionResults = [];
     this.checkedItems = [];
-    this.headerIsChecked = false;
+    this.toggleAllChecked();
   }
 
   // calculates the number of pages on display

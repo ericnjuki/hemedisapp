@@ -13,7 +13,7 @@ import { Observable } from 'rxjs';
 import { dbStockItems } from '../shared/app.db';
 import { NgRedux, select } from 'ng2-redux';
 import { IAppState } from '../interfaces/appstate.interface';
-import { ADD_ITEMS, UPDATE_ITEMS } from '../app.actions';
+import { ADD_ITEMS, UPDATE_ITEMS, DELETE_ITEMS } from '../app.actions';
 
 /**
  * Interacts with remote api to retrieve various item data
@@ -38,18 +38,16 @@ export class ItemService {
 
   addItems(items: Item[]) {
     this.ngRedux.dispatch({type: ADD_ITEMS, items: items});
-    return Observable.of(this.stateStockItems);
+    return this.stateStockItems;
   }
 
   updateItems(items) {
     this.ngRedux.dispatch({type: UPDATE_ITEMS, items: items});
-    return this.http.put(this._url + 'u', items);
+    return Observable.of(this.stateStockItems);
   }
 
-  deleteItems(items: number[]) {
-    this.options.body = items;
-    return this.http
-      .delete(this._url + 'd', this.options)
-      .map((respnse: Response) => respnse.json());
+  deleteItems(itemIds: number[]) {
+    this.ngRedux.dispatch({type: DELETE_ITEMS, itemIds: itemIds});
+    return this.stateStockItems;
   }
 }

@@ -1,2 +1,4 @@
+<!-- confirmation modal -->
+<np-modal [(visible)]="showDialog" [options]="modalOpts" (confirmed)="isConfirmed($event)"></np-modal>
 <!-- table of records -->
 <np-grid [np-grid]="npGridConfig" [data]="data" (action)="onGridAction($event)"></np-grid>

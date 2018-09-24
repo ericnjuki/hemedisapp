@@ -3,6 +3,7 @@ import { trigger, state, style, animate, transition, keyframes } from '@angular/
 import { NpModalOptions } from 'app/shared/np-modal-options';
 
 @Component({
+  // tslint:disable-next-line:component-selector
   selector: 'np-modal',
   templateUrl: './np-modal.component.html',
   styleUrls: ['./np-modal.component.css'],

@@ -3,6 +3,7 @@ import { ItemService } from 'app/services/items.service';
 import { ToastyService, ToastOptions, ToastData } from 'ng2-toasty';
 import { NgRedux, select } from 'ng2-redux';
 import { IAppState } from '../../interfaces/appstate.interface';
+import { NpModalOptions } from '../../shared/np-modal-options';
 
 @Component({
   selector: 'app-stock',
@@ -13,6 +14,7 @@ export class StockComponent implements OnInit {
   isContenteditable = false;
   updatedItems = [];
   itemsToDelete: number[] = [];
+  latestDeleteToast;
 
   // configuring np-grid
   data = [{}];
@@ -36,6 +38,8 @@ export class StockComponent implements OnInit {
 
   // view
   prefillBtnStatus;
+  modalOpts: NpModalOptions = new NpModalOptions();
+  showDialog = false;
 
   // from the state
   @select((s: IAppState) => s.stockItems) stateStockItems;
@@ -63,6 +67,11 @@ export class StockComponent implements OnInit {
     })
   }
   onGridAction(eventData) {
+    // EDIT 9 24 18: I Really shoulda put the switch outside the for
+    // cause now I only allow one update at a time. So most of the code
+    // in the update case won't make much sense, but...
+    // it works :)
+
     // all incoming updated rows all share the same ids so...
     let itemToUpdate = null;
     for (let i = 0; i < eventData.length; i++) {
@@ -87,7 +96,7 @@ export class StockComponent implements OnInit {
       }
     // because if we put it in the switch block, they get deleted one by one (too many api calls)
     if (this.itemsToDelete.length > 0) {
-      this.removeItems(this.itemsToDelete);
+      this.showModal(this.itemsToDelete.length);
     }
     this.updatedItems = [];
   }
@@ -97,7 +106,7 @@ export class StockComponent implements OnInit {
     this.itemService.updateItems(this.updatedItems)
       .subscribe(response => {
         this.toastyService.clear(firstToast);
-        this.addToast('success', 'Posted!');
+        this.addToast('success', 'Item(s) Updated!');
         this.updatedItems = [];
       });
   }
@@ -107,10 +116,25 @@ export class StockComponent implements OnInit {
     this.itemService.deleteItems(itemIds)
       .subscribe(newItems => {
         this.data = newItems;
-        this.addToast('info', 'Deleted!');
+        if (this.latestDeleteToast) {
+          this.toastyService.clear(this.latestDeleteToast);
+        }
+        this.latestDeleteToast = this.addToast('info', 'Deleted!');
         this.toastyService.clear(firstToast);
       })
     this.itemsToDelete = [];
+  }
+
+  isConfirmed(eventData) {
+    this.showDialog = false;
+    if (eventData) {
+      this.removeItems(this.itemsToDelete);
+      return;
+    }
+  }
+  showModal(numberOfItemsToDelete) {
+    this.modalOpts.body = 'Delete ' + numberOfItemsToDelete.toString() + ' items?';
+    this.showDialog = true;
   }
 
   addToast(toastType: string, message: string) {

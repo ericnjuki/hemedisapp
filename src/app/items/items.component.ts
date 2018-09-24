@@ -3,7 +3,14 @@ import { ItemService } from './../services/items.service';
 import { Component, OnInit } from '@angular/core';
 import { TransactionService } from 'app/services/transacs.service';
 import { ITransactionData } from 'app/interfaces/transacs.interface';
-import { ToastyService, ToastyConfig, ToastOptions, ToastData } from 'ng2-toasty';
+import {
+  ToastyService,
+  ToastyConfig,
+  ToastOptions,
+  ToastData
+} from 'ng2-toasty';
+import { select } from 'ng2-redux';
+import { IAppState } from '../interfaces/appstate.interface';
 
 /**
  * Where all new/unique items are added from, has no autocomplete
@@ -21,11 +28,18 @@ export class ItemsComponent implements OnInit {
   somethingIsEmpty = true;
 
   // to display errors during user input
-  formStatus = { OK: true, text: 'All Good' }; constructor(private itemService: ItemService,
-    private toastyService: ToastyService) { }
+  formStatus = { OK: true, text: 'All Good' };
+
+  @select((s: IAppState) => s.stockItems)
+  stateStockItems;
+
+  constructor(
+    private itemService: ItemService,
+    private toastyService: ToastyService
+  ) {}
 
   ngOnInit() {
-    $(function () {
+    $(function() {
       const $contentEditables = $('[contentEditable=true]');
       // focus on the first contenteditable field when this component is created
       setTimeout(() => {
@@ -34,7 +48,9 @@ export class ItemsComponent implements OnInit {
       // disables enter_key's action of adding a line-break in a contenteditable
       // as i've subscribed to the enter onclick event, setting it's action to
       // add a new row in the ADD ITEMS table
-      $contentEditables.keypress(function (e) { return e.which !== 13; });
+      $contentEditables.keypress(function(e) {
+        return e.which !== 13;
+      });
     });
   }
 
@@ -42,9 +58,11 @@ export class ItemsComponent implements OnInit {
     const toastOptions: ToastOptions = {
       title: '',
       msg: 'Fill in the fields please',
-      timeout: 5000,
+      timeout: 5000
     };
-    const $itemData = $('[name=record-items] thead tr').eq(2).children('td');
+    const $itemData = $('[name=record-items] thead tr')
+      .eq(2)
+      .children('td');
 
     for (let i = 0; i <= 2; i++) {
       const $el = $itemData.eq(i);
@@ -68,8 +86,14 @@ export class ItemsComponent implements OnInit {
     let unit;
     // .replace(regex) to remove all spaces from the value of the td;
     // fixed a bug where the value entered had a space character before it
-    const purchaseCost = +$itemData.eq(1).html().replace(/\s+/g, '');
-    const sellingPrice = +$itemData.eq(2).html().replace(/\s+/g, '');
+    const purchaseCost = +$itemData
+      .eq(1)
+      .html()
+      .replace(/\s+/g, '');
+    const sellingPrice = +$itemData
+      .eq(2)
+      .html()
+      .replace(/\s+/g, '');
     let quantity;
 
     const $QtyEl = $itemData.eq(3);
@@ -80,7 +104,10 @@ export class ItemsComponent implements OnInit {
     } else if (this.isEmpty($QtyEl, 'number')) {
       quantity = 0;
     } else {
-      quantity = +$itemData.eq(3).html().replace(/\s+/g, '');
+      quantity = +$itemData
+        .eq(3)
+        .html()
+        .replace(/\s+/g, '');
     }
     const $UnitEl = $itemData.eq(4);
     if (this.isEmpty($UnitEl, 'string')) {
@@ -99,7 +126,7 @@ export class ItemsComponent implements OnInit {
       quantity: quantity,
       purchaseCost: purchaseCost,
       sellingPrice: sellingPrice
-    }
+    };
     this.itemsForRecord.unshift(itemForRecord);
     // clears row of contenteditable tds after its values are added to the
     // array of items above
@@ -113,14 +140,25 @@ export class ItemsComponent implements OnInit {
   }
 
   postItems() {
-    const firstToast = this.addToast('wait');
-    this.itemService.addItems(this.itemsForRecord)
-      .subscribe(response => {
-        this.toastyService.clear(firstToast);
-        this.addToast();
-        this.itemsForRecord = [];
-      });
-    const $itemData = $('[name=record-items] thead tr').eq(2).children('td');
+    const firstToast = this.addToast('wait...');
+
+    // manually setting ids of elements since we don't have a db to auto-assign them
+    let lastItemId = 0;
+    this.stateStockItems.subscribe(theItems => {
+      lastItemId = theItems.length;
+    });
+    for (let i = 0; i < this.itemsForRecord.length; i++) {
+      this.itemsForRecord[i].itemId = lastItemId++;
+    }
+
+    this.itemService.addItems(this.itemsForRecord).subscribe(response => {
+      this.toastyService.clear(firstToast);
+      this.addToast();
+      this.itemsForRecord = [];
+    });
+    const $itemData = $('[name=record-items] thead tr')
+      .eq(2)
+      .children('td');
     $itemData.eq(0).focus();
   }
 
@@ -131,7 +169,7 @@ export class ItemsComponent implements OnInit {
       timeout: 5000,
       theme: 'bootstrap',
       onAdd: (toast: ToastData) => {
-        toastId = toast.id
+        toastId = toast.id;
       }
     };
     if (toastType === 'wait') {
@@ -165,19 +203,20 @@ export class ItemsComponent implements OnInit {
   }
 
   isEmpty($element: JQuery<HTMLElement>, type) {
-    if (type === 'number' &&
+    if (
+      type === 'number' &&
       +$element.html().replace(/\s+/g, '') === NaN
       // || +$element.html().replace(/\s+/g, '') === 0
     ) {
       return true;
     }
-    if (type === 'string' &&
-      $element.html().replace(/\s+/g, '') === null ||
+    if (
+      (type === 'string' && $element.html().replace(/\s+/g, '') === null) ||
       $element.html().replace(/\s+/g, '') === ''
     ) {
       return true;
     }
-    return false
+    return false;
   }
 
   isValidInput($element: JQuery<HTMLElement>, type) {
@@ -211,7 +250,9 @@ export class ItemsComponent implements OnInit {
 
   checkIfHasNumber(element: HTMLInputElement) {
     if (this.hasNUmber(element.innerHTML)) {
-      this.validationError('This is a unit, are you sure you want numbers in it?');
+      this.validationError(
+        'This is a unit, are you sure you want numbers in it?'
+      );
     }
   }
 
