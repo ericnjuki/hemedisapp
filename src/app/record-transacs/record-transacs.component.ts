@@ -65,9 +65,10 @@ export class RecordTransacsComponent implements OnInit {
   selectedDate = this.setDate();
 
   // from state
-  @select((s: IAppState) => s.stockItems) stateStockItems;
+  // @select((s: IAppState) => s.stockItems) stateStockItems;
 
   constructor(private transacService: TransactionService,
+    private itemService: ItemService,
     private toastyService: ToastyService) {}
 
   ngOnInit() {
@@ -77,7 +78,7 @@ export class RecordTransacsComponent implements OnInit {
       const $contentEditables = $('[contentEditable=true]');
       $contentEditables.keypress(function (e) { return e.which !== 13; });
     });
-    this.stateStockItems
+    this.itemService.getItems()
       .subscribe(res => {
         this.data = res;
       })

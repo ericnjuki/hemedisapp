@@ -210,7 +210,8 @@ export class NpGridComponent implements OnInit, OnDestroy {
     this.updDisabled(); // this function uses lastPage, which is updated in pageCount()
     this.gridData.rows = [];
     if (allRows.length <= 0) {
-      console.log('nothing to render');
+      return;
+      // console.log();
     } else if (allRows.length > 10) {
       const startAt = this.paginator.currentPage * this.paginator.rowsPerPage - this.paginator.rowsPerPage;
       let stopAt = this.paginator.currentPage * this.paginator.rowsPerPage;

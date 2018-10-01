@@ -1,15 +1,9 @@
 import { HttpInterceptor } from './../shared/error handlers/interceptor.http';
 import { Item } from './../shared/item.model';
 import { Injectable, EventEmitter } from '@angular/core';
-import {
-  Http,
-  Response,
-  RequestOptionsArgs,
-  RequestOptions
-} from '@angular/http';
+import { Response, RequestOptions } from '@angular/http';
 import 'rxjs/add/operator/map';
-// tslint:disable-next-line:import-blacklist
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
 import { dbStockItems } from '../shared/app.db';
 import { NgRedux, select } from 'ng2-redux';
 import { IAppState } from '../interfaces/appstate.interface';
@@ -26,7 +20,13 @@ export class ItemService {
 
   @select((s: IAppState) => s.stockItems) stateStockItems;
 
-  constructor(private http: HttpInterceptor, private ngRedux: NgRedux<IAppState>) {}
+  constructor(
+    private http: HttpInterceptor,
+    private ngRedux: NgRedux<IAppState>
+  ) {}
+  getItems() {
+    return this.stateStockItems;
+  }
   getDbItems() {
     return Observable.of(dbStockItems);
   }
@@ -37,17 +37,17 @@ export class ItemService {
   }
 
   addItems(items: Item[]) {
-    this.ngRedux.dispatch({type: ADD_ITEMS, items: items});
+    this.ngRedux.dispatch({ type: ADD_ITEMS, items: items });
     return this.stateStockItems;
   }
 
   updateItems(items) {
-    this.ngRedux.dispatch({type: UPDATE_ITEMS, items: items});
+    this.ngRedux.dispatch({ type: UPDATE_ITEMS, items: items });
     return Observable.of(this.stateStockItems);
   }
 
   deleteItems(itemIds: number[]) {
-    this.ngRedux.dispatch({type: DELETE_ITEMS, itemIds: itemIds});
+    this.ngRedux.dispatch({ type: DELETE_ITEMS, itemIds: itemIds });
     return this.stateStockItems;
   }
 }

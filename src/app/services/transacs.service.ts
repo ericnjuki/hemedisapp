@@ -1,46 +1,72 @@
 import { HttpInterceptor } from './../shared/error handlers/interceptor.http';
 import { Injectable } from '@angular/core';
-import { Http, Response, RequestOptions, RequestOptionsArgs, URLSearchParams } from '@angular/http';
+import {
+  Http,
+  Response,
+  RequestOptions,
+  RequestOptionsArgs,
+  URLSearchParams
+} from '@angular/http';
 import 'rxjs/add/operator/map';
 import { ITransactionData } from 'app/interfaces/transacs.interface';
+import { NgRedux, select } from 'ng2-redux';
+import { IAppState } from '../interfaces/appstate.interface';
+import { POST_TRANSACTIONS, GET_TRANSACTIONS } from '../app.actions';
+import { Observable } from 'rxjs/Observable';
 /**
  * Interacts with remote api to retrieve various transaction data
  */
 @Injectable()
 export class TransactionService {
-    private _url = 'http://localhost:1111/api/v1.0/transacs/';
+  private _url = 'http://localhost:1111/api/v1.0/transacs/';
 
-    private options: RequestOptions = new RequestOptions();
+  private options: RequestOptions = new RequestOptions();
 
-    constructor(private _http: HttpInterceptor) { }
-    getTransacs(date, includeItems: boolean) {
-        this.options.search = new URLSearchParams('includeItems=true&' + 'forDate=' + date);
-        if (includeItems) {
-            return this._http.get(this._url + 'g', this.options)
-                .map((response: Response) => response.json());
-        }
-        return this._http.get(this._url + 'g')
-            .map((response: Response) => response.json());
-    }
+  @select((s: IAppState) => s.transactions) stateTransacions;
 
-    getStatsData(year: number, month: number, day: number) {
-        this.options.search = new URLSearchParams('date=' + year.toString() + '/' + month.toString() + '/' + day.toString());
-        return this._http.get(this._url + 'g/stats', this.options)
-            .map((response: Response) => response.json());
-    }
-    getStatsForYear(year: number) {
-        this.options.search = new URLSearchParams('forYear=' + year.toString());
-        return this._http.get(this._url + 'g/stats', this.options)
-            .map((response: Response) => response.json());
-    }
+  constructor(
+    private _http: HttpInterceptor,
+    private ngRedux: NgRedux<IAppState>
+  ) {}
+  getTransacs(date, includeItems: boolean) {
+    return this.stateTransacions;
+    // this.options.search = new URLSearchParams(
+    //   'includeItems=true&' + 'forDate=' + date
+    // );
+    // if (includeItems) {
+    //   return this._http
+    //     .get(this._url + 'g', this.options)
+    //     .map((response: Response) => response.json());
+    // }
+    // return this._http
+    //   .get(this._url + 'g')
+    //   .map((response: Response) => response.json());
+  }
 
-    postTransacs(transactionObject: ITransactionData) {
-        return this._http.post(this._url + 'p', transactionObject);
-    }
+  getStatsData(year: number, month: number, day: number) {
+    this.options.search = new URLSearchParams(
+      'date=' + year.toString() + '/' + month.toString() + '/' + day.toString()
+    );
+    return this._http
+      .get(this._url + 'g/stats', this.options)
+      .map((response: Response) => response.json());
+  }
+  getStatsForYear(year: number) {
+    this.options.search = new URLSearchParams('forYear=' + year.toString());
+    return this._http
+      .get(this._url + 'g/stats', this.options)
+      .map((response: Response) => response.json());
+  }
 
-    deleteTransacs(transactionObjects: number[]) {
-        this.options.body = transactionObjects;
-        return this._http.delete(this._url + 'd', this.options)
-            .map((response: Response) => response.json());
-    }
+  postTransacs(transactionObject: ITransactionData) {
+    this.ngRedux.dispatch({ type: POST_TRANSACTIONS, data: transactionObject });
+    return Observable.of('success?');
+  }
+
+  deleteTransacs(transactionObjects: number[]) {
+    this.options.body = transactionObjects;
+    return this._http
+      .delete(this._url + 'd', this.options)
+      .map((response: Response) => response.json());
+  }
 }

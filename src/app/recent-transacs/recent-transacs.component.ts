@@ -58,11 +58,30 @@ export class RecentTransacsComponent implements OnInit {
 
   getTransacs(date: string) {
     const firstToast = this.addToast('wait', 'Fetching records...');
+    // const dateFromStr = new Date(date);
+    // const shortDateStr = dateFromStr.toISOString().substr(0, 10);
+    // console.log(shortDateStr);
     this.transacService.getTransacs(date, this.includeItems)
       .subscribe(allTransactions => {
+        // console.log(allTransactions[shortDateStr]);
         this.toastyService.clear(firstToast);
         let maxItemNumber = 0;
-        this.transactions = allTransactions;
+        // this.transactions = allTransactions[date];
+
+        const allTransacDateStrings = Object.keys(allTransactions);
+        const thisMonthDateStrings = []
+        for (let i = 0; i < allTransacDateStrings.length; i++) {
+          const dateOfString = new Date(allTransacDateStrings[i]);
+          if (dateOfString.getMonth() === new Date(date).getMonth()) {
+            // console.log(allTransactions[allTransacDateStrings[i]]);
+            this.transactions = this.transactions.concat(allTransactions[allTransacDateStrings[i]]);
+          }
+        }
+
+        if (this.transactions === undefined) {
+          this.transactions = [];
+        }
+        console.log(this.transactions);
         // for each transaction
         for (let t = 0; t < this.transactions.length; t++) {
           this.transactions[t].total = 0;
