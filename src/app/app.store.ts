@@ -5,7 +5,6 @@ import {
   UPDATE_ITEMS,
   DELETE_ITEMS,
   POST_TRANSACTIONS,
-  GET_TRANSACTIONS
 } from './app.actions';
 import { tassign } from 'tassign';
 import { IAppState } from './interfaces/appstate.interface';
@@ -55,7 +54,8 @@ export function rootReducer(state = INITIAL_STATE, action): IAppState {
       const transactionObj = {
         transactionId: action.data.transactionId,
         items: action.data.items,
-        transactionType: action.data.transactionType
+        transactionType: action.data.transactionType,
+        date: action.data.date
       };
       const transactionsCopy = jQuery.extend(true, {}, state.transactions);
       const transactionDate = action.data.date;
@@ -66,7 +66,8 @@ export function rootReducer(state = INITIAL_STATE, action): IAppState {
         transactionObj.transactionId = transactionsCopy[transactionDate].length;
         transactionsCopy[transactionDate].push(transactionObj);
       }
-      return tassign(state, {transactions: transactionsCopy});
+      const v = tassign(state, {transactions: transactionsCopy});
+      return v;
 
     case CLEAR:
       return INITIAL_STATE;

@@ -64,9 +64,6 @@ export class RecordTransacsComponent implements OnInit {
   selectedItem: Item;
   selectedDate = this.setDate();
 
-  // from state
-  // @select((s: IAppState) => s.stockItems) stateStockItems;
-
   constructor(private transacService: TransactionService,
     private itemService: ItemService,
     private toastyService: ToastyService) {}

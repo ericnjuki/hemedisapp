@@ -5,6 +5,7 @@ import { TransactionData } from 'app/shared/transacs.model';
 import { ToastyService, ToastOptions, ToastData } from 'ng2-toasty';
 import { NpModalOptions } from 'app/shared/np-modal-options';
 
+
 @Component({
   selector: 'app-recent-transacs',
   templateUrl: './recent-transacs.component.html',
@@ -26,6 +27,7 @@ export class RecentTransacsComponent implements OnInit {
   // displayed data
   transactions: Array<TransactionData> = [];
   displayedTransacs = [];
+  a = [1, 2, 3];
   monthStrings = [];
 
   constructor(
@@ -58,34 +60,26 @@ export class RecentTransacsComponent implements OnInit {
 
   getTransacs(date: string) {
     const firstToast = this.addToast('wait', 'Fetching records...');
-    // const dateFromStr = new Date(date);
-    // const shortDateStr = dateFromStr.toISOString().substr(0, 10);
-    // console.log(shortDateStr);
     this.transacService.getTransacs(date, this.includeItems)
       .subscribe(allTransactions => {
-        // console.log(allTransactions[shortDateStr]);
         this.toastyService.clear(firstToast);
-        let maxItemNumber = 0;
-        // this.transactions = allTransactions[date];
 
         const allTransacDateStrings = Object.keys(allTransactions);
-        const thisMonthDateStrings = []
         for (let i = 0; i < allTransacDateStrings.length; i++) {
           const dateOfString = new Date(allTransacDateStrings[i]);
           if (dateOfString.getMonth() === new Date(date).getMonth()) {
-            // console.log(allTransactions[allTransacDateStrings[i]]);
-            this.transactions = this.transactions.concat(allTransactions[allTransacDateStrings[i]]);
+            const allTransactionsCopy = jQuery.extend(true, {}, allTransactions)
+            this.transactions = [...this.transactions.concat(allTransactionsCopy[allTransacDateStrings[i]])];
           }
         }
 
         if (this.transactions === undefined) {
           this.transactions = [];
         }
-        console.log(this.transactions);
         // for each transaction
         for (let t = 0; t < this.transactions.length; t++) {
           this.transactions[t].total = 0;
-          const shortDateString = this.transactions[t].date.substr(0, 10);
+          const shortDateString = this.transactions[t].date;
           const shortYear = shortDateString.substr(0, 4);
           const shortMonth = shortDateString.substr(5, 2);
           const shortDay = shortDateString.substr(8, 2);
@@ -105,23 +99,13 @@ export class RecentTransacsComponent implements OnInit {
             }
           }
         }
-        // number of items in
-        // transac with most items
-        this.transactions.forEach((transac) => {
-          if (transac.items.length > maxItemNumber) {
-            maxItemNumber = transac.items.length;
-          }
-        });
 
         // reverse order of transacs
         for (let i = 0; i < this.transactions.length; i++) {
           this.displayedTransacs.unshift(this.transactions[i]);
         }
-      }, err => {
-        this.toastyService.clear(firstToast);
+        this.transactions = [];
       });
-    this.displayedTransacs = [];
-    this.transactions = [];
   }
 
   updateYearOpts() {
@@ -136,10 +120,8 @@ export class RecentTransacsComponent implements OnInit {
 
   deleteTransacs(transacIds: number[]) {
     const firstToast = this.addToast('wait', 'Deleting...');
-    // let arrNewTransacs: any[] = [];
     this.transacService.deleteTransacs(this.transacIdsToDelete)
       .subscribe(() => {
-        // arrNewTransacs = newTransacs;
         // update ngFored var here
         this.toastyService.clear(firstToast);
         this.addToast('info', 'Deleted!');

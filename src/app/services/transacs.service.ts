@@ -1,17 +1,15 @@
 import { HttpInterceptor } from './../shared/error handlers/interceptor.http';
 import { Injectable } from '@angular/core';
 import {
-  Http,
   Response,
   RequestOptions,
-  RequestOptionsArgs,
   URLSearchParams
 } from '@angular/http';
 import 'rxjs/add/operator/map';
 import { ITransactionData } from 'app/interfaces/transacs.interface';
 import { NgRedux, select } from 'ng2-redux';
 import { IAppState } from '../interfaces/appstate.interface';
-import { POST_TRANSACTIONS, GET_TRANSACTIONS } from '../app.actions';
+import { POST_TRANSACTIONS } from '../app.actions';
 import { Observable } from 'rxjs/Observable';
 /**
  * Interacts with remote api to retrieve various transaction data
@@ -22,7 +20,8 @@ export class TransactionService {
 
   private options: RequestOptions = new RequestOptions();
 
-  @select((s: IAppState) => s.transactions) stateTransacions;
+  @select((s: IAppState) => s.transactions)
+  stateTransacions;
 
   constructor(
     private _http: HttpInterceptor,
@@ -30,17 +29,6 @@ export class TransactionService {
   ) {}
   getTransacs(date, includeItems: boolean) {
     return this.stateTransacions;
-    // this.options.search = new URLSearchParams(
-    //   'includeItems=true&' + 'forDate=' + date
-    // );
-    // if (includeItems) {
-    //   return this._http
-    //     .get(this._url + 'g', this.options)
-    //     .map((response: Response) => response.json());
-    // }
-    // return this._http
-    //   .get(this._url + 'g')
-    //   .map((response: Response) => response.json());
   }
 
   getStatsData(year: number, month: number, day: number) {
