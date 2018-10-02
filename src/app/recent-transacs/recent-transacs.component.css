@@ -3,7 +3,7 @@
 }
 .app-header{
     padding: 0;
-    position: fixed;
+    /* position: fixed; */
 }
     .app-header select{
         margin-top: 13px;
@@ -38,7 +38,8 @@ div.row{
     z-index: 98;
 }
 
-.np-recent-btn-holder{
+.np-recent-btn-holder.col-md-1{
+    width: 10%;
     height: 56px;
 }
 .col-md-1{

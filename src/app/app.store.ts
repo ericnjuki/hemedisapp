@@ -67,7 +67,18 @@ export function rootReducer(state = INITIAL_STATE, action): IAppState {
         transactionObj.transactionId = transactionsCopy[transactionDate].length;
         transactionsCopy[transactionDate].push(transactionObj);
       }
-      return tassign(state, {transactions: transactionsCopy});
+
+      // update quantity
+      const stockItemsCopy = [...state.stockItems];
+      for (let i = 0; i < action.data.items.length; i++) {
+        const currentItem = action.data.items[i];
+        stockItemsCopy.filter((item, index) => {
+          if (item.itemId === currentItem.itemId) {
+            item.quantity -= currentItem.quantity;
+          }
+        });
+      }
+      return tassign(state, {stockItems: stockItemsCopy, transactions: transactionsCopy});
 
     case DELETE_TRANSACTIONS:
       const transactionsCopy2 = jQuery.extend(true, {}, state.transactions);

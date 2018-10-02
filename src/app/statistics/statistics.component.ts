@@ -1,6 +1,5 @@
 import { TransactionService } from 'app/services/transacs.service';
 import { AppMonths } from './../shared/enums/months.enum';
-import { Http } from '@angular/http';
 import { Component, OnInit, Input } from '@angular/core';
 import { ToastyService, ToastyConfig, ToastOptions, ToastData } from 'ng2-toasty';
 
@@ -39,15 +38,67 @@ export class StatisticsComponent implements OnInit {
 
   getStatsForYear(year: number) {
     const firstToast = this.addToast();
+    this.monthlyStats = [];
+
     this.transacService.getStatsForYear(year)
-      .subscribe(theData => {
-        // converting int months (i.e. 0, 1, 2...) into my enum strings (JAN, FEB...)
-        for (const data of theData) {
-          data.month = AppMonths[data.month];
+      .subscribe(allTransactions => {
+        const allTransacDateStrings = Object.keys(allTransactions);
+        const stats = [];
+
+        for (let i = 0; i < allTransacDateStrings.length; i++) {
+          const monthlySales = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+          const monthlyPurchases = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+          const monthlyProfitLoss = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+          const currentMonth = new Date(allTransacDateStrings[i]).getMonth();
+          const transacsOfCurrentDate = allTransactions[allTransacDateStrings[i]];
+          // iterating transactions in a day
+          for (let j = 0; j < transacsOfCurrentDate.length; j++ ) {
+            const currentTransaction = transacsOfCurrentDate[j];
+            let currentTransacTotalSales = 0;
+            let currentTransacTotalPurchases = 0;
+            let currentTransacProfitLoss = 0;
+            // iterating items in a transaction
+            for (let k = 0; k < transacsOfCurrentDate[j].items.length; k++) {
+              const currentTransaclyTotalSales = currentTransaction.items[k].sellingPrice * currentTransaction.items[k].quantity;
+              const currentTransaclyTotalPurchases = currentTransaction.items[k].purchaseCost * currentTransaction.items[k].quantity;
+              const currentTransaclyProfitLoss = currentTransaclyTotalSales - currentTransaclyTotalPurchases;
+              currentTransacTotalSales += currentTransaclyTotalSales;
+              currentTransacTotalPurchases += currentTransaclyTotalPurchases;
+              currentTransacProfitLoss += currentTransaclyProfitLoss;
+            }
+            switch (transacsOfCurrentDate[j].transactionType) {
+              case 1:
+                monthlySales[currentMonth] += currentTransacTotalSales;
+                monthlyProfitLoss[currentMonth] += currentTransacProfitLoss;
+                break;
+              case 2:
+                monthlyPurchases[currentMonth] += currentTransacTotalPurchases;
+                break;
+              default:
+                break;
+            }
+          }
+          const currentTransacDate = new Date(allTransacDateStrings[i]);
+
+          if (currentTransacDate.getFullYear() === new Date(year, 0).getFullYear()) {
+            for (let m = 0; m <= 11; m++) {
+              if (stats.length < 12) {
+                const dataOfMonth = {
+                  month: AppMonths[m],
+                  sales: monthlySales[m],
+                  purchases: monthlyPurchases[m],
+                  profitLoss: monthlyProfitLoss[m]
+                }
+                stats.push(dataOfMonth);
+              } else {
+                stats[m].sales += monthlySales[m];
+                stats[m].purchases += monthlyPurchases[m];
+                stats[m].profitLoss += monthlyProfitLoss[m];
+              }
+            }
+          }
         }
-        this.monthlyStats = theData;
-        this.toastyService.clear(firstToast);
-      }, err => {
+        this.monthlyStats = stats;
         this.toastyService.clear(firstToast);
       });
   }

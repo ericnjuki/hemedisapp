@@ -1,5 +1,5 @@
 export enum AppMonths {
-    JAN,
+    JAN = 0,
     FEB,
     MAR,
     APR,
