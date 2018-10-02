@@ -9,7 +9,7 @@ import 'rxjs/add/operator/map';
 import { ITransactionData } from 'app/interfaces/transacs.interface';
 import { NgRedux, select } from 'ng2-redux';
 import { IAppState } from '../interfaces/appstate.interface';
-import { POST_TRANSACTIONS } from '../app.actions';
+import { POST_TRANSACTIONS, DELETE_TRANSACTIONS } from '../app.actions';
 import { Observable } from 'rxjs/Observable';
 /**
  * Interacts with remote api to retrieve various transaction data
@@ -27,7 +27,7 @@ export class TransactionService {
     private _http: HttpInterceptor,
     private ngRedux: NgRedux<IAppState>
   ) {}
-  getTransacs(date, includeItems: boolean) {
+  getTransacs() {
     return this.stateTransacions;
   }
 
@@ -51,10 +51,8 @@ export class TransactionService {
     return Observable.of('success?');
   }
 
-  deleteTransacs(transactionObjects: number[]) {
-    this.options.body = transactionObjects;
-    return this._http
-      .delete(this._url + 'd', this.options)
-      .map((response: Response) => response.json());
+  deleteTransacs(transactionIds: number[]) {
+    this.ngRedux.dispatch({type: DELETE_TRANSACTIONS, transactionIds: transactionIds})
+    return Observable.of('');
   }
 }

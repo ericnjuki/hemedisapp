@@ -5,6 +5,7 @@ import {
   UPDATE_ITEMS,
   DELETE_ITEMS,
   POST_TRANSACTIONS,
+  DELETE_TRANSACTIONS,
 } from './app.actions';
 import { tassign } from 'tassign';
 import { IAppState } from './interfaces/appstate.interface';
@@ -66,8 +67,23 @@ export function rootReducer(state = INITIAL_STATE, action): IAppState {
         transactionObj.transactionId = transactionsCopy[transactionDate].length;
         transactionsCopy[transactionDate].push(transactionObj);
       }
-      const v = tassign(state, {transactions: transactionsCopy});
-      return v;
+      return tassign(state, {transactions: transactionsCopy});
+
+    case DELETE_TRANSACTIONS:
+      const transactionsCopy2 = jQuery.extend(true, {}, state.transactions);
+      const transactionsKeys = Object.keys(transactionsCopy2);
+      for (let i = 0; i < transactionsKeys.length; i++) {
+        const transacsOfCurrentDate = transactionsCopy2[transactionsKeys[i]];
+        for (let j = 0; j < transacsOfCurrentDate.length; j++) {
+          if (action.transactionIds.indexOf(transacsOfCurrentDate[j].transactionId) !== -1) {
+            transacsOfCurrentDate.splice(j, 1);
+          }
+          if (transacsOfCurrentDate.length < 1) {
+            delete transactionsCopy2[transactionsKeys[i]];
+          }
+        }
+      }
+      return tassign(state, {transactions: transactionsCopy2});
 
     case CLEAR:
       return INITIAL_STATE;
