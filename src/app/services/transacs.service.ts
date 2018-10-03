@@ -18,20 +18,20 @@ export class TransactionService {
     private ngRedux: NgRedux<IAppState>
   ) {}
   getTransacs() {
-    return this.stateTransacions;
+    return this.stateTransacions.delay(1500);
   }
 
   getStatsForYear(year: number) {
-    return this.stateTransacions;
+    return this.stateTransacions.delay(1500);
   }
 
   postTransacs(transactionObject: ITransactionData) {
     this.ngRedux.dispatch({ type: POST_TRANSACTIONS, data: transactionObject });
-    return Observable.of('success?');
+    return Observable.of('success?').delay(1000);
   }
 
   deleteTransacs(transactionIds: number[]) {
     this.ngRedux.dispatch({type: DELETE_TRANSACTIONS, transactionIds: transactionIds})
-    return Observable.of('success?');
+    return Observable.of('success?').delay(1000);
   }
 }

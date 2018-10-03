@@ -151,11 +151,11 @@ export class ItemsComponent implements OnInit {
       this.itemsForRecord[i].itemId = lastItemId++;
     }
 
-    this.itemService.addItems(this.itemsForRecord).subscribe(response => {
-      this.toastyService.clear(firstToast);
-      this.addToast();
-      this.itemsForRecord = [];
-    });
+    this.itemService.addItems(this.itemsForRecord)
+      .subscribe(response => {
+        this.toastyService.clear(firstToast);
+        this.itemsForRecord = [];
+      });
     const $itemData = $('[name=record-items] thead tr')
       .eq(2)
       .children('td');

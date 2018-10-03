@@ -23,7 +23,7 @@ export class ItemService {
   ) {}
 
   getItems() {
-    return this.stateStockItems;
+    return this.stateStockItems.delay(1500);
   }
   getDbItems() {
     return Observable.of(dbStockItems);
@@ -31,16 +31,16 @@ export class ItemService {
 
   addItems(items: Item[]) {
     this.ngRedux.dispatch({ type: ADD_ITEMS, items: items });
-    return this.stateStockItems;
+    return this.stateStockItems.delay(1500);
   }
 
   updateItems(items) {
     this.ngRedux.dispatch({ type: UPDATE_ITEMS, items: items });
-    return this.stateStockItems;
+    return this.stateStockItems.delay(1500);
   }
 
   deleteItems(itemIds: number[]) {
     this.ngRedux.dispatch({ type: DELETE_ITEMS, itemIds: itemIds });
-    return this.stateStockItems;
+    return this.stateStockItems.delay(1500);
   }
 }

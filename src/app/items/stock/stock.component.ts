@@ -14,7 +14,6 @@ export class StockComponent implements OnInit {
   isContenteditable = false;
   updatedItems = [];
   itemsToDelete: number[] = [];
-  latestDeleteToast;
 
   // configuring np-grid
   data = [{}];
@@ -106,7 +105,6 @@ export class StockComponent implements OnInit {
     this.itemService.updateItems(this.updatedItems)
       .subscribe(response => {
         this.toastyService.clear(firstToast);
-        this.addToast('success', 'Item(s) Updated!');
         this.updatedItems = [];
       });
   }
@@ -114,13 +112,9 @@ export class StockComponent implements OnInit {
   removeItems(itemIds: number[]) {
     const firstToast = this.addToast('wait', 'Deleting...');
     this.itemService.deleteItems(itemIds)
-      .subscribe(newItems => {
-        this.data = newItems;
-        if (this.latestDeleteToast) {
-          this.toastyService.clear(this.latestDeleteToast);
-        }
-        this.latestDeleteToast = this.addToast('info', 'Deleted!');
-        this.toastyService.clear(firstToast);
+    .subscribe(newItems => {
+      this.data = newItems;
+      this.toastyService.clear(firstToast);
       })
     this.itemsToDelete = [];
   }
